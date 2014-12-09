@@ -1,0 +1,4 @@
+<AbsorptionColorTable gradient="1" back="1" bias="0.5" amplitude="1" lighting="none">
+ <Channel minColorG="76" maxColorR="0" maxColorA="255" maxHuv="349" maxColorB="51" minHuv="-350" minColorR="76" minColorA="0" minColorB="255" maxColorG="0"/>
+ <Channel minColorG="127" maxColorR="255" maxColorA="255" maxHuv="3071" maxColorB="255" minHuv="350" minColorR="127" minColorA="0" minColorB="127" maxColorG="255"/>
+</AbsorptionColorTable>

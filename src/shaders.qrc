@@ -1,0 +1,6 @@
+<RCC>
+  <qresource prefix="/shaders">
+    <file alias="point-cloud.vert">res/point-cloud.vert</file>
+    <file alias="point-cloud.frag">res/point-cloud.frag</file>
+  </qresource>
+</RCC>

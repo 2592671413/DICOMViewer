@@ -1,0 +1,3 @@
+<MaximumIntensityColorTable>
+ <Channel minColorG="0" opacity="1" maxColorR="255" maxColorA="255" maxHuv="3071" maxColorB="255" minHuv="-1024" minColorR="0" minColorA="255" minColorB="0" function="Replace" maxColorG="255"/>
+</MaximumIntensityColorTable>

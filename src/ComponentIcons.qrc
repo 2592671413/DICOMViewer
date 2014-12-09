@@ -1,0 +1,8 @@
+<RCC>
+  <qresource prefix="/icons/components">
+    <file alias="MPR.png">res/mpr.png</file>
+    <file alias="Volume View.png">res/volumeview.png</file>
+    <file alias="Slice Plane View.png">res/sliceplane.png</file>
+    <file alias="Histogram.png">res/Histogram.png</file>
+  </qresource>
+</RCC>

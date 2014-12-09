@@ -1,0 +1,3 @@
+@echo off
+
+call bin\release\DICOMViewer-@FULL_VERSION@.exe

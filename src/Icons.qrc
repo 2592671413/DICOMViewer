@@ -1,0 +1,23 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file alias="1x1.png">res/1x1.png</file>
+        <file alias="1x2.png">res/1x2.png</file>
+        <file alias="2x1.png">res/2x1.png</file>
+        <file alias="2x2.png">res/2x2.png</file>
+        <file alias="spawnPoint.png">res/spawnPoint.png</file>
+        <file alias="save.png">res/download.png</file>
+        <file alias="load.png">res/upload.png</file>
+        <file alias="record.png">res/video-camera.png</file>
+        <file alias="segmentate.png">res/scissors.png</file>
+        <file alias="connect.png">res/plug.png</file>
+        <file alias="add.png">res/add.png</file>
+        <file alias="pencil.png">res/pencil.png</file>
+        <file alias="brush.png">res/paint-brush.png</file>
+        <file alias="trash.png">res/trash.png</file>
+        <file alias="information.png">res/information.png</file>
+        <file alias="pause.png">res/pause.png</file>
+        <file alias="home.png">res/home.png</file>
+        <file alias="configure.png">res/configure.png</file>
+        <file alias="pin.png">res/pin.png</file>
+    </qresource>
+</RCC>

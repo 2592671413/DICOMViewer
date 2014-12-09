@@ -1,0 +1,5 @@
+<AbsorptionColorTable gradient="1" back="0" bias="0.75" amplitude="1.2" lighting="specular">
+ <Channel minColorG="0" maxColorR="189" maxColorA="66" maxHuv="-294" maxColorB="0" minHuv="-654" minColorR="0" minColorA="0" minColorB="0" maxColorG="56"/>
+ <Channel minColorG="115" maxColorR="255" maxColorA="255" maxHuv="326" maxColorB="255" minHuv="51" minColorR="209" minColorA="0" minColorB="0" maxColorG="255"/>
+ <Channel minColorG="207" maxColorR="255" maxColorA="255" maxHuv="1800" maxColorB="255" minHuv="327" minColorR="207" minColorA="255" minColorB="207" maxColorG="255"/>
+</AbsorptionColorTable>

@@ -1,0 +1,31 @@
+/** \mainpage
+  *
+  * Concepts:
+  *
+  * - \ref Record::Mediator "The Record Service: Organizing Communication"
+  * - \ref RecordFacets
+  *
+  * Modules:
+  *
+  * - Components:
+  *   - Visualization:
+  *     - \ref VolumeView "Volume Rendering"
+  *     - \ref MPR
+  *     - \ref SlicePlane "Slice Plane"
+  *     - \ref Histogram
+  *   - Others:
+  *     - \ref Localizer "Localizer Manager"
+  *     - \ref PointClouds "Point Clouds Manager"
+  *       - \ref PointRecorder "Recorder"
+  *       - \ref PointCloudCreator "Composer"
+  *       - \ref SurfaceExtractionDialog "Surface Extractor"
+  *     - \ref Registration "Registration Manager"
+  */
+
+
+/** \defgroup RecordFacets Record Service Facets
+  *
+  * \brief  Lists all record service facets.
+  *
+  * \see    \ref Record::Mediator
+  */
