@@ -54,8 +54,8 @@ public:
  // ----------------------------------------------------------------------------------
 
     void compute
-        ( const Carna::Tools::Vector& position
-        , const Carna::Tools::Vector& vesselDirection
+        ( const Carna::base::Vector& position
+        , const Carna::base::Vector& vesselDirection
         , double& medialness
         , double& radius
         , double minimumMedialness = -std::numeric_limits< double >::infinity() ) const;
@@ -70,8 +70,8 @@ private:
     double currentMinimumContrast;
 
     void updateDirectionData
-        ( const Carna::Tools::Vector& position
-        , const Carna::Tools::Vector& vesselDirection ) const;
+        ( const Carna::base::Vector& position
+        , const Carna::base::Vector& vesselDirection ) const;
 
     void deleteDirectionData() const;
 

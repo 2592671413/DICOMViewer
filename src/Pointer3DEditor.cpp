@@ -12,7 +12,7 @@
 #include "Pointer3DEditor.h"
 #include "Pointer3D.h"
 #include "Pointer3DCalibration.h"
-#include <Carna/WideColorPicker.h>
+#include <Carna/base/qt/WideColorPicker.h>
 #include <QFormLayout>
 #include <QDoubleSpinBox>
 #include <QCheckBox>
@@ -39,7 +39,7 @@ Pointer3DEditor::Pointer3DEditor( Pointer3D& editedPointer, QWidget* parent )
 
  // head color
 
-    Carna::WideColorPicker* headColorPicker = new Carna::WideColorPicker( editedPointer.getHeadColor() );
+    Carna::base::qt::WideColorPicker* headColorPicker = new Carna::base::qt::WideColorPicker( editedPointer.getHeadColor() );
     sizeAndColorForm->addRow( "Head Color:", headColorPicker );
 
     connect( headColorPicker, SIGNAL( colorChanged( const QColor& ) ), &editedPointer, SLOT( setHeadColor( const QColor& ) ) );
@@ -47,7 +47,7 @@ Pointer3DEditor::Pointer3DEditor( Pointer3D& editedPointer, QWidget* parent )
 
  // shaft color
 
-    Carna::WideColorPicker* shaftColorPicker = new Carna::WideColorPicker( editedPointer.getShaftColor() );
+    Carna::base::qt::WideColorPicker* shaftColorPicker = new Carna::base::qt::WideColorPicker( editedPointer.getShaftColor() );
     sizeAndColorForm->addRow( "Shaft Color:", shaftColorPicker );
 
     connect( shaftColorPicker, SIGNAL( colorChanged( const QColor& ) ), &editedPointer, SLOT( setShaftColor( const QColor& ) ) );
@@ -113,7 +113,7 @@ Pointer3DEditor::Pointer3DEditor( Pointer3D& editedPointer, QWidget* parent )
     connect( buCalibrationReset, SIGNAL( clicked() ), calibration.get(), SLOT( reset  () ) );
     connect( buCalibrationCapture, SIGNAL( clicked() ), this, SLOT( captureAndComputeCalibration() ) );
 
-    connect( calibration.get(), SIGNAL( computed( const Carna::Tools::Vector& ) ), &editedPointer, SLOT( setShaftDirection( const Carna::Tools::Vector& ) ) );
+    connect( calibration.get(), SIGNAL( computed( const Carna::base::Vector& ) ), &editedPointer, SLOT( setShaftDirection( const Carna::base::Vector& ) ) );
 
  // invert
 

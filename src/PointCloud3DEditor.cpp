@@ -11,7 +11,7 @@
 
 #include "PointCloud3DEditor.h"
 #include "PointCloud3D.h"
-#include <Carna/ColorPicker.h>
+#include <Carna/base/qt/ColorPicker.h>
 #include <QFormLayout>
 #include <QDoubleSpinBox>
 #include <QCheckBox>
@@ -34,7 +34,7 @@ PointCloud3DEditor::PointCloud3DEditor( PointCloud3D& editedObject, QWidget* par
 
  // colorAndSize color
 
-    Carna::ColorPicker* colorPicker = new Carna::ColorPicker( editedPointCloud.getPointColor(), true );
+    Carna::base::qt::ColorPicker* colorPicker = new Carna::base::qt::ColorPicker( editedPointCloud.getPointColor(), true );
     colorAndSize->addRow( "Color:", colorPicker );
 
     connect( colorPicker, SIGNAL( colorChanged( const QColor& ) ), &editedPointCloud, SLOT( setPointColor( const QColor& ) ) );

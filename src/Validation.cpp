@@ -16,7 +16,7 @@
 #include "RegistrationComponent.h"
 #include "RegistrationArguments.h"
 #include "RegistrationController.h"
-#include <Carna/common.h>
+#include <Carna/base/Math.h>
 
 
 
@@ -61,7 +61,7 @@ void Validation::perform( const RegistrationArguments& args
 
     double square = 0;
 
-    const Carna::Tools::Transformation registration = RegistrationClient( server )->getTransformation();
+    const Carna::base::Transformation registration = RegistrationClient( server )->getTransformation();
     for( unsigned int i = 0; i < args.recordedPoints.getList().size(); ++i )
     {
         const PointCloud::Point& recordedPoint = args.recordedPoints.getList()[ i ];

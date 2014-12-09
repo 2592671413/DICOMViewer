@@ -10,7 +10,7 @@
  */
 
 #include "CarnaContextProvider.h"
-#include <Carna/Model.h>
+#include <Carna/base/model/Scene.h>
 
 
 

@@ -11,7 +11,7 @@
 
 #pragma once
 
-#include <Carna/Vector3.h>
+#include <Carna/base/Vector3.h>
 #include <vector>
 
 
@@ -40,7 +40,7 @@ public:
 
     /** \brief	Instantiates.
       */
-    ScalarField3ui( const Carna::Tools::Vector3ui& size )
+    ScalarField3ui( const Carna::base::Vector3ui& size )
         : data( size.x * size.y * size.z )
         , size( size )
     {
@@ -83,7 +83,7 @@ public:
 
     /** \brief	Tells this volume's size.
       */
-    const Carna::Tools::Vector3ui& getSize() const
+    const Carna::base::Vector3ui& getSize() const
     {
         return size;
     }
@@ -100,7 +100,7 @@ private:
 
     /** \brief	Holds this volume's size.
       */
-    const Carna::Tools::Vector3ui size;
+    const Carna::base::Vector3ui size;
 
 
     /** \brief	Computes the position of a voxel within the \ref data "voxel buffer".

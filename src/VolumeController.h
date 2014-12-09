@@ -32,7 +32,7 @@ class QSpinBox;
 // VolumeController
 // ----------------------------------------------------------------------------------
 
-/** \brief  Provides \c Carna::VolumeController with some extra options.
+/** \brief  Provides \c Carna::base::model::VolumeController with some extra options.
   *
   * \see    VolumeView
   * \author Leonid Kostrykin
@@ -53,7 +53,7 @@ public:
     };
 
 
-    VolumeController( Carna::VolumeVisualization& view, Record::Server& server, VolumeView& tool );
+    VolumeController( Carna::VolumeRenderings::VolumeVisualization& view, Record::Server& server, VolumeView& tool );
 
     virtual ~VolumeController();
 
@@ -64,15 +64,15 @@ public slots:
 
     /** \brief
       * If \c CRA::LinkedCamera is currently being used,
-      * it is replaced by new instance of \c Carna::DefaultCamera through \ref releaseLinkedCamera.
-      * Otherwise the current camera is replaced by new instance of \c Carna::DefaultCamera through \ref setDefaultCamera.
+      * it is replaced by new instance of \c Carna::base::view::DefaultCamera through \ref releaseLinkedCamera.
+      * Otherwise the current camera is replaced by new instance of \c Carna::base::view::DefaultCamera through \ref setDefaultCamera.
       */
     void resetCamera();
 
 
 private:
 
-    Carna::VolumeVisualization& view;
+    Carna::VolumeRenderings::VolumeVisualization& view;
 
     Record::Server& server;
 
@@ -108,7 +108,7 @@ private:
 
 
     /** \brief
-      * Creates new \c Carna::DefaultCamera instance and utilizes it as current camera.
+      * Creates new \c Carna::base::view::DefaultCamera instance and utilizes it as current camera.
       */
     void setDefaultCamera();
 
@@ -136,7 +136,7 @@ private slots:
     /** \brief
       * If \c CRA::LinkedCamera is currently being used,
       * than first it is unlinked through \ref unlinkCamera,
-      * second \c Carna::DefaultCamera is utilized through \ref setDefaultCamera
+      * second \c Carna::base::view::DefaultCamera is utilized through \ref setDefaultCamera
       * and finally the \c CRA::LinkedCamera is destroyed.
       */
     void releaseLinkedCamera();
@@ -147,7 +147,7 @@ private slots:
     void setPreferredCameraMode( int );
 
     /** \brief
-      * Updates the projection mode of the current camera if it is instance of \c Carna::DefaultCamera.
+      * Updates the projection mode of the current camera if it is instance of \c Carna::base::view::DefaultCamera.
       * Otherwise, nothing happens.
       */
     void updateCamera();

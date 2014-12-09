@@ -13,6 +13,7 @@
 
 #include "Server.h"
 #include <Carna/Carna.h>
+#include <Carna/dicom/SeriesLoadingRequest.h>
 #include <QWidget>
 
 class Importer;
@@ -38,12 +39,12 @@ public:
 
 signals:
 
-    void created( Carna::Model* );
+    void created( Carna::base::model::Scene* );
 
 
 private:
 
-    typedef Carna::SeriesLoadingRequest SeriesLoadingRequest;
+    typedef Carna::dicom::SeriesLoadingRequest SeriesLoadingRequest;
 
     QTabWidget* const tabs;
 
@@ -54,7 +55,7 @@ private:
 
 private slots:
 
-    void disptach( const SeriesLoadingRequest& );
+    void dispatch( const SeriesLoadingRequest& );
     void closeImporter();
     void import();
     

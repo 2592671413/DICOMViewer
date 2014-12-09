@@ -37,6 +37,6 @@ public:
 
     virtual void doExport( Exporter& ) override;
 
-    virtual Carna::Model* doImport( Importer& ) override;
+    virtual Carna::base::model::Scene* doImport( Importer& ) override;
     
 }; // BinaryDumpProcessor

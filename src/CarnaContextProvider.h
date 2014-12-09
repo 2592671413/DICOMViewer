@@ -12,7 +12,7 @@
 #pragma once
 
 #include "CarnaContext.h"
-#include <Carna/Scene.h>
+#include <Carna/base/view/SceneProvider.h>
 
 
 
@@ -34,10 +34,10 @@ public:
 
     /** \copydoc Record::Provider::Provider
       */
-    CarnaContextProvider( Record::Server& server, Carna::Model* model )
+    CarnaContextProvider( Record::Server& server, Carna::base::model::Scene* model )
         : Provider( server )
         , myModel( model )
-        , myScene( new Carna::Scene( *model ) )
+        , myScene( new Carna::base::view::SceneProvider( *model ) )
     {
     }
 
@@ -46,12 +46,12 @@ public:
     virtual ~CarnaContextProvider();
 
 
-    virtual Carna::Scene& scene() const override
+    virtual Carna::base::view::SceneProvider& scene() const override
     {
         return *myScene;
     }
 
-    virtual Carna::Model& model() const override
+    virtual Carna::base::model::Scene& model() const override
     {
         return *myModel;
     }
@@ -59,8 +59,8 @@ public:
 
 private:
 
-    const std::unique_ptr< Carna::Model > myModel;
+    const std::unique_ptr< Carna::base::model::Scene > myModel;
 
-    const std::unique_ptr< Carna::Scene > myScene;
+    const std::unique_ptr< Carna::base::view::SceneProvider > myScene;
 
 };

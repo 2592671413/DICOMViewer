@@ -19,7 +19,7 @@
 #include <QMainWindow>
 #include <QThread>
 #include <vector>
-#include <Carna/noncopyable.h>
+#include <Carna/base/noncopyable.h>
 #include <Carna/Carna.h>
 
 class QTabWidget;
@@ -167,7 +167,7 @@ private:
       */
     QAction* const acquiringModelInfo;
 
-    /** \brief	Acquires the \c Carna::Object3D management component.
+    /** \brief	Acquires the \c Carna::base::model::Object3D management component.
       */
     QAction* const acquiringObjectsManager;
 
@@ -207,7 +207,7 @@ private slots:
 
     /** \brief	Initializes the user interface from a newly created Carna model.
       */
-    void init( Carna::Model* );
+    void init( Carna::base::model::Scene* );
 
 
     /** \brief  Releases current data model.
@@ -256,9 +256,9 @@ private slots:
       */
     void acquireModelInfo();
 
-    /** \brief  Acquires the \c Carna::Object3D management component.
+    /** \brief  Acquires the \c Carna::base::model::Object3D management component.
       *
-      * Disables user interface option for \c Carna::Object3D management component acquisition.
+      * Disables user interface option for \c Carna::base::model::Object3D management component acquisition.
       */
     void acquireObjectsManager();
 
@@ -268,9 +268,9 @@ private slots:
       */
     void modelInfoReleased();
 
-    /** \brief  Indicates that the \c Carna::Object3D management component has been released.
+    /** \brief  Indicates that the \c Carna::base::model::Object3D management component has been released.
       *
-      * Enabled user interface option for \c Carna::Object3D management component acquisition.
+      * Enabled user interface option for \c Carna::base::model::Object3D management component acquisition.
       */
     void objectsManagerReleased();
 

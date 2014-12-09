@@ -23,12 +23,12 @@
 #include "ICP.h"
 #include "Validation.h"
 #include "PointCloud.h"
-#include <Carna/Object3DChooser.h>
-#include <Carna/Object3D.h>
-#include <Carna/Position.h>
-#include <Carna/Transformation.h>
-#include <Carna/common.h>
-#include <Carna/CarnaException.h>
+#include <Carna/base/qt/Object3DChooser.h>
+#include <Carna/base/model/Object3D.h>
+#include <Carna/base/model/Position.h>
+#include <Carna/base/Transformation.h>
+#include <Carna/base/CarnaException.h>
+#include <Carna/base/Math.h>
 #include <QVBoxLayout>
 #include <QFormLayout>
 #include <QGroupBox>
@@ -52,7 +52,7 @@ RegistrationController::RegistrationController( Record::Server& server, Registra
     , component( component )
     , laRms( new QLabel( "" ) )
     , laTranslation( new QLabel( "" ) )
-    , customTranslationPoint( new Carna::Object3DChooser( CarnaContextClient( server ).model() ) )
+    , customTranslationPoint( new Carna::base::qt::Object3DChooser( CarnaContextClient( server ).model() ) )
     , customTranslationPointCloud( new PointCloudChooser( server ) )
     , buSetCustomTranslation( new QPushButton( "Set" ) )
     , controllerOptionsFrame( new QGroupBox( "" ) )
@@ -137,7 +137,7 @@ RegistrationController::~RegistrationController()
 
 
 void RegistrationController::setRegistration( CRA::Tool& referenceBase
-                                             , const Carna::Tools::Transformation& transformation
+                                             , const Carna::base::Transformation& transformation
                                              , double rms )
 {
     if( !this->registration.get() || &( **( this->registration ) ).getReferenceBase() != &referenceBase )
@@ -179,8 +179,8 @@ void RegistrationController::updateCustomTranslation()
 
      // find closest model point
         
-        using Carna::Tools::Vector;
-        using Carna::Tools::sq;
+        using Carna::base::Vector;
+        using Carna::base::Math;
         const Vector data_point = customTranslationPoint->selectedObject3D().position().toMillimeters();
         const Vector data_point_in_world_cs = registration.getTransformation().inverse() * data_point;
 
@@ -192,9 +192,9 @@ void RegistrationController::updateCustomTranslation()
         for( auto it = model_points.begin(); it != model_points.end(); ++it )
         {
             const PointCloud::Point& model_point = *it;
-            const double square_distance = sq( model_point.x() - data_point_in_world_cs.x() )
-                                         + sq( model_point.y() - data_point_in_world_cs.y() )
-                                         + sq( model_point.z() - data_point_in_world_cs.z() );
+            const double square_distance = Math::sq( model_point.x() - data_point_in_world_cs.x() )
+                                         + Math::sq( model_point.y() - data_point_in_world_cs.y() )
+                                         + Math::sq( model_point.z() - data_point_in_world_cs.z() );
 
             if( square_distance < min_square_distance )
             {

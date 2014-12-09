@@ -11,7 +11,7 @@
 
 #include "GulsunRadiusStore.h"
 #include "MedialnessGraph.h"
-#include <Carna/CarnaException.h>
+#include <Carna/base/CarnaException.h>
 
 
 

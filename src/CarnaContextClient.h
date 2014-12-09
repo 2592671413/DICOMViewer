@@ -12,7 +12,7 @@
 #pragma once
 
 #include "CarnaContext.h"
-#include <Carna/Scene.h>
+#include <Carna/base/view/SceneProvider.h>
 
 
 
@@ -39,12 +39,12 @@ public:
     {
     }
 
-    virtual Carna::Scene& scene() const override
+    virtual Carna::base::view::SceneProvider& scene() const override
     {
         return destination.scene();
     }
 
-    virtual Carna::Model& model() const override
+    virtual Carna::base::model::Scene& model() const override
     {
         return destination.model();
     }

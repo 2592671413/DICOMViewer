@@ -11,7 +11,7 @@
 
 #include "OptimizedVolumeDecorator.h"
 #include "CarnaContextClient.h"
-#include <Carna/Model.h>
+#include <Carna/base/model/Scene.h>
 
 
 
@@ -20,7 +20,7 @@
 // ----------------------------------------------------------------------------------
 
 OptimizedVolumeDecorator::OptimizedVolumeDecorator
-    ( Carna::Tools::Association< const Carna::Volume >* originalPtr
+    ( Carna::base::Association< const Carna::base::model::Volume >* originalPtr
     , float spacingX
     , float spacingY
     , float spacingZ )
@@ -38,7 +38,7 @@ OptimizedVolumeDecorator::OptimizedVolumeDecorator
     const unsigned int sy = static_cast< unsigned int>( std::ceil( BUFFER_SIZE_MILLIMETERS / spacingY ) + 0.1 );
     const unsigned int sz = static_cast< unsigned int>( std::ceil( BUFFER_SIZE_MILLIMETERS / spacingZ ) + 0.1 );
 
-    buffer.reset( new Carna::UInt16Volume( Carna::Tools::Vector3ui( sx, sy, sz ) ) );
+    buffer.reset( new Carna::base::model::UInt16Volume( Carna::base::Vector3ui( sx, sy, sz ) ) );
 }
 
 
@@ -47,7 +47,7 @@ OptimizedVolumeDecorator::~OptimizedVolumeDecorator()
 }
 
 
-const Carna::Volume& OptimizedVolumeDecorator::original() const
+const Carna::base::model::Volume& OptimizedVolumeDecorator::original() const
 {
     return *originalPtr->get();
 }
@@ -59,7 +59,7 @@ void OptimizedVolumeDecorator::uploadTexture() const
 }
 
 
-signed short OptimizedVolumeDecorator::operator()( const Carna::Tools::Vector3ui& at ) const
+signed short OptimizedVolumeDecorator::operator()( const Carna::base::Vector3ui& at ) const
 {
     return ( *this )( at.x, at.y, at.z );
 }
@@ -130,11 +130,11 @@ bool OptimizedVolumeDecorator::testCacheHit( unsigned int x, unsigned int y, uns
 
 void OptimizedVolumeDecorator::updateCache( unsigned int x, unsigned int y, unsigned int z ) const
 {
-    bufferX = Carna::Tools::clamp( signed( x ) - signed( buffer->size.x / 2 ), 0, signed( original().size.x - 1 - buffer->size.x ) );
-    bufferY = Carna::Tools::clamp( signed( y ) - signed( buffer->size.y / 2 ), 0, signed( original().size.y - 1 - buffer->size.y ) );
-    bufferZ = Carna::Tools::clamp( signed( z ) - signed( buffer->size.z / 2 ), 0, signed( original().size.z - 1 - buffer->size.z ) );
+    bufferX = Carna::base::Math::clamp( signed( x ) - signed( buffer->size.x / 2 ), 0, signed( original().size.x - 1 - buffer->size.x ) );
+    bufferY = Carna::base::Math::clamp( signed( y ) - signed( buffer->size.y / 2 ), 0, signed( original().size.y - 1 - buffer->size.y ) );
+    bufferZ = Carna::base::Math::clamp( signed( z ) - signed( buffer->size.z / 2 ), 0, signed( original().size.z - 1 - buffer->size.z ) );
 
-    const Carna::UInt16Volume* const original = dynamic_cast< const Carna::UInt16Volume* >( &this->original() );
+    const Carna::base::model::UInt16Volume* const original = dynamic_cast< const Carna::base::model::UInt16Volume* >( &this->original() );
     if( original != nullptr )
     {
         for( unsigned int z = bufferZ; z < bufferZ + buffer->size.z; ++z )

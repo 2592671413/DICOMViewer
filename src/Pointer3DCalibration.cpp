@@ -11,7 +11,7 @@
 
 #include "Pointer3DCalibration.h"
 #include "RegistrationClient.h"
-#include <Carna/RotatableObject3D.h>
+#include <Carna/base/model/RotatableObject3D.h>
 #include <TRTK/FitLine3D.hpp>
 
 
@@ -20,7 +20,7 @@
 // Pointer3DCalibration
 // ----------------------------------------------------------------------------------
 
-Pointer3DCalibration::Pointer3DCalibration( Carna::RotatableObject3D& pointer )
+Pointer3DCalibration::Pointer3DCalibration( Carna::base::model::RotatableObject3D& pointer )
     : pointer( pointer )
 {
 }
@@ -31,7 +31,7 @@ Pointer3DCalibration::~Pointer3DCalibration()
 }
 
 
-const Carna::Tools::Vector& Pointer3DCalibration::getShaftDirection()
+const Carna::base::Vector& Pointer3DCalibration::getShaftDirection()
 {
     if( !shaftDirection.get() )
     {
@@ -41,7 +41,7 @@ const Carna::Tools::Vector& Pointer3DCalibration::getShaftDirection()
 }
 
 
-const Carna::Tools::Vector& Pointer3DCalibration::getShaftDirection() const
+const Carna::base::Vector& Pointer3DCalibration::getShaftDirection() const
 {
     if( !shaftDirection.get() )
     {
@@ -53,7 +53,7 @@ const Carna::Tools::Vector& Pointer3DCalibration::getShaftDirection() const
 
 void Pointer3DCalibration::capture()
 {
-    const Carna::Tools::Vector& p_captured = pointer.position().toMillimeters();
+    const Carna::base::Vector& p_captured = pointer.position().toMillimeters();
 
     capturedPoints.push_back( p_captured );
 }
@@ -72,9 +72,9 @@ void Pointer3DCalibration::compute()
         throw std::logic_error( "Too few points captured." );
     }
 
-    const Carna::Tools::Vector& origin = capturedPoints[ 0 ];
+    const Carna::base::Vector& origin = capturedPoints[ 0 ];
 
-    std::vector< Carna::Tools::Vector > object_sapce_points( capturedPoints.size() );
+    std::vector< Carna::base::Vector > object_sapce_points( capturedPoints.size() );
     for( unsigned int i = 0; i < capturedPoints.size(); ++i )
     {
         object_sapce_points[ i ] = capturedPoints[ i ] - origin;
@@ -83,9 +83,9 @@ void Pointer3DCalibration::compute()
     TRTK::FitLine3D< double > fitLine3D( object_sapce_points );
     fitLine3D.compute();
 
-    Carna::Tools::Vector result = fitLine3D.getDirectionVector().normalized();
+    Carna::base::Vector result = fitLine3D.getDirectionVector().normalized();
     result = pointer.rotation().inverse() * result;
 
-    this->shaftDirection.reset( new Carna::Tools::Vector( result ) );
+    this->shaftDirection.reset( new Carna::base::Vector( result ) );
     emit computed( *shaftDirection );
 }

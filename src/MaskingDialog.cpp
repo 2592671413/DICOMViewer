@@ -13,11 +13,11 @@
 #include "PointCloudChooser.h"
 #include "PointCloud.h"
 #include "CarnaContextClient.h"
-#include <Carna/Vector3.h>
-#include <Carna/Model.h>
-#include <Carna/Volume.h>
-#include <Carna/Position.h>
-#include <Carna/CarnaException.h>
+#include <Carna/base/Vector3.h>
+#include <Carna/base/model/Scene.h>
+#include <Carna/base/model/Volume.h>
+#include <Carna/base/model/Position.h>
+#include <Carna/base/CarnaException.h>
 #include <QVBoxLayout>
 #include <QFormLayout>
 #include <QDialogButtonBox>
@@ -33,12 +33,12 @@
 // PointCloudMaskAdapter
 // ----------------------------------------------------------------------------------
 
-class PointCloudMaskAdapter : public Carna::ModelFactory::BinarizedScalarField
+class PointCloudMaskAdapter : public Carna::base::model::SceneFactory::BinarizedScalarField
 {
 
 public:
 
-    PointCloudMaskAdapter( Carna::Model& model, const PointCloud& points, QWidget* const parent = nullptr );
+    PointCloudMaskAdapter( Carna::base::model::Scene& model, const PointCloud& points, QWidget* const parent = nullptr );
 
 
     virtual bool operator()( unsigned int x, unsigned int y, unsigned int z ) const override
@@ -47,7 +47,7 @@ public:
         return mask[ index ];
     }
 
-    virtual bool operator()( const Carna::Tools::Vector3ui& position ) const override
+    virtual bool operator()( const Carna::base::Vector3ui& position ) const override
     {
         return ( *this )( position.x, position.y, position.z );
     }
@@ -55,7 +55,7 @@ public:
 
 private:
 
-    const Carna::Tools::Vector3ui size;
+    const Carna::base::Vector3ui size;
     std::vector< bool > mask;
 
     unsigned int getIndex( unsigned int x, unsigned int y, unsigned int z ) const
@@ -66,7 +66,7 @@ private:
 }; // PointCloudMaskAdapter
 
 
-PointCloudMaskAdapter::PointCloudMaskAdapter( Carna::Model& model, const PointCloud& points, QWidget* const parent )
+PointCloudMaskAdapter::PointCloudMaskAdapter( Carna::base::model::Scene& model, const PointCloud& points, QWidget* const parent )
     : size( model.volume().size )
     , mask( size.x * size.y * size.z, false )
 {
@@ -78,8 +78,8 @@ PointCloudMaskAdapter::PointCloudMaskAdapter( Carna::Model& model, const PointCl
 
     for( unsigned int pointIndex = 0; pointIndex < points.getList().size(); ++pointIndex )
     {
-        const Carna::Position position = points.getPoint( pointIndex );
-        const Carna::Tools::Vector millimeters = position.toMillimeters();
+        const Carna::base::model::Position position = points.getPoint( pointIndex );
+        const Carna::base::Vector millimeters = position.toMillimeters();
 
         const unsigned int x = static_cast< unsigned int >( millimeters.x() / model.spacingX() );
         const unsigned int y = static_cast< unsigned int >( millimeters.y() / model.spacingY() );
@@ -156,7 +156,7 @@ MaskingDialog::MaskingDialog( Record::Server& server, QWidget* parent, Qt::Windo
 
 void MaskingDialog::createMask( PointCloud& pointCloud )
 {
-    Carna::Model& model = CarnaContextClient( server ).model();
+    Carna::base::model::Scene& model = CarnaContextClient( server ).model();
 
     QApplication::setOverrideCursor( Qt::WaitCursor );
     QApplication::processEvents();

@@ -60,14 +60,14 @@ public:
     {
         
         const NormalizedEdgeResponse& context;
-        const Carna::Tools::Vector position;
-        const Carna::Tools::Vector radialDirection;
+        const Carna::base::Vector position;
+        const Carna::base::Vector radialDirection;
         const double maximumResponse;
 
         RadialSampler
             ( const NormalizedEdgeResponse& context
-            , const Carna::Tools::Vector& position
-            , const Carna::Tools::Vector& radialVector
+            , const Carna::base::Vector& position
+            , const Carna::base::Vector& radialVector
             , double minimumContrast = 1. );
 
         double sample( double radius ) const;

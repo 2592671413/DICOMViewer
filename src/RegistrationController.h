@@ -18,7 +18,7 @@
 #include "Server.h"
 #include "Component.h"
 #include <Carna/Carna.h>
-#include <Carna/Transformation.h>
+#include <Carna/base/Transformation.h>
 #include <CRA/Tool.h>
 #include <QWidget>
 
@@ -58,7 +58,7 @@ public:
     virtual ~RegistrationController();
 
 
-    void setRegistration( CRA::Tool& referenceBase, const Carna::Tools::Transformation&, double rms );
+    void setRegistration( CRA::Tool& referenceBase, const Carna::base::Transformation&, double rms );
 
 
     /** \brief	References currently selected method.
@@ -97,7 +97,7 @@ private:
       */
     QLabel* laTranslation;
 
-    Carna::Object3DChooser* const customTranslationPoint;
+    Carna::base::qt::Object3DChooser* const customTranslationPoint;
 
     PointCloudChooser* const customTranslationPointCloud;
 

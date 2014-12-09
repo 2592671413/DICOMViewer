@@ -14,7 +14,7 @@
 #include "MedialnessGraph.h"
 #include "Dijkstra.h"
 #include "GulsunRadiusStore.h"
-#include <Carna/Polyline.h>
+#include <Carna/base/view/Polyline.h>
 #include <QObject>
 
 class QDataStream;
@@ -135,7 +135,7 @@ private:
 
     GulsunRadiusStore radiuses;
 
-    std::vector< Carna::Polyline* > centerlines;
+    std::vector< Carna::base::view::Polyline* > centerlines;
     double currentMinimumLengthToRadiusRatio;
 
     std::vector< std::vector< MedialnessGraphSupport::NodeHash > > significantPaths;

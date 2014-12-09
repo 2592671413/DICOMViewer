@@ -102,7 +102,7 @@ private:
     QAction* const cloudExtracting; ///< \brief  Opens a new \ref SurfaceExtractionDialog "surface extraction dialog".
     QAction* const cloudBuilding;   ///< \brief  Opens a new \ref PointCloudCreator "point cloud composer".
     QAction* const object3dCreation;///< \brief  Creates a new \ref PointCloud3D "visual representation" of the selected point cloud.
-    QAction* const point3dCreation; ///< \brief  Creates one \c Carna::Point3D instance for each point within the selected point cloud.
+    QAction* const point3dCreation; ///< \brief  Creates one \c Carna::base::view::Point3D instance for each point within the selected point cloud.
 
     /** \brief	References the \ref PointRecorder "point recorder dialog" if it is open or is \c nullptr.
       */
@@ -190,7 +190,7 @@ private slots:
       */
     void create3dObject();
     
-    /** \brief	Creates one \c Carna::Point3D instance for each point within the selected point cloud.
+    /** \brief	Creates one \c Carna::base::view::Point3D instance for each point within the selected point cloud.
       */
     void create3dPoints();
     

@@ -19,7 +19,7 @@
 // Object3DEditor
 // ----------------------------------------------------------------------------------
 
-Object3DEditor::Object3DEditor( Carna::Object3D& editedObject, QWidget* parent )
+Object3DEditor::Object3DEditor( Carna::base::model::Object3D& editedObject, QWidget* parent )
     : QMainWindow( parent )
     , editedObject( editedObject )
     , pimpl( new Details( *this ) )

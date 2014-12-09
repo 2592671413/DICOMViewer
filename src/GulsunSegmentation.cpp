@@ -11,7 +11,7 @@
 
 #include "GulsunSegmentation.h"
 #include <TRTK/RegionGrowing3D.hpp>
-#include <Carna/CarnaException.h>
+#include <Carna/base/CarnaException.h>
 
 
 
@@ -32,8 +32,8 @@ unsigned int ceil2uint( T x )
 // ----------------------------------------------------------------------------------
 
 bool GulsunSegmentation::Result::less::operator()
-    ( const Carna::Tools::Vector3ui& v1
-    , const Carna::Tools::Vector3ui& v2 ) const
+    ( const Carna::base::Vector3ui& v1
+    , const Carna::base::Vector3ui& v2 ) const
 {
     if( v1.x == v2.x )
     {
@@ -58,12 +58,12 @@ bool GulsunSegmentation::Result::less::operator()
 // GulsunSegmentation :: Result
 // ----------------------------------------------------------------------------------
 
-Carna::BufferedMaskAdapter::BinaryMask::ValueType GulsunSegmentation::Result::operator()
+Carna::base::model::BufferedMaskAdapter::BinaryMask::ValueType GulsunSegmentation::Result::operator()
     ( unsigned int x
     , unsigned int y
     , unsigned int z ) const
 {
-    const auto itr = container.find( Carna::Tools::Vector3ui( x, y, z ) );
+    const auto itr = container.find( Carna::base::Vector3ui( x, y, z ) );
 
     if( itr == container.end() )
     {
@@ -114,7 +114,7 @@ void GulsunSegmentation::cancel()
 }
 
 
-Carna::BufferedMaskAdapter::BinaryMask& GulsunSegmentation::getMask() const
+Carna::base::model::BufferedMaskAdapter::BinaryMask& GulsunSegmentation::getMask() const
 {
     CARNA_ASSERT( mask.get() != nullptr );
 
@@ -122,7 +122,7 @@ Carna::BufferedMaskAdapter::BinaryMask& GulsunSegmentation::getMask() const
 }
 
 
-Carna::BufferedMaskAdapter::BinaryMask* GulsunSegmentation::takeMask()
+Carna::base::model::BufferedMaskAdapter::BinaryMask* GulsunSegmentation::takeMask()
 {
     CARNA_ASSERT( mask.get() != nullptr );
 
@@ -191,7 +191,7 @@ void GulsunSegmentation::compute()
         emit maximumChanged( 0 );
         QApplication::processEvents();
 
-        mask.reset( new Carna::BufferedMaskAdapter::BinaryMask( gulsun.graph.model.volume().size, *result ) );
+        mask.reset( new Carna::base::model::BufferedMaskAdapter::BinaryMask( gulsun.graph.model.volume().size, *result ) );
     }
 
     emit finished();
@@ -210,7 +210,7 @@ void GulsunSegmentation::segmentInterval
 
     for( unsigned int i = first; i <= last; ++i )
     {
-        const Carna::Position position = gulsun.graph.getNodePosition( branch[ i ] );
+        const Carna::base::model::Position position = gulsun.graph.getNodePosition( branch[ i ] );
         double intensity = gulsun.graph.model.intensityAt( position );
         intensities[ i - first ] = intensity;
     }
@@ -231,7 +231,7 @@ void GulsunSegmentation::segmentInterval
     std::for_each( intensities.begin(), intensities.end(),
         [&]( double intensity )
         {
-            sq_differences_sum += Carna::Tools::sq( intensity - mean_intensity );
+            sq_differences_sum += Carna::base::Math::sq( intensity - mean_intensity );
         }
     );
 
@@ -241,14 +241,14 @@ void GulsunSegmentation::segmentInterval
 
     const int min_huv = static_cast< int >( mean_intensity - intensityTolerance() * standard_deviation );
     ClippedVolumeMask::Setup mask_setup( gulsun.graph.model, min_huv, 3071 );
-    ClippedVolumeMask mask( [&]( const Carna::Tools::Vector3ui& voxel )->bool
+    ClippedVolumeMask mask( [&]( const Carna::base::Vector3ui& voxel )->bool
         {
             return result->container.find( voxel ) == result->container.end();
         }
         , mask_setup );
 
     std::deque< TRTK::Coordinate< unsigned > > seed_points;
-    Carna::Tools::Vector edge_support = gulsun.graph.getNodePosition( branch[ first ] ).toMillimeters();
+    Carna::base::Vector edge_support = gulsun.graph.getNodePosition( branch[ first ] ).toMillimeters();
 
     double lastRadius = -std::numeric_limits< double >::infinity();
     double nextRadius = gulsun.edgeRadiuses().radius( branch[ first ], branch[ first + 1 ] );
@@ -292,9 +292,9 @@ void GulsunSegmentation::segmentInterval
 
      // ----------------------------------------------------------------------------------
 
-        const Carna::Position p0 = gulsun.graph.getNodePosition( branch[ node_index + 1 ] );
-        const Carna::Tools::Vector edge_destination = p0.toMillimeters();
-        const Carna::Tools::Vector edge_way = edge_destination - edge_support;
+        const Carna::base::model::Position p0 = gulsun.graph.getNodePosition( branch[ node_index + 1 ] );
+        const Carna::base::Vector edge_destination = p0.toMillimeters();
+        const Carna::base::Vector edge_way = edge_destination - edge_support;
 
         mask_setup.addLine( ClippedVolumeMask::Line( edge_support, edge_way, smoothedRadius * radiusMultiplier() ) );
 
@@ -302,7 +302,7 @@ void GulsunSegmentation::segmentInterval
 
      // compute and save seed point
 
-        const auto positionToVoxel = [&]( const Carna::Position& p )->TRTK::Coordinate< unsigned >
+        const auto positionToVoxel = [&]( const Carna::base::model::Position& p )->TRTK::Coordinate< unsigned >
         {
             return TRTK::Coordinate< unsigned >
                 ( unsigned( p.toVolumeUnits().x() * ( gulsun.graph.model.volume().size.x - 1 ) + 0.5 )
@@ -317,10 +317,10 @@ void GulsunSegmentation::segmentInterval
      // ----------------------------------------------------------------------------------
      // rasterize edge
 
-        const Carna::Position p1 = gulsun.graph.getNodePosition( branch[ node_index ] );
+        const Carna::base::model::Position p1 = gulsun.graph.getNodePosition( branch[ node_index ] );
         const TRTK::Coordinate< unsigned > sink_point = positionToVoxel( p1 );
-        result->container.insert( Carna::Tools::Vector3ui( seed_point.x(), seed_point.y(), seed_point.z() ) );
-        result->container.insert( Carna::Tools::Vector3ui( sink_point.x(), sink_point.y(), sink_point.z() ) );
+        result->container.insert( Carna::base::Vector3ui( seed_point.x(), seed_point.y(), seed_point.z() ) );
+        result->container.insert( Carna::base::Vector3ui( sink_point.x(), sink_point.y(), sink_point.z() ) );
         */
     }
 
@@ -347,7 +347,7 @@ void GulsunSegmentation::segmentInterval
         unsigned int duplicates = 0;
         for( unsigned int i = 0; i < region.size(); ++i )
         {
-            if( !result->container.insert( Carna::Tools::Vector3ui
+            if( !result->container.insert( Carna::base::Vector3ui
                 ( region[ i ].x()
                 , region[ i ].y()
                 , region[ i ].z() ) ).second )

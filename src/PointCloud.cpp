@@ -12,7 +12,7 @@
 #include "PointCloud.h"
 #include "PointCloudsClient.h"
 #include "CarnaContextClient.h"
-#include <Carna/Position.h>
+#include <Carna/base/model/Position.h>
 #include <sstream>
 #include <QApplication>
 #include <QProgressDialog>
@@ -62,20 +62,20 @@ const PointCloud::PointList& PointCloud::getList() const
 }
 
 
-Carna::Position PointCloud::getPoint( unsigned int index ) const
+Carna::base::model::Position PointCloud::getPoint( unsigned int index ) const
 {
-    Carna::Model& model = CarnaContextClient( server ).model();
+    Carna::base::model::Scene& model = CarnaContextClient( server ).model();
     switch( getFormat() )
     {
 
         case PointCloud::millimeters:
         {
-            return Carna::Position::fromMillimeters( model, list[ index ] );
+            return Carna::base::model::Position::fromMillimeters( model, list[ index ] );
         }
 
         case PointCloud::volumeUnits:
         {
-            return Carna::Position::fromVolumeUnits( model, list[ index ] );
+            return Carna::base::model::Position::fromVolumeUnits( model, list[ index ] );
         }
 
         default:
@@ -116,9 +116,9 @@ void PointCloud::convert( PointCloud::Unit newUnit, QWidget* modalParent )
     QProgressDialog progress( "Converting point cloud...", "", 0, list.size() - 1, modalParent );
     progress.setWindowModality( Qt::WindowModal );
     progress.setCancelButton( nullptr );
-    Carna::Model& model = CarnaContextClient( server ).model();
+    Carna::base::model::Scene& model = CarnaContextClient( server ).model();
 
-    Carna::Position position( model );
+    Carna::base::model::Position position( model );
     for( auto it = list.begin(); it != list.end(); ++it )
     {
         Point& point = *it;

@@ -11,17 +11,17 @@
 
 #include "MainWindow.h"
 #include <QFileInfo>
-#include <Carna/Application.h>
+#include <Carna/base/Application.h>
 #include <Carna/Version.h>
-#include <Carna/Model.h>
-#include <Carna/ModelFactory.h>
+#include <Carna/base/view/SceneProvider.h>
+#include <Carna/base/model/SceneFactory.h>
 #include <sstream>
 #include <QMessageBox>
 #include <QDir>
 
 // ----------------------------------------------------------------------------------
 
-CARNA_ASSERT_API_VERSION( 2, 2, 2 )
+CARNA_ASSERT_API_VERSION( 2, 5, 0 )
 
 // ----------------------------------------------------------------------------------
 
@@ -31,13 +31,13 @@ CARNA_ASSERT_API_VERSION( 2, 2, 2 )
 // DicomViewer
 // ----------------------------------------------------------------------------------
 
-class DicomViewer : public Carna::Application
+class DicomViewer : public Carna::base::Application
 {
 
 public:
 
     DicomViewer( int argc, char** argv )
-        : Carna::Application( argc, argv )
+        : Carna::base::Application( argc, argv )
     {
         setApplicationName( "DICOM Viewer" );
 
@@ -57,7 +57,7 @@ public:
     {
         try
         {
-            return Carna::Application::notify( receiver, ev );
+            return Carna::base::Application::notify( receiver, ev );
         }
         catch( const std::bad_alloc& )
         {
@@ -87,7 +87,7 @@ int main( int argc, char** argv )
 
     // check max 3D texture size
 
-    const unsigned int max3dTextureSize = Carna::Model::max3DTextureSize();
+    const unsigned int max3dTextureSize = Carna::base::view::SceneProvider::max3DTextureSize();
     const unsigned int max3dTextureSizeMin = 512;
 
     if( max3dTextureSize < max3dTextureSizeMin )

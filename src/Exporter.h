@@ -12,7 +12,7 @@
 #pragma once
 
 #include "Server.h"
-#include <Carna/noncopyable.h>
+#include <Carna/base/noncopyable.h>
 #include <QFile>
 #include <set>
 

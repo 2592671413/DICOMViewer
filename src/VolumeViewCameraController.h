@@ -11,8 +11,8 @@
 
 #pragma once
 
-#include <Carna/noncopyable.h>
-#include <Carna/VolumeVisualizationCameraController.h>
+#include <Carna/base/noncopyable.h>
+#include <Carna/VolumeRenderings/VolumeVisualizationCameraController.h>
 #include <QTimer>
 #include <QTime>
 
@@ -22,7 +22,7 @@
 // VolumeViewCameraController
 // ----------------------------------------------------------------------------------
 
-class VolumeViewCameraController : public Carna::VolumeVisualizationCameraController
+class VolumeViewCameraController : public Carna::VolumeRenderings::VolumeVisualizationCameraController
 {
 
     Q_OBJECT
@@ -31,9 +31,9 @@ class VolumeViewCameraController : public Carna::VolumeVisualizationCameraContro
 
 public:
 
-    explicit VolumeViewCameraController( Carna::VolumeVisualization& view, QObject* parent = nullptr );
+    explicit VolumeViewCameraController( Carna::VolumeRenderings::VolumeVisualization& view, QObject* parent = nullptr );
 
-    virtual void event( Carna::Visualization& sourceModule, QEvent* event ) override;
+    virtual void event( Carna::base::Visualization& sourceModule, QEvent* event ) override;
 
 
     int getStepsPerSecond() const;

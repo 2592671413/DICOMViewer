@@ -59,9 +59,13 @@ include( $ENV{MEDITEC_LIBS}/GLEW/1.7.0/configure.cmake )
 
 include( $ENV{MEDITEC_LIBS}/Carna/2.5.0/configure.cmake )
 
+# Carna-DICOM
+
+include( $ENV{MEDITEC_LIBS}/Carna-DICOM/0.1.0/configure.cmake )
+
 # CRA
 
-include( $ENV{MEDITEC_LIBS}/CRA/1.15.0/configure.cmake )
+include( $ENV{MEDITEC_LIBS}/CRA/1.16.0/configure.cmake )
 
 # Project
 
@@ -339,6 +343,7 @@ target_link_libraries( ${TARGET_NAME}
 			${QT_LIBRARIES}
 			${TRTK_LIBLIST}
 			${CARNA_LIBLIST}
+			${CARNA_DICOM_LIBLIST}
 			${CRA_LIBLIST}
 		)
 

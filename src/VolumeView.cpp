@@ -12,11 +12,11 @@
 #include "VolumeView.h"
 #include "VolumeController.h"
 #include "CarnaContextClient.h"
-#include <Carna/VolumeVisualization.h>
-#include <Carna/XRay.h>
-#include <Carna/Display.h>
-#include <Carna/MIP/MaximumIntensityProjection.h>
-#include <Carna/AbsorptionProjection/AbsorptionProjection.h>
+#include <Carna/base/qt/Display.h>
+#include <Carna/VolumeRenderings/DefaultVolumeVisualization.h>
+#include <Carna/VolumeRenderings/DRR/XRay.h>
+#include <Carna/VolumeRenderings/MIP/MaximumIntensityProjection.h>
+#include <Carna/VolumeRenderings/DVR/DirectVolumeRendering.h>
 
 
 
@@ -30,18 +30,21 @@ const std::string RegistredComponent< VolumeView >::name = "Volume View";
 
 VolumeView::VolumeView( Record::Server& server, ComponentWindowFactory& factory )
     : RegistredComponent< VolumeView >( server, factory )
-    , view( new Carna::VolumeVisualization() )
+    , view( new Carna::VolumeRenderings::DefaultVolumeVisualization() )
 {
     ComponentEmbeddable& viewWindow = createVitalEmbeddable
-        ( new Carna::Display( view, CarnaContextClient( server ).scene() )
+        ( new Carna::base::qt::Display( view, CarnaContextClient( server ).scene() )
         , SingleEmbeddablePlacer::instance()
         , "" );
 
     viewWindow.resize( QSize( 400, 400 ) );
 
-    Carna::XRay* const xray = new Carna::XRay( CarnaContextClient( server ).model() );
-    Carna::MIP::MaximumIntensityProjection* const mip = new Carna::MIP::MaximumIntensityProjection();
-    Carna::AbsorptionProjection::AbsorptionProjection* const absorption = new Carna::AbsorptionProjection::AbsorptionProjection( CarnaContextClient( server ).model() );
+    Carna::VolumeRenderings::DRR::XRay* const xray
+        = new Carna::VolumeRenderings::DRR::XRay( CarnaContextClient( server ).model() );
+    Carna::VolumeRenderings::MIP::MaximumIntensityProjection* const mip
+        = new Carna::VolumeRenderings::MIP::MaximumIntensityProjection();
+    Carna::VolumeRenderings::DVR::DirectVolumeRendering* const absorption
+        = new Carna::VolumeRenderings::DVR::DirectVolumeRendering( CarnaContextClient( server ).model() );
 
  // ----------------------------------------------------------------------------------
 

@@ -13,7 +13,7 @@
 #include "PointCloudComposerSlot.h"
 #include "PointCloud.h"
 #include "ComponentEmbeddable.h"
-#include <Carna/Object3D.h>
+#include <Carna/base/model/Object3D.h>
 #include <QVBoxLayout>
 #include <QToolBar>
 #include <QIcon>
@@ -93,14 +93,14 @@ void PointCloudComposer::accept()
 {
     for( SlotList::iterator it = slotList.begin(); it != slotList.end(); ++it )
     {
-        const Carna::Object3DChooser& chooser = ( **it ).getObjectChooser();
+        const Carna::base::qt::Object3DChooser& chooser = ( **it ).getObjectChooser();
 
         if( !chooser.isObject3DSelected() )
         {
             continue;
         }
 
-        const Carna::Object3D& object = chooser.selectedObject3D();
+        const Carna::base::model::Object3D& object = chooser.selectedObject3D();
 
         cloud.getList().push_back( object.position().toVolumeUnits() );
     }

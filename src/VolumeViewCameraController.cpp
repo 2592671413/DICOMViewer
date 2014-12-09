@@ -11,9 +11,9 @@
 
 #include "glew.h"
 #include "VolumeViewCameraController.h"
-#include <Carna/VolumeVisualization.h>
-#include <Carna/Renderer.h>
-#include <Carna/DefaultCamera.h>
+#include <Carna/VolumeRenderings/VolumeVisualization.h>
+#include <Carna/base/view/Renderer.h>
+#include <Carna/base/view/DefaultCamera.h>
 #include <QEvent>
 
 
@@ -22,7 +22,7 @@
 // VolumeViewCameraController
 // ----------------------------------------------------------------------------------
 
-VolumeViewCameraController::VolumeViewCameraController( Carna::VolumeVisualization& view, QObject* parent )
+VolumeViewCameraController::VolumeViewCameraController( Carna::VolumeRenderings::VolumeVisualization& view, QObject* parent )
     : VolumeVisualizationCameraController( view, parent )
     , autoRotate( false )
     , secondsPerRotation( 10. )
@@ -33,7 +33,7 @@ VolumeViewCameraController::VolumeViewCameraController( Carna::VolumeVisualizati
 }
 
 
-void VolumeViewCameraController::event( Carna::Visualization& sourceModule, QEvent* event )
+void VolumeViewCameraController::event( Carna::base::Visualization& sourceModule, QEvent* event )
 {
     if( autoRotate )
     {
@@ -125,11 +125,11 @@ void VolumeViewCameraController::doRotationStep()
     const double degreesPerSecond = 360. / secondsPerRotation;
     const double degreesPerStep = degreesPerSecond * secondsPerStep;
 
-    Carna::DefaultCamera* const camera = dynamic_cast< Carna::DefaultCamera* >( &module.renderer().camera() );
+    Carna::base::view::DefaultCamera* const camera = dynamic_cast< Carna::base::view::DefaultCamera* >( &module.renderer().camera() );
     if( camera != nullptr )
     {
-        Carna::Tools::Transformation rotation;
-        rotation.rotateY( degreesPerStep, Carna::Tools::Transformation::DEGREES );
+        Carna::base::Transformation rotation;
+        rotation.rotateY( degreesPerStep, Carna::base::Transformation::DEGREES );
         camera->rotate( rotation );
     }
 }

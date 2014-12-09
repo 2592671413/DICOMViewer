@@ -47,7 +47,7 @@ void PointToPointRegistration::perform( const RegistrationArguments& args
 
     trafo.compute();
 
-    Carna::Tools::Transformation result( trafo.getTransformationMatrix() );
+    Carna::base::Transformation result( trafo.getTransformationMatrix() );
 
     controller.setRegistration( args.referenceBase, trafo.getTransformationMatrix(), trafo.getRMS() );
 }

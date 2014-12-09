@@ -17,9 +17,9 @@
 
 #include "ObjectsListItem.h"
 #include "CarnaContextClient.h"
-#include <Carna/Object3D.h>
-#include <Carna/Object3DEvent.h>
-#include <Carna/Model.h>
+#include <Carna/base/model/Object3D.h>
+#include <Carna/base/model/Object3DEvent.h>
+#include <Carna/base/model/Scene.h>
 
 
 
@@ -27,7 +27,7 @@
 // ObjectsListItem
 // ----------------------------------------------------------------------------------
 
-ObjectsListItem::ObjectsListItem( Record::Server& server, Carna::Object3D& object )
+ObjectsListItem::ObjectsListItem( Record::Server& server, Carna::base::model::Object3D& object )
     : object( object )
 {
     setText( QString::fromStdString( object.name() ) );
@@ -46,9 +46,9 @@ void ObjectsListItem::setText( const QString& text )
 }
 
 
-void ObjectsListItem::processObjectsEvent( Carna::Object3DEvent& ev )
+void ObjectsListItem::processObjectsEvent( Carna::base::model::Object3DEvent& ev )
 {
-    if( ev.mightAffect( Carna::Object3DEvent::shape ) )
+    if( ev.mightAffect( Carna::base::model::Object3DEvent::shape ) )
     {
         setIcon( object.icon() );
     }

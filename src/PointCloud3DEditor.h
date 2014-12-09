@@ -25,7 +25,7 @@ class PointCloud3D;
 // PointCloud3DEditor
 // ----------------------------------------------------------------------------------
 
-/** \brief  Visual \c Carna::Point3D editor
+/** \brief  Visual \c Carna::base::view::Point3D editor
   *
   * \author Leonid Kostrykin
   * \date   8.8.12

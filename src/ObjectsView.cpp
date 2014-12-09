@@ -11,8 +11,8 @@
 
 #include "ObjectsView.h"
 #include "CarnaContextClient.h"
-#include <Carna/Object3DEvent.h>
-#include <Carna/Model.h>
+#include <Carna/base/model/Object3DEvent.h>
+#include <Carna/base/model/Scene.h>
 #include <QApplication>
 #include <algorithm>
 
@@ -29,12 +29,12 @@ ObjectsView::ObjectsView( Record::Server& server, QWidget* parent )
 }
 
 
-void ObjectsView::addObject( Carna::Object3D& )
+void ObjectsView::addObject( Carna::base::model::Object3D& )
 {
 }
 
 
-void ObjectsView::removeObject( Carna::Object3D& )
+void ObjectsView::removeObject( Carna::base::model::Object3D& )
 {
 }
 
@@ -48,7 +48,7 @@ void ObjectsView::processObjectsEvent( Objects3DEvent& ev )
 {
     ObjectsList::processObjectsEvent( ev );
 
-    if( ev.mightAffect( Carna::Object3DEvent::existence ) )
+    if( ev.mightAffect( Carna::base::model::Object3DEvent::existence ) )
     {
         completeList();
     }
@@ -59,13 +59,13 @@ void ObjectsView::completeList()
 {
     QApplication::setOverrideCursor( Qt::WaitCursor );
 
-    std::vector< Carna::Object3D* > objects;
+    std::vector< Carna::base::model::Object3D* > objects;
     fetchObjects( objects );
 
-    Carna::Model& model = CarnaContextClient( server ).model();
+    Carna::base::model::Scene& model = CarnaContextClient( server ).model();
     for( unsigned int i = 0; i < model.objectsCount(); ++i )
     {
-        Carna::Object3D& object = model.objectByIndex( i );
+        Carna::base::model::Object3D& object = model.objectByIndex( i );
         if( std::find( objects.begin(), objects.end(), &object ) == objects.end() )
         {
             ObjectsList::addObject( object );

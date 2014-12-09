@@ -12,7 +12,7 @@
 #pragma once
 
 #include "Localizer.h"
-#include <Carna/CarnaException.h>
+#include <Carna/base/CarnaException.h>
 #include <CRA/DefaultLocalizer.h>
 #include <CRA/LazyLocalizer.h>
 #include <set>

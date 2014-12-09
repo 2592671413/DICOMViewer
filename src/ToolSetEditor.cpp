@@ -259,7 +259,7 @@ void ToolSetEditor::load()
                         throw unexpected_format_exception();
                     }
 
-                    rb.setOffset( Carna::Tools::Vector( dx, dy, dz ) );
+                    rb.setOffset( Carna::base::Vector( dx, dy, dz ) );
                 }
             }
 

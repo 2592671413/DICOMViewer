@@ -13,8 +13,7 @@
 
 #include "Gulsun.h"
 #include "ClippedVolumeMask.h"
-#include <Carna/Mask.h>
-#include <Carna/BufferedMaskAdapter.h>
+#include <Carna/base/model/BufferedMaskAdapter.h>
 
 
 
@@ -39,9 +38,9 @@ public:
 
  // ----------------------------------------------------------------------------------
 
-    Carna::BufferedMaskAdapter::BinaryMask& getMask() const;
+    Carna::base::model::BufferedMaskAdapter::BinaryMask& getMask() const;
 
-    Carna::BufferedMaskAdapter::BinaryMask* takeMask();
+    Carna::base::model::BufferedMaskAdapter::BinaryMask* takeMask();
 
     double intensityTolerance() const;
 
@@ -102,15 +101,15 @@ private:
 
  // ----------------------------------------------------------------------------------
 
-    struct Result : public Carna::ScalarField< Carna::BufferedMaskAdapter::BinaryMask::ValueType >
+    struct Result : public Carna::base::model::ScalarField< Carna::base::model::BufferedMaskAdapter::BinaryMask::ValueType >
     {
 
         struct less
         {
-            bool operator()( const Carna::Tools::Vector3ui&, const Carna::Tools::Vector3ui& ) const;
+            bool operator()( const Carna::base::Vector3ui&, const Carna::base::Vector3ui& ) const;
         };
 
-        typedef std::set< Carna::Tools::Vector3ui, less > Container;
+        typedef std::set< Carna::base::Vector3ui, less > Container;
 
         Container container;
     
@@ -125,6 +124,6 @@ private:
 
     std::unique_ptr< Result > result;
 
-    std::unique_ptr< Carna::BufferedMaskAdapter::BinaryMask > mask;
+    std::unique_ptr< Carna::base::model::BufferedMaskAdapter::BinaryMask > mask;
 
 }; // GulsunSegmentation

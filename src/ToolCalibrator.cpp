@@ -10,7 +10,7 @@
  */
 
 #include "ToolCalibrator.h"
-#include <Carna/Transformation.h>
+#include <Carna/base/Transformation.h>
 #include <QPushButton>
 #include <QTimer>
 #include <QLabel>
@@ -49,7 +49,7 @@ ToolCalibrator::~ToolCalibrator()
 
 void ToolCalibrator::capture()
 {
-    const Carna::Tools::Transformation& bearing = tool.getOrientation();
+    const Carna::base::Transformation& bearing = tool.getOrientation();
 
     if( !tool.isVisible() )
     {
@@ -75,7 +75,7 @@ void ToolCalibrator::begin()
     rotations.clear();
 
     connect( shotTimer.get(), SIGNAL( timeout() ), this, SLOT( capture() ) );
-    tool.setOffset( Carna::Tools::Vector( 0, 0, 0 ) );
+    tool.setOffset( Carna::base::Vector( 0, 0, 0 ) );
 
     shotTimer->start();
 }
@@ -95,7 +95,7 @@ void ToolCalibrator::end()
 
         const Vector translation = pivotCalibration.getTranslation();
 
-        tool.setOffset( Carna::Tools::Vector( translation ) );
+        tool.setOffset( Carna::base::Vector( translation ) );
 
         laState->setText( "Offset: " + QString::number( translation.norm() ) + " mm" );
 

@@ -18,7 +18,7 @@ class ComponentWindowFactory;
 class ViewWindow;
 
 #include <QObject>
-#include <Carna/noncopyable.h>
+#include <Carna/base/noncopyable.h>
 
 
 

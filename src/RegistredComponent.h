@@ -16,7 +16,7 @@
   */
 
 #include "Component.h"
-#include <Carna/Singleton.h>
+#include <Carna/base/Singleton.h>
 
 
 
@@ -107,7 +107,7 @@ public:
   * \author Leonid Kostrykin
   * \date   9.3.2011
   */
-class ComponentRegister : public Carna::Tools::Singleton< ComponentRegister >
+class ComponentRegister : public Carna::base::Singleton< ComponentRegister >
 {
 
 public:

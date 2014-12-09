@@ -17,7 +17,7 @@
 #pragma warning( push )
 #pragma warning( disable : 4290 )
 
-#include <Carna/noncopyable.h>
+#include <Carna/base/noncopyable.h>
 #include <map>
 #include <queue>
 

@@ -49,8 +49,8 @@ void Medialness::setScales( double minScale, double maxScale, unsigned int scale
 
 
 void Medialness::compute
-    ( const Carna::Tools::Vector& position
-    , const Carna::Tools::Vector& vesselDirection
+    ( const Carna::base::Vector& position
+    , const Carna::base::Vector& vesselDirection
     , double& medialness
     , double& radius
     , double minimumMedialness ) const
@@ -82,7 +82,7 @@ void Medialness::compute
             medialness = response;
             radius = r;
         }
-        if( Carna::Tools::isEqual( medialness, 1. ) )
+        if( Carna::base::Math::isEqual( medialness, 1. ) )
         {
             break;
         }
@@ -102,17 +102,17 @@ void Medialness::deleteDirectionData() const
 
 
 void Medialness::updateDirectionData
-    ( const Carna::Tools::Vector& position
-    , const Carna::Tools::Vector& vesselDirection ) const
+    ( const Carna::base::Vector& position
+    , const Carna::base::Vector& vesselDirection ) const
 {
     deleteDirectionData();
 
-    const Carna::Tools::Vector u1 = vesselDirection.orthonormal();
-    const Carna::Tools::Vector u2 = u1.cross( vesselDirection ).normalized();
+    const Carna::base::Vector u1 = vesselDirection.orthonormal();
+    const Carna::base::Vector u2 = u1.cross( vesselDirection ).normalized();
 
     CARNA_ASSERT(
-        Carna::Tools::isEqual( u1.cross( u2 ).normalized(), vesselDirection.normalized() ) ||
-        Carna::Tools::isEqual( u1.cross( u2 ).normalized(), vesselDirection.normalized() * -1 ) );
+        Carna::base::Math::isEqual( u1.cross( u2 ).normalized(), vesselDirection.normalized() ) ||
+        Carna::base::Math::isEqual( u1.cross( u2 ).normalized(), vesselDirection.normalized() * -1 ) );
 
     const unsigned int n = 8;
     const static double PI = std::acos( -1. );
@@ -120,7 +120,7 @@ void Medialness::updateDirectionData
     for( int i = 0; i < n; ++i )
     {
         const double radians = radians_step * i;
-        const Carna::Tools::Vector radialDirection = u1 * std::sin( radians ) + u2 * std::cos( radians );
+        const Carna::base::Vector radialDirection = u1 * std::sin( radians ) + u2 * std::cos( radians );
 
         directionData.push_back
             ( new NormalizedEdgeResponse::RadialSampler

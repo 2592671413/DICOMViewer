@@ -16,7 +16,7 @@
 #include "PointCloud3D.h"
 #include "Pointer3DEditor.h"
 #include "Pointer3D.h"
-#include <Carna/Point3D.h>
+#include <Carna/base/view/Point3D.h>
 
 
 
@@ -30,7 +30,7 @@ Object3DEditorFactory::Object3DEditorFactory( EditorType requiredEditorType )
 }
 
 
-Object3DEditor* Object3DEditorFactory::create( Carna::Object3D& object ) const
+Object3DEditor* Object3DEditorFactory::create( Carna::base::model::Object3D& object ) const
 {
     switch( createdEditorType )
     {
@@ -42,7 +42,7 @@ Object3DEditor* Object3DEditorFactory::create( Carna::Object3D& object ) const
 
         case pointEditor:
         {
-            return new Point3DEditor( static_cast< Carna::Point3D& >( object ) );
+            return new Point3DEditor( static_cast< Carna::base::view::Point3D& >( object ) );
         }
 
         case pointCloudEditor:

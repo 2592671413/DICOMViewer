@@ -12,7 +12,7 @@
 #pragma once
 
 #include "Server.h"
-#include <Carna/Object3D.h>
+#include <Carna/base/model/Object3D.h>
 #include <QColor>
 
 class PointCloud;
@@ -30,7 +30,7 @@ class PointCloud;
   * \author Leonid Kostrykin
   * \date   30.3.12 - 31.5.12
   */
-class PointCloud3D : public Carna::Object3D
+class PointCloud3D : public Carna::base::model::Object3D
 {
 
     Q_OBJECT
@@ -50,11 +50,11 @@ public:
     
     /** \brief  Draws this object.
       */
-    virtual void paint( const Carna::Renderer& ) const;
+    virtual void paint( const Carna::base::view::Renderer& ) const;
     
     /** \brief  Draw this object using all-over the specified color.
       */
-    virtual void paintFalseColor( const Carna::Renderer&, const Carna::Tools::Vector3ui& color ) const;
+    virtual void paintFalseColor( const Carna::base::view::Renderer&, const Carna::base::Vector3ui& color ) const;
 
 
     double getPointSize() const;
@@ -108,7 +108,7 @@ private:
 
     /** \brief	Defines list of points.
       */
-    typedef std::deque< Carna::Tools::Vector > PointList;
+    typedef std::deque< Carna::base::Vector > PointList;
 
     /** \brief	Holds the points within this point cloud in model units.
       */
@@ -157,6 +157,6 @@ private:
 
     /** \brief  Draws the geometry.
       */
-    void draw( const Carna::Renderer&, const Carna::Tools::Vector3ui& color, bool simplified ) const;
+    void draw( const Carna::base::view::Renderer&, const Carna::base::Vector3ui& color, bool simplified ) const;
 
 }; // PointCloud3D

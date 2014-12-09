@@ -13,7 +13,7 @@
 
 #include "PointCloud.h"
 #include "PointClouds.h"
-#include <Carna/CarnaException.h>
+#include <Carna/base/CarnaException.h>
 #include <set>
 #include <algorithm>
 #include <QObject>

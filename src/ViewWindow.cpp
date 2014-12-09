@@ -17,7 +17,7 @@
 #include "ComponentLauncher.h"
 #include "ComponentsClient.h"
 #include "CarnaContextClient.h"
-#include <Carna/Point3D.h>
+#include <Carna/base/view/Point3D.h>
 #include <sstream>
 #include <QToolBar>
 #include <QToolButton>

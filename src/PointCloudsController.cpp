@@ -20,7 +20,7 @@
 #include "PointCloudComposer.h"
 #include "SurfaceExtractionDialog.h"
 #include "DataSize.h"
-#include <Carna/Point3D.h>
+#include <Carna/base/view/Point3D.h>
 #include <QAction>
 #include <QListWidget>
 #include <QToolBar>
@@ -775,21 +775,21 @@ void PointCloudsController::create3dPoints()
                                                it != cloud->getList().end();
                                              ++it )
     {
-        const Carna::Tools::Vector& p = *it;
+        const Carna::base::Vector& p = *it;
 
-        Carna::Model& model = CarnaContextClient( server ).model();
+        Carna::base::model::Scene& model = CarnaContextClient( server ).model();
 
-        std::auto_ptr< Carna::Position > pos;
+        std::auto_ptr< Carna::base::model::Position > pos;
 
         switch( cloud->getFormat() )
         {
 
         case PointCloud::millimeters:
-            pos.reset( new Carna::Position( Carna::Position::fromMillimeters( model, p.x(), p.y(), p.z() ) ) );
+            pos.reset( new Carna::base::model::Position( Carna::base::model::Position::fromMillimeters( model, p.x(), p.y(), p.z() ) ) );
             break;
 
         case PointCloud::volumeUnits:
-            pos.reset( new Carna::Position( Carna::Position::fromVolumeUnits( model, p.x(), p.y(), p.z() ) ) );
+            pos.reset( new Carna::base::model::Position( Carna::base::model::Position::fromVolumeUnits( model, p.x(), p.y(), p.z() ) ) );
             break;
 
         default:
@@ -797,7 +797,7 @@ void PointCloudsController::create3dPoints()
 
         }
 
-        new Carna::Point3D( model, *pos );
+        new Carna::base::view::Point3D( model, *pos );
 
         progress.setValue( it - cloud->getList().begin() );
     }

@@ -12,7 +12,7 @@
 #pragma once
 
 #include "Server.h"
-#include <Carna/Transformation.h>
+#include <Carna/base/Transformation.h>
 #include <QWidget>
 #include <deque>
 
@@ -68,7 +68,7 @@ private:
 
     bool isToolSelectionValid() const;
 
-    void fetchRelativeBearing( Carna::Tools::Transformation& ) const;
+    void fetchRelativeBearing( Carna::base::Transformation& ) const;
 
 
 private slots:

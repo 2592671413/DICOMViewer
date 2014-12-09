@@ -11,10 +11,10 @@
 
 #include "Segmentation.h"
 #include "BinaryVolumeMask.h"
-#include <Carna/Model.h>
-#include <Carna/Volume.h>
-#include <Carna/Object3D.h>
-#include <Carna/CarnaException.h>
+#include <Carna/base/model/Scene.h>
+#include <Carna/base/model/Volume.h>
+#include <Carna/base/model/Object3D.h>
+#include <Carna/base/CarnaException.h>
 #include <TRTK/RegionGrowing3D.hpp>
 #include <QApplication>
 #include <QDebug>
@@ -25,11 +25,11 @@
 // Segmentation
 // ----------------------------------------------------------------------------------
 
-Segmentation::Segmentation( const Carna::Model& model
-                          , const Carna::Object3D& seedPointObject
+Segmentation::Segmentation( const Carna::base::model::Scene& model
+                          , const Carna::base::model::Object3D& seedPointObject
                           , int huv0
                           , int huv1 )
-    : mask( Carna::Tools::Vector3ui( model.volume().size ) )
+    : mask( Carna::base::Vector3ui( model.volume().size ) )
 {
     BinaryVolumeMask binaryVolumeMask( huv0, huv1, model.volume() );
 

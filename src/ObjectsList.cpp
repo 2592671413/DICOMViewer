@@ -12,8 +12,8 @@
 #include "ObjectsList.h"
 #include "ObjectsListItem.h"
 #include "CarnaContextClient.h"
-#include <Carna/Model.h>
-#include <Carna/Object3DEvent.h>
+#include <Carna/base/model/Scene.h>
+#include <Carna/base/model/Object3DEvent.h>
 #include <QVBoxLayout>
 #include <QApplication>
 
@@ -37,12 +37,12 @@ public:
 
     std::vector< ObjectsListItem* > items;
 
-    int itemIndexByObject( Carna::Object3D& ) const;
+    int itemIndexByObject( Carna::base::model::Object3D& ) const;
 
     static const int ITEM_NOT_IN_LIST = -1;
 
 
-    bool doesObjectExist( Carna::Object3D& ) const;
+    bool doesObjectExist( Carna::base::model::Object3D& ) const;
 
 
 private:
@@ -52,7 +52,7 @@ private:
 }; // ObjectsList :: Details
 
 
-int ObjectsList::Details::itemIndexByObject( Carna::Object3D& object ) const
+int ObjectsList::Details::itemIndexByObject( Carna::base::model::Object3D& object ) const
 {
     for( auto it = items.begin(); it != items.end(); ++it )
     {
@@ -67,12 +67,12 @@ int ObjectsList::Details::itemIndexByObject( Carna::Object3D& object ) const
 }
 
 
-bool ObjectsList::Details::doesObjectExist( Carna::Object3D& object ) const
+bool ObjectsList::Details::doesObjectExist( Carna::base::model::Object3D& object ) const
 {
-    Carna::Model& model = CarnaContextClient( self.server ).model();
+    Carna::base::model::Scene& model = CarnaContextClient( self.server ).model();
     for( unsigned int i = 0; i < model.objectsCount(); ++i )
     {
-        const Carna::Object3D& existingObject = model.objectByIndex( i );
+        const Carna::base::model::Object3D& existingObject = model.objectByIndex( i );
         if( &existingObject == &object )
         {
             return true;
@@ -92,7 +92,7 @@ ObjectsList::ObjectsList( Record::Server& server, QWidget* parent )
     , server( server )
     , pimpl( new Details( *this ) )
 {
-    connect( &( CarnaContextClient( server ).model() ), SIGNAL( objectsChanged( Object3DEvent& ) ), this, SLOT( processObjectsEvent( Object3DEvent& ) ) );
+    connect( &( CarnaContextClient( server ).model() ), SIGNAL( objectsChanged( Carna::base::model::Object3DEvent& ) ), this, SLOT( processObjectsEvent( Carna::base::model::Object3DEvent& ) ) );
     connect( pimpl.get(), SIGNAL( itemSelectionChanged() ), this, SLOT( processChangedSelection() ) );
     connect( pimpl.get(), SIGNAL( itemDoubleClicked( QListWidgetItem* ) ), this, SLOT( processDoubleClickedItem( QListWidgetItem* ) ) );
 
@@ -110,7 +110,7 @@ ObjectsList::~ObjectsList()
 }
 
 
-void ObjectsList::fetchSelectedObjects( std::vector< Carna::Object3D* >& selectedObjects ) const
+void ObjectsList::fetchSelectedObjects( std::vector< Carna::base::model::Object3D* >& selectedObjects ) const
 {
     selectedObjects.clear();
 
@@ -129,7 +129,7 @@ void ObjectsList::selectNone()
 }
 
 
-void ObjectsList::fetchObjects( std::vector< Carna::Object3D* >& objects ) const
+void ObjectsList::fetchObjects( std::vector< Carna::base::model::Object3D* >& objects ) const
 {
     objects.clear();
 
@@ -141,7 +141,7 @@ void ObjectsList::fetchObjects( std::vector< Carna::Object3D* >& objects ) const
 }
 
 
-void ObjectsList::addObject( Carna::Object3D& object )
+void ObjectsList::addObject( Carna::base::model::Object3D& object )
 {
     if( pimpl->itemIndexByObject( object ) != Details::ITEM_NOT_IN_LIST )
     {
@@ -154,7 +154,7 @@ void ObjectsList::addObject( Carna::Object3D& object )
 }
     
 
-void ObjectsList::removeObject( Carna::Object3D& object )
+void ObjectsList::removeObject( Carna::base::model::Object3D& object )
 {
     while( true )
     {
@@ -191,11 +191,11 @@ void ObjectsList::processDoubleClickedItem( QListWidgetItem* item )
 }
 
 
-void ObjectsList::processObjectsEvent( Carna::Object3DEvent& ev )
+void ObjectsList::processObjectsEvent( Carna::base::model::Object3DEvent& ev )
 {
     QApplication::setOverrideCursor( Qt::WaitCursor );
 
-    if( ev.mightAffect( Carna::Object3DEvent::existence ) )
+    if( ev.mightAffect( Carna::base::model::Object3DEvent::existence ) )
     {
         bool restart;
         do 
@@ -203,7 +203,7 @@ void ObjectsList::processObjectsEvent( Carna::Object3DEvent& ev )
             restart = false;
             for( auto it = pimpl->items.begin(); it != pimpl->items.end(); ++it )
             {
-                Carna::Object3D& object = ( **it ).object;
+                Carna::base::model::Object3D& object = ( **it ).object;
                 if( !pimpl->doesObjectExist( object ) )
                 {
                     ObjectsList::removeObject( object );

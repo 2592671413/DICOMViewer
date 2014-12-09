@@ -11,7 +11,7 @@
 
 #pragma once
 
-#include <Carna/Transformation.h>
+#include <Carna/base/Transformation.h>
 #include <QObject>
 #include <vector>
 #include <memory>
@@ -34,12 +34,12 @@ class Pointer3DCalibration : public QObject
 
 public:
 
-    Pointer3DCalibration( Carna::RotatableObject3D& pointer );
+    Pointer3DCalibration( Carna::base::model::RotatableObject3D& pointer );
 
     ~Pointer3DCalibration();
 
 
-    Carna::RotatableObject3D& pointer;
+    Carna::base::model::RotatableObject3D& pointer;
 
 
     /** \brief  Tells the (normalized) calibrated shaft direction.
@@ -48,13 +48,13 @@ public:
       *                          cannot be computed since too few points have been
       *                          captured.
       */
-    const Carna::Tools::Vector& getShaftDirection();
+    const Carna::base::Vector& getShaftDirection();
 
     /** \brief  Tells the (normalized) calibrated shaft direction.
       *
       * \throws std::logic_error when the calibration has not been computed yet.
       */
-    const Carna::Tools::Vector& getShaftDirection() const;
+    const Carna::base::Vector& getShaftDirection() const;
 
 
 public slots:
@@ -76,13 +76,13 @@ public slots:
 
 signals:
 
-    void computed( const Carna::Tools::Vector& );
+    void computed( const Carna::base::Vector& );
 
 
 private:
 
-    std::unique_ptr< Carna::Tools::Vector > shaftDirection;
+    std::unique_ptr< Carna::base::Vector > shaftDirection;
 
-    std::vector< Carna::Tools::Vector > capturedPoints;
+    std::vector< Carna::base::Vector > capturedPoints;
 
 }; // Pointer3DCalibration

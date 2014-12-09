@@ -23,7 +23,7 @@
 // Point3DEditor
 // ----------------------------------------------------------------------------------
 
-/** \brief  Visual \c Carna::Point3D editor
+/** \brief  Visual \c Carna::base::view::Point3D editor
   *
   * \author Leonid Kostrykin
   * \date   8.8.12
@@ -35,11 +35,11 @@ public:
 
     /** \brief  Instantiates.
       */
-    Point3DEditor( Carna::Point3D& editedObject, QWidget* parent = nullptr );
+    Point3DEditor( Carna::base::view::Point3D& editedObject, QWidget* parent = nullptr );
 
 
     /** \brief  References the edited point.
       */
-    Carna::Point3D& editedPoint;
+    Carna::base::view::Point3D& editedPoint;
 
 }; // Point3DEditor

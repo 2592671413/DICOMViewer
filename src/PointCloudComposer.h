@@ -27,7 +27,7 @@ class QVBoxLayout;
 // ----------------------------------------------------------------------------------
 
 /** \brief	Widget which lets the user compose \ref PointCloud "point clouds" out of
-  *         \c Carna::Object3D other objects, such as points.
+  *         \c Carna::base::model::Object3D other objects, such as points.
   *
   * \ref PointCloudComposerSlot "Slots" are user-interface elements which represent points.
   *

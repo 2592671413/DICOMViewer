@@ -10,8 +10,8 @@
  */
 
 #include "Point3DEditor.h"
-#include <Carna/Point3D.h>
-#include <Carna/ColorPicker.h>
+#include <Carna/base/view/Point3D.h>
+#include <Carna/base/qt/ColorPicker.h>
 #include <QFormLayout>
 #include <QDoubleSpinBox>
 
@@ -21,7 +21,7 @@
 // Point3DEditor
 // ----------------------------------------------------------------------------------
 
-Point3DEditor::Point3DEditor( Carna::Point3D& editedObject, QWidget* parent )
+Point3DEditor::Point3DEditor( Carna::base::view::Point3D& editedObject, QWidget* parent )
     : Object3DEditor( editedObject, parent )
     , editedPoint( editedObject )
 {
@@ -30,7 +30,7 @@ Point3DEditor::Point3DEditor( Carna::Point3D& editedObject, QWidget* parent )
     pointPage->setLayout( point );
     pointPage->setWindowTitle( "Color / Size" );
 
-    Carna::ColorPicker* colorPicker = new Carna::ColorPicker( editedPoint.color(), true );
+    Carna::base::qt::ColorPicker* colorPicker = new Carna::base::qt::ColorPicker( editedPoint.color(), true );
     point->addRow( "Color:", colorPicker );
 
     connect( colorPicker, SIGNAL( colorChanged( const QColor& ) ), &editedPoint, SLOT( setColor( const QColor& ) ) );

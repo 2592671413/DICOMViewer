@@ -72,7 +72,7 @@ QStringList Importer::getFilters() const
 }
 
 
-Carna::Model* Importer::run()
+Carna::base::model::Scene* Importer::run()
 {
     if( processors.empty() )
     {

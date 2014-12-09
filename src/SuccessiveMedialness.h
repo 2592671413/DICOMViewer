@@ -12,7 +12,7 @@
 #pragma once
 
 #include "MedialnessGraph.h"
-#include <Carna/Polyline.h>
+#include <Carna/base/view/Polyline.h>
 
 
 
@@ -40,7 +40,7 @@ private:
 
     MedialnessGraph::Node node;
 
-    Carna::Polyline centerline;
+    Carna::base::view::Polyline centerline;
 
     std::set< unsigned int > visitedNodeIndices;
 

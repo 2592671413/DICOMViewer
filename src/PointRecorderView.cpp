@@ -13,8 +13,6 @@
 #include "PointCloud.h"
 #include <QDebug>
 
-using Carna::Tools::glMultMatrix;
-
 
 
 // ----------------------------------------------------------------------------------
@@ -111,7 +109,7 @@ void PointRecorderView::paintGL()
 
     if( this->pointerVisibility )
     {
-        const Carna::Tools::Vector pos( pointerBearing.a14()
+        const Carna::base::Vector pos( pointerBearing.a14()
                                       , pointerBearing.a24()
                                       , pointerBearing.a34() );
 
@@ -143,7 +141,7 @@ void PointRecorderView::paintGL()
 
     for( PointCloud::PointList::const_iterator it = cloud.getList().begin(); it != cloud.getList().end(); ++it )
         {
-            const Carna::Tools::Vector& point = *it;
+            const Carna::base::Vector& point = *it;
 
             glVertex3f( point.x(), point.y(), point.z() );
         }
@@ -189,7 +187,7 @@ void PointRecorderView::resizeGL( int width, int height )
 }
 
 
-void PointRecorderView::setPointerBearing( const Carna::Tools::Transformation& pointerBearing )
+void PointRecorderView::setPointerBearing( const Carna::base::Transformation& pointerBearing )
 {
     this->pointerBearing = pointerBearing;
 }

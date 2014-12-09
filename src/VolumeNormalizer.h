@@ -11,7 +11,7 @@
 
 #pragma once
 
-#include <Carna/noncopyable.h>
+#include <Carna/base/noncopyable.h>
 #include <Carna/Carna.h>
 #include <QObject>
 
@@ -42,7 +42,7 @@ public:
 
     /** \brief	Instantiates.
       */
-    VolumeNormalizer( const Carna::Model&, QWidget* parent = nullptr );
+    VolumeNormalizer( const Carna::base::model::Scene&, QWidget* parent = nullptr );
 
     ~VolumeNormalizer();
 
@@ -51,7 +51,7 @@ public:
 
     int getMinimalSize() const;
 
-    Carna::Model* getResult() const;
+    Carna::base::model::Scene* getResult() const;
 
     double getSizeLoss() const;
 
@@ -78,7 +78,7 @@ signals:
 
 private:
 
-    const Carna::Model& model;
+    const Carna::base::model::Scene& model;
 
     QWidget* const parent;
 

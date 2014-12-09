@@ -10,7 +10,7 @@
  */
 
 #include "WindowingController.h"
-#include <Carna/Model.h>
+#include <Carna/base/model/Scene.h>
 #include <QSlider>
 #include <QLabel>
 #include <QFormLayout>

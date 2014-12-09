@@ -21,7 +21,7 @@
 
 bool NormalizedEdgeResponse::RadialSampler::reallyLess::operator()( const double x, const double y ) const
 {
-    return !Carna::Tools::isEqual( x, y ) && x < y;
+    return !Carna::base::Math::isEqual( x, y ) && x < y;
 }
 
 
@@ -32,8 +32,8 @@ bool NormalizedEdgeResponse::RadialSampler::reallyLess::operator()( const double
 
 NormalizedEdgeResponse::RadialSampler::RadialSampler
     ( const NormalizedEdgeResponse& context
-    , const Carna::Tools::Vector& position
-    , const Carna::Tools::Vector& radialVector
+    , const Carna::base::Vector& position
+    , const Carna::base::Vector& radialVector
     , double minimumContrast )
 
     : context( context )
@@ -99,7 +99,7 @@ void NormalizedEdgeResponse::setRadiuses( double minRadius, double maxRadius, un
     radiuses.clear();
 
     currentRadiusSampleDistance = ( maxRadius - minRadius ) / ( radiusSamples - 1 );
-    for( double radius = minRadius; radius < maxRadius || Carna::Tools::isEqual( radius, maxRadius ); radius += currentRadiusSampleDistance )
+    for( double radius = minRadius; radius < maxRadius || Carna::base::Math::isEqual( radius, maxRadius ); radius += currentRadiusSampleDistance )
     {
         radiuses.insert( radius );
     }
@@ -128,8 +128,8 @@ double NormalizedEdgeResponse::compute( const RadialSampler& sampler, double r )
 {
     CARNA_ASSERT( &sampler.context == this );
 
-    const Carna::Tools::Vector& p0 = sampler.position;
-    const Carna::Tools::Vector& u  = sampler.radialDirection;
+    const Carna::base::Vector& p0 = sampler.position;
+    const Carna::base::Vector& u  = sampler.radialDirection;
 
  // compute response at p0
 

@@ -12,7 +12,7 @@
 #include "SurfaceExtractionDialog.h"
 #include "SurfaceExtraction.h"
 #include "CarnaContextClient.h"
-#include <Carna/Object3DChooser.h>
+#include <Carna/base/qt/Object3DChooser.h>
 #include <QFormLayout>
 #include <QSpinBox>
 #include <QPushButton>
@@ -32,7 +32,7 @@
 SurfaceExtractionDialog::SurfaceExtractionDialog( Record::Server& server, QWidget* parent )
     : QWidget( parent )
     , server( server )
-    , seedPointSelector( new Carna::Object3DChooser( CarnaContextClient( server ).model() ) )
+    , seedPointSelector( new Carna::base::qt::Object3DChooser( CarnaContextClient( server ).model() ) )
     , sbHuv0( new QSpinBox() )
     , sbHuv1( new QSpinBox() )
 {
@@ -73,7 +73,7 @@ void SurfaceExtractionDialog::run()
         QMessageBox::critical( this, "Surface Extraction", "No seed point selected." );
         return;
     }
-    const Carna::Object3D& seedPoint = seedPointSelector->selectedObject3D();
+    const Carna::base::model::Object3D& seedPoint = seedPointSelector->selectedObject3D();
 
     const int huv0 = sbHuv0->value();
     const int huv1 = sbHuv1->value();

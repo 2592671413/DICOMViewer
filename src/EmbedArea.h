@@ -16,7 +16,7 @@
   */
 
 #include <QFrame>
-#include <Carna/noncopyable.h>
+#include <Carna/base/noncopyable.h>
 
 class Embeddable;
 

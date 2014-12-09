@@ -16,7 +16,7 @@
   */
 
 #include "EmbedArea.h"
-#include <Carna/noncopyable.h>
+#include <Carna/base/noncopyable.h>
 
 
 

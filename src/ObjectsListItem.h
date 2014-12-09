@@ -26,7 +26,7 @@
 // ObjectsListItem
 // ----------------------------------------------------------------------------------
 
-/** \brief  Represents a \c Carna::Object3D instance within \ref ObjectsList
+/** \brief  Represents a \c Carna::base::model::Object3D instance within \ref ObjectsList
   *
   * \author Leonid Kostrykin
   * \date   7.8.12
@@ -40,12 +40,12 @@ public:
 
     /** \brief  Instantiates.
       */
-    ObjectsListItem( Record::Server& server, Carna::Object3D& object );
+    ObjectsListItem( Record::Server& server, Carna::base::model::Object3D& object );
 
 
-    /** \brief  References the represented \c Carna::Object3D instance.
+    /** \brief  References the represented \c Carna::base::model::Object3D instance.
       */
-    Carna::Object3D& object;
+    Carna::base::model::Object3D& object;
 
 
 public slots:
@@ -57,9 +57,9 @@ public slots:
 
 private:
 
-    /** \brief  Shortcut for \c Carna::Object3DEvent
+    /** \brief  Shortcut for \c Carna::base::model::Object3DEvent
       */
-    typedef Carna::Object3DEvent Object3DEvent;
+    typedef Carna::base::model::Object3DEvent Object3DEvent;
 
 
 private slots:

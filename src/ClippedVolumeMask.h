@@ -12,7 +12,7 @@
 #pragma once
 
 #include "BinaryVolumeMask.h"
-#include <Carna/Transformation.h>
+#include <Carna/base/Transformation.h>
 #include <vector>
 
 
@@ -29,10 +29,10 @@ public:
     struct Line
     {
 
-        Carna::Tools::Vector support, way;
+        Carna::base::Vector support, way;
         double radius;
 
-        Line( const Carna::Tools::Vector& support, const Carna::Tools::Vector& way, double radius );
+        Line( const Carna::base::Vector& support, const Carna::base::Vector& way, double radius );
 
     };  // Line
 
@@ -45,11 +45,11 @@ public:
 
     public:
 
-        Setup( const Carna::Model&, int min, int max );
+        Setup( const Carna::base::model::Scene&, int min, int max );
 
         ~Setup();
 
-        const Carna::Model& model;
+        const Carna::base::model::Scene& model;
         const int min;
         const int max;
 
@@ -63,7 +63,7 @@ public:
 
  // ----------------------------------------------------------------------------------
 
-    ClippedVolumeMask( const std::function< bool( Carna::Tools::Vector3ui& ) >& accept, const Setup& );
+    ClippedVolumeMask( const std::function< bool( Carna::base::Vector3ui& ) >& accept, const Setup& );
 
     ClippedVolumeMask();
 
@@ -79,6 +79,6 @@ private:
 
     const Setup* setup;
 
-    std::function< bool( Carna::Tools::Vector3ui& ) > accept;
+    std::function< bool( Carna::base::Vector3ui& ) > accept;
 
 }; // ClippedVolumeMask

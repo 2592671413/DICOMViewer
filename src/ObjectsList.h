@@ -28,7 +28,7 @@ class QListWidgetItem;
 // ObjectsList
 // ----------------------------------------------------------------------------------
 
-/** \brief  Widget which lists \c Carna::Object3D instances.
+/** \brief  Widget which lists \c Carna::base::model::Object3D instances.
   *
   * \author Leonid Kostrykin
   * \date   7.8.12
@@ -55,11 +55,11 @@ public:
 
     /** \brief  Writes the currently selected objects to the given list.
       */
-    void fetchSelectedObjects( std::vector< Carna::Object3D* >& ) const;
+    void fetchSelectedObjects( std::vector< Carna::base::model::Object3D* >& ) const;
 
     /** \brief  Writes all objects to the given list.
       */
-    void fetchObjects( std::vector< Carna::Object3D* >& ) const;
+    void fetchObjects( std::vector< Carna::base::model::Object3D* >& ) const;
 
 
 public slots:
@@ -69,11 +69,11 @@ public slots:
       * Each object may only be added once.
       * If the given object already is on the list, nothing happens.
       */
-    virtual void addObject( Carna::Object3D& );
+    virtual void addObject( Carna::base::model::Object3D& );
     
     /** \brief  Removes the given object from the list.
       */
-    virtual void removeObject( Carna::Object3D& );
+    virtual void removeObject( Carna::base::model::Object3D& );
 
     /** \brief  Removes all objects from the list.
       */
@@ -92,14 +92,14 @@ signals:
 
     /** \brief  An object has been double clicked.
       */
-    void objectDoubleClicked( Carna::Object3D& );
+    void objectDoubleClicked( Carna::base::model::Object3D& );
 
 
 protected:
 
-    /** \brief  Shortcut for \c Carna::Object3DEvent
+    /** \brief  Shortcut for \c Carna::base::model::Object3DEvent
       */
-    typedef Carna::Object3DEvent Object3DEvent;
+    typedef Carna::base::model::Object3DEvent Object3DEvent;
 
 
 protected slots:

@@ -11,7 +11,7 @@
 
 #pragma once
 
-#include <Carna/Transformation.h>
+#include <Carna/base/Transformation.h>
 
 
 
@@ -31,7 +31,7 @@ public:
 
         virtual ~Sampler();
 
-        virtual double valueAt( const Carna::Tools::Vector& millimeters ) const = 0;
+        virtual double valueAt( const Carna::base::Vector& millimeters ) const = 0;
 
     }; // Sampler
 
@@ -43,7 +43,7 @@ public:
 
     void setSampler( Sampler* );
 
-    double partialDerivativeAt( const Carna::Tools::Vector& position, const Carna::Tools::Vector& direction ) const;
+    double partialDerivativeAt( const Carna::base::Vector& position, const Carna::base::Vector& direction ) const;
 
     void setMinimumHUV( int );
 

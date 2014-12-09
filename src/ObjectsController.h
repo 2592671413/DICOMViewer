@@ -35,7 +35,7 @@ class QFrame;
 // ObjectsController
 // ----------------------------------------------------------------------------------
 
-/** \brief	Widget which lets the user manage \c Carna::Object3D instances.
+/** \brief	Widget which lets the user manage \c Carna::base::model::Object3D instances.
   *
   * \see    \ref ObjectsComponent
   *
@@ -70,7 +70,7 @@ public slots:
     
     /** \brief	Renames the given object to a name prompted from the user.
       */
-    void renameObject( Carna::Object3D& );
+    void renameObject( Carna::base::model::Object3D& );
     
     /** \brief	Presents details of the selected object to the user.
       *
@@ -80,7 +80,7 @@ public slots:
     
     /** \brief	Presents details of the given object to the user.
       */
-    void openObjectEditor( Carna::Object3D& );
+    void openObjectEditor( Carna::base::model::Object3D& );
 
     /** \brief  Closes the object editor if it is open.
       */
@@ -90,7 +90,7 @@ public slots:
       */
     void detachEditor();
 
-    /** \brief  Instantiates \c Carna::Point3D.
+    /** \brief  Instantiates \c Carna::base::view::Point3D.
       */
     void createPoint3D();
     
@@ -98,7 +98,7 @@ public slots:
       */
     void createPointer3D();
 
-    /** \brief  Instantiates \c Carna::Polyline.
+    /** \brief  Instantiates \c Carna::base::view::Polyline.
       */
     void importPolyline();
 
@@ -115,7 +115,7 @@ private:
       */
     ObjectsComponent& component;
 
-    /** \brief	Widget which lists all loaded \c Carna::Object3D instances.
+    /** \brief	Widget which lists all loaded \c Carna::base::model::Object3D instances.
       */
     ObjectsView* const view;
 
@@ -124,9 +124,9 @@ private:
     QAction* const objectRenaming;  ///< \brief  Renames the selected object to a name prompted from the user.
     QAction* const editorDetaching; ///< \brief  Invokes \ref detachEditor when triggered.
 
-    QAction* const pointCreation;   ///< \brief  Instantiates \c Carna::Point3D when triggered.
+    QAction* const pointCreation;   ///< \brief  Instantiates \c Carna::base::view::Point3D when triggered.
     QAction* const pointerCreation; ///< \brief  Instantiates \ref Pointer3D when triggered.
-    QAction* const polylineImport;  ///< \brief  Imports \c Carna::Polyline when triggered.
+    QAction* const polylineImport;  ///< \brief  Imports \c Carna::base::view::Polyline when triggered.
 
     QAction* const tempPointCreation;
 
@@ -144,7 +144,7 @@ private:
     
     /** \brief  Creates an editor for the given object and returns it.
       */
-    Object3DEditor* createObjectEditor( Carna::Object3D& );
+    Object3DEditor* createObjectEditor( Carna::base::model::Object3D& );
 
 
 private slots:

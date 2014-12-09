@@ -10,11 +10,11 @@
  */
 
 #include "MedialnessGraph.h"
-#include <Carna/Scene.h>
-#include <Carna/Model.h>
-#include <Carna/Volume.h>
-#include <Carna/VisualizationEnvironment.h>
-#include <Carna/glError.h>
+#include <Carna/base/view/SceneProvider.h>
+#include <Carna/base/model/Scene.h>
+#include <Carna/base/model/Volume.h>
+#include <Carna/base/VisualizationEnvironment.h>
+#include <Carna/base/view/glError.h>
 #include <QGLFramebufferObject>
 
 
@@ -23,16 +23,16 @@
 // IntensitySampler
 // ----------------------------------------------------------------------------------
 
-IntensitySampler::IntensitySampler( const Carna::Model& model )
+IntensitySampler::IntensitySampler( const Carna::base::model::Scene& model )
     : model( model )
 {
 }
 
 
-double IntensitySampler::valueAt( const Carna::Tools::Vector& millimeters ) const
+double IntensitySampler::valueAt( const Carna::base::Vector& millimeters ) const
 {
 #if 1
-    return model.intensityAt( Carna::Position::fromMillimeters( model, millimeters ) );
+    return model.intensityAt( Carna::base::model::Position::fromMillimeters( model, millimeters ) );
 #else
     /*
     const double x = millimeters.x() / model.spacingX();
@@ -40,13 +40,13 @@ double IntensitySampler::valueAt( const Carna::Tools::Vector& millimeters ) cons
     const double z = millimeters.z() / model.spacingZ();
     */
 
-    const Carna::Tools::Vector vu = Carna::Position::fromMillimeters( model, millimeters ).toVolumeUnits();
+    const Carna::base::Vector vu = Carna::base::model::Position::fromMillimeters( model, millimeters ).toVolumeUnits();
     const double x = vu.x() * ( model.volume().size.x - 1 );
     const double y = vu.y() * ( model.volume().size.y - 1 );
     const double z = vu.z() * ( model.volume().size.z - 1 );
 
     /*
-    const auto position = Carna::Position::fromMillimeters( model, millimeters );
+    const auto position = Carna::base::model::Position::fromMillimeters( model, millimeters );
     const double x = position.toVolumeUnits().x() * ( model.volume().size.x - 1 );
     const double y = position.toVolumeUnits().y() * ( model.volume().size.y - 1 );
     const double z = position.toVolumeUnits().z() * ( model.volume().size.z - 1 );
@@ -71,10 +71,10 @@ double IntensitySampler::valueAt( const Carna::Tools::Vector& millimeters ) cons
                 */
 
             /*
-            return static_cast< signed short >( static_cast< const Carna::UInt16Volume& >( model.volume() ).getBuffer()[ i + model.volume().size.x * j + model.volume().size.y * model.volume().size.x * k ] >> 4 ) - 1024;
+            return static_cast< signed short >( static_cast< const Carna::base::model::UInt16Volume& >( model.volume() ).getBuffer()[ i + model.volume().size.x * j + model.volume().size.y * model.volume().size.x * k ] >> 4 ) - 1024;
             */
 
-            unsigned short value = static_cast< const Carna::UInt16Volume& >( model.volume() ).getBuffer()
+            unsigned short value = static_cast< const Carna::base::model::UInt16Volume& >( model.volume() ).getBuffer()
                 [ i + model.volume().size.x * j + model.volume().size.y * model.volume().size.x * k ];
 
             return int( ( value / double( std::numeric_limits< unsigned short >::max() ) ) * (1024+3071)  ) - 1024;
@@ -94,8 +94,8 @@ double IntensitySampler::valueAt( const Carna::Tools::Vector& millimeters ) cons
 // GpuIntensitySampler
 // ----------------------------------------------------------------------------------
 
-GpuIntensitySampler::GpuIntensitySampler( Carna::VisualizationEnvironment& environment, Carna::Scene& scene )
-    : Carna::Scene::ResourceContext( environment, scene )
+GpuIntensitySampler::GpuIntensitySampler( Carna::base::VisualizationEnvironment& environment, Carna::base::view::SceneProvider& scene )
+    : Carna::base::view::SceneProvider::ResourceClient( environment, scene )
     , fbo( new QGLFramebufferObject // the proper GL context is activated by the above constructor
         ( 1, 1
         , QGLFramebufferObject::NoAttachment
@@ -111,9 +111,9 @@ GpuIntensitySampler::~GpuIntensitySampler()
 }
 
 
-double GpuIntensitySampler::valueAt( const Carna::Tools::Vector& millimeters ) const
+double GpuIntensitySampler::valueAt( const Carna::base::Vector& millimeters ) const
 {
-    const Carna::Tools::Vector vu = Carna::Position::fromMillimeters( scene.model, millimeters ).toVolumeUnits();
+    const Carna::base::Vector vu = Carna::base::model::Position::fromMillimeters( provider.scene, millimeters ).toVolumeUnits();
 
     if( vu.x() < 0 || vu.y() < 0 || vu.z() < 0 || vu.x() >= 1 || vu.y() >= 1 || vu.z() >= 1  )
     {
@@ -181,7 +181,7 @@ const double MedialnessGraph::millimetersPerNode = 0.25;
 
 MedialnessGraph::MedialnessGraph
     ( Differential::Sampler* sampler
-    , Carna::Model& model
+    , Carna::base::model::Scene& model
     , const Setup& setup
     , const EdgeRadiusConsumer& produceRadius )
 
@@ -190,12 +190,12 @@ MedialnessGraph::MedialnessGraph
     , medialnessFilter( sampler )
     , produceRadius( produceRadius )
     , detailedDebug( true )
-    , size( [&]()->Carna::Tools::Vector3ui
+    , size( [&]()->Carna::base::Vector3ui
             {
                 const unsigned int max_x = static_cast< unsigned int >( ( model.volume().size.x - 1 ) * model.spacingX() / millimetersPerNode );
                 const unsigned int max_y = static_cast< unsigned int >( ( model.volume().size.y - 1 ) * model.spacingY() / millimetersPerNode );
                 const unsigned int max_z = static_cast< unsigned int >( ( model.volume().size.z - 1 ) * model.spacingZ() / millimetersPerNode );
-                return Carna::Tools::Vector3ui( max_x + 1, max_y + 1, max_z + 1 );
+                return Carna::base::Vector3ui( max_x + 1, max_y + 1, max_z + 1 );
             }
         () )
     , sampler( [&]()->Differential::Sampler&
@@ -216,23 +216,23 @@ MedialnessGraph::~MedialnessGraph()
 }
 
 
-MedialnessGraph::Node MedialnessGraph::pickNode( const Carna::Position& position ) const
+MedialnessGraph::Node MedialnessGraph::pickNode( const Carna::base::model::Position& position ) const
 {
     const unsigned int x = static_cast< unsigned int >( position.toMillimeters().x() / millimetersPerNode + 0.5 );
     const unsigned int y = static_cast< unsigned int >( position.toMillimeters().y() / millimetersPerNode + 0.5 );
     const unsigned int z = static_cast< unsigned int >( position.toMillimeters().z() / millimetersPerNode + 0.5 );
 
-    return Carna::Tools::Vector3ui( x, y, z );
+    return Carna::base::Vector3ui( x, y, z );
 }
 
 
-Carna::Position MedialnessGraph::getNodePosition( const Carna::Tools::Vector3ui& node ) const
+Carna::base::model::Position MedialnessGraph::getNodePosition( const Carna::base::Vector3ui& node ) const
 {
-    return Carna::Position::fromMillimeters( model, node.x * millimetersPerNode, node.y * millimetersPerNode, node.z * millimetersPerNode );
+    return Carna::base::model::Position::fromMillimeters( model, node.x * millimetersPerNode, node.y * millimetersPerNode, node.z * millimetersPerNode );
 }
 
 
-unsigned int MedialnessGraph::computeNodeIndex( const Carna::Tools::Vector3ui& node ) const
+unsigned int MedialnessGraph::computeNodeIndex( const Carna::base::Vector3ui& node ) const
 {
     return node.x + size.x * node.y + size.y * size.x * node.z;
 }
@@ -256,12 +256,12 @@ const MedialnessGraph::Setup& MedialnessGraph::setup() const
 
 
 void MedialnessGraph::computeEdge
-    ( const Carna::Tools::Vector& p0
-    , const Carna::Tools::Vector& p1
+    ( const Carna::base::Vector& p0
+    , const Carna::base::Vector& p1
     , double& medialness
     , double& radius ) const
 {
-    const Carna::Tools::Vector direction = p1 - p0;
+    const Carna::base::Vector direction = p1 - p0;
     const double minimumMedialness = setup().allowMedialnessEarlyOut
         ? setup().minimumMedialness
         : -std::numeric_limits< double >::infinity();
@@ -371,7 +371,7 @@ void MedialnessGraph::expand
     , OrderedEdges& edges
     , const std::function< bool( const Node& ) >& isReachable ) const
 {
-    const Carna::Position probedNodePosition = getNodePosition( probedNode );
+    const Carna::base::model::Position probedNodePosition = getNodePosition( probedNode );
 
     qDebug() << "Expanding Node: (" << probedNode.x << "," << probedNode.y << "," << probedNode.z << ")";
 
@@ -398,7 +398,7 @@ void MedialnessGraph::expand
         const int dx = x - signed( probedNode.x );
         const int dy = y - signed( probedNode.y );
         const int dz = z - signed( probedNode.z );
-        const Carna::Tools::Vector neighborPosition = probedNodePosition.toMillimeters() + millimetersPerNode * Carna::Tools::Vector( dx, dy, dz );
+        const Carna::base::Vector neighborPosition = probedNodePosition.toMillimeters() + millimetersPerNode * Carna::base::Vector( dx, dy, dz );
 
         double medialness, radius;
         computeEdge( probedNodePosition.toMillimeters(), neighborPosition, medialness, radius );
@@ -410,7 +410,7 @@ void MedialnessGraph::expand
 
             const double weight = 1. / medialness;
             /*
-            const double weight = 1. / Carna::Tools::sq( medialness );
+            const double weight = 1. / Carna::base::Math::sq( medialness );
             */
             edges.insert( std::pair< double, Node >( weight, neighbor ) );
             produceRadius( probedNode, neighbor, radius );

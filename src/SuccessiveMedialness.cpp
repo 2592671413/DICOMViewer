@@ -10,7 +10,7 @@
  */
 
 #include "SuccessiveMedialness.h"
-#include <Carna/Polyline.h>
+#include <Carna/base/view/Polyline.h>
 
 
 
@@ -21,7 +21,7 @@
 SuccessiveMedialness::SuccessiveMedialness( MedialnessGraph& graph, const MedialnessGraph::Node& root )
     : graph( graph )
     , node( root )
-    , centerline( graph.model, Carna::Polyline::lineStrip )
+    , centerline( graph.model, Carna::base::view::Polyline::lineStrip )
 {
     visitedNodeIndices.insert( graph.computeNodeIndex( root ) );
 
@@ -38,7 +38,7 @@ SuccessiveMedialness::~SuccessiveMedialness()
 
 double SuccessiveMedialness::doNext()
 {
-    const Carna::Tools::Vector3ui& size = graph.model.volume().size;
+    const Carna::base::Vector3ui& size = graph.model.volume().size;
 
     MedialnessGraph::OrderedEdges edges;
     graph.expand( node, edges );
@@ -51,7 +51,7 @@ double SuccessiveMedialness::doNext()
             visitedNodeIndices.insert( nodeIndex );
             node = edge_it->second;
 
-            const Carna::Position nodePosition = graph.getNodePosition( node );
+            const Carna::base::model::Position nodePosition = graph.getNodePosition( node );
             const double medialness = 1. / edge_it->first;
 
             qDebug() << "Moved to Node: (" << this->node.x << "," << this->node.y << "," << this->node.z << ") - Medialness:" << medialness;

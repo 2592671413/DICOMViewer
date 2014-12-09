@@ -12,7 +12,7 @@
 #pragma once
 
 #include <QWidget>
-#include <Carna/noncopyable.h>
+#include <Carna/base/noncopyable.h>
 #include "Server.h"
 
 class RegistrationArguments;

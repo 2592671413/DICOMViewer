@@ -11,7 +11,7 @@
 
 #pragma once
 
-#include <Carna/Transformation.h>
+#include <Carna/base/Transformation.h>
 #include <QGLWidget>
 
 class PointCloud;
@@ -36,7 +36,7 @@ public:
 
 public slots:
 
-    void setPointerBearing( const Carna::Tools::Transformation& );
+    void setPointerBearing( const Carna::base::Transformation& );
 
     void setPointerVisibility( bool );
 
@@ -54,7 +54,7 @@ private:
 
     const PointCloud& cloud;
 
-    Carna::Tools::Transformation pointerBearing;
+    Carna::base::Transformation pointerBearing;
 
     bool pointerVisibility;
 

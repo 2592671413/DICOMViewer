@@ -11,7 +11,7 @@
 
 #include "SurfaceExtraction.h"
 #include <TRTK/SurfaceExtraction3D.hpp>
-#include <Carna/Position.h>
+#include <Carna/base/model/Position.h>
 #include <QProgressDialog>
 #include <QFuture>
 #include <QtConcurrentRun>
@@ -28,7 +28,7 @@ SurfaceExtraction::SurfaceExtraction( QProgressDialog& progress
                                     , const Segmentation::MaskType& segmentationMask )
     : cloud( new PointCloud( server, PointCloud::volumeUnits ) )
 {
-    const Carna::Tools::Vector3ui& size = segmentationMask.getSize();
+    const Carna::base::Vector3ui& size = segmentationMask.getSize();
 
     typedef TRTK::SurfaceExtraction3D< Segmentation::MaskType::VoxelType > MySurfaceExtraction3D;
     MySurfaceExtraction3D surfaceExtraction3D( &( segmentationMask.getData().front() ), size.x, size.y, size.z );

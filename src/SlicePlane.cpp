@@ -11,9 +11,9 @@
 
 #include "SlicePlane.h"
 #include "CarnaContextClient.h"
-#include <Carna/SlicePlaneVisualization.h>
-#include <Carna/SlicePlaneControllerUI.h>
-#include <Carna/Display.h>
+#include <Carna/SlicePlanes/DefaultSlicePlaneVisualization.h>
+#include <Carna/SlicePlanes/SlicePlaneControllerUI.h>
+#include <Carna/base/qt/Display.h>
 
 
 
@@ -28,16 +28,17 @@ const std::string RegistredComponent< SlicePlane >::name = "Slice Plane View";
 SlicePlane::SlicePlane( Record::Server& server, ComponentWindowFactory& componentWindowFactory )
     : RegistredComponent< SlicePlane >( server, componentWindowFactory )
 {
-    Carna::SlicePlaneVisualization* const view = new Carna::SlicePlaneVisualization();
+    Carna::SlicePlanes::SlicePlaneVisualization* const view = new Carna::SlicePlanes::DefaultSlicePlaneVisualization();
 
     view->doAfterInitialization( [&]
         {
-            Carna::SlicePlaneControllerUI* const controller = new Carna::SlicePlaneControllerUI( view->renderer() );
+            Carna::SlicePlanes::SlicePlaneControllerUI* const controller
+                = new Carna::SlicePlanes::SlicePlaneControllerUI( view->renderer() );
             createDockable( controller, Qt::RightDockWidgetArea );
         }
     );
 
     createVitalEmbeddable
-        ( new Carna::Display( view, CarnaContextClient( server ).scene() )
+        ( new Carna::base::qt::Display( view, CarnaContextClient( server ).scene() )
         , SingleEmbeddablePlacer::instance() );
 }

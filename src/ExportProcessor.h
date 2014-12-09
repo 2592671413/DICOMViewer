@@ -11,7 +11,7 @@
 
 #pragma once
 
-#include <Carna/noncopyable.h>
+#include <Carna/base/noncopyable.h>
 #include <string>
 
 class Exporter;

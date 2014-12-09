@@ -60,6 +60,6 @@ public:
 
     /** \brief  Creates an editor from \ref createdEditorType "specified type".
       */
-    Object3DEditor* create( Carna::Object3D& ) const;
+    Object3DEditor* create( Carna::base::model::Object3D& ) const;
 
 }; // Object3DEditorFactory

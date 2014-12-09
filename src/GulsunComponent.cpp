@@ -24,10 +24,10 @@
 #include <QFileDialog>
 #include <QFile>
 #include <QDataStream>
-#include <Carna/Object3DChooser.h>
-#include <Carna/CarnaProgressDialog.h>
-#include <Carna/ExpendableGroupBox.h>
-#include <Carna/Composition.h>
+#include <Carna/base/qt/Object3DChooser.h>
+#include <Carna/base/qt/CarnaProgressDialog.h>
+#include <Carna/base/qt/ExpandableGroupBox.h>
+#include <Carna/base/Composition.h>
 
 
 
@@ -60,12 +60,12 @@ GulsunComponent::~GulsunComponent()
 
 GulsunController::GulsunController
     ( Record::Server& server
-    , Carna::VisualizationEnvironment* acceleration
+    , Carna::base::VisualizationEnvironment* acceleration
     , QWidget* parent )
 
     : QWidget( parent )
     , server( server )
-    , seedChooser( new Carna::Object3DChooser( CarnaContextClient( server ).model() ) )
+    , seedChooser( new Carna::base::qt::Object3DChooser( CarnaContextClient( server ).model() ) )
     , laSeedHUV( new QLabel() )
     , cbEdgeEvaluation( new QComboBox() )
     , sbMinScale( new QDoubleSpinBox() )
@@ -138,9 +138,9 @@ GulsunController::GulsunController
     QFormLayout* const medialness   = new QFormLayout();
     QFormLayout* const graphControl = new QFormLayout();
 
-    Carna::ExpendableGroupBox* const multiscaleFrame   = new Carna::ExpendableGroupBox( "Multiscale Processing", false );
-    Carna::ExpendableGroupBox* const medialnessFrame   = new Carna::ExpendableGroupBox( "Medialness Filter", false );
-    Carna::ExpendableGroupBox* const graphControlFrame = new Carna::ExpendableGroupBox( "Graph Control", true );
+    Carna::base::qt::ExpandableGroupBox* const multiscaleFrame   = new Carna::base::qt::ExpandableGroupBox( "Multiscale Processing", false );
+    Carna::base::qt::ExpandableGroupBox* const medialnessFrame   = new Carna::base::qt::ExpandableGroupBox( "Medialness Filter", false );
+    Carna::base::qt::ExpandableGroupBox* const graphControlFrame = new Carna::base::qt::ExpandableGroupBox( "Graph Control", true );
 
     multiscaleFrame  ->child()->setLayout(   multiscale );
     medialnessFrame  ->child()->setLayout(   medialness );
@@ -326,7 +326,7 @@ GulsunController::GulsunController
 
     cbSmoothedRadiuses->setChecked( false );
 
-    Carna::ExpendableGroupBox* const segmentationFrame = new Carna::ExpendableGroupBox( "Segmentation", false );
+    Carna::base::qt::ExpandableGroupBox* const segmentationFrame = new Carna::base::qt::ExpandableGroupBox( "Segmentation", false );
     QFormLayout* const segmentation = new QFormLayout();
     segmentationFrame->child()->setLayout( segmentation );
     segmentationFrame->child()->setContentsMargins( 0, 0, 0, 0 );
@@ -411,8 +411,8 @@ MedialnessGraph::Setup* GulsunController::getSetup() const
     const double minimumMedialness = sbMinimumMedialness->value();
     const bool allowMedialnessEarlyOut = cbAllowMedialnessEarlyOut->isChecked();
 
-    if( minRadius > maxRadius || Carna::Tools::isEqual( minRadius, maxRadius ) ||
-        minScale > maxScale   || Carna::Tools::isEqual( minScale ,  maxScale ) )
+    if( minRadius > maxRadius || Carna::base::Math::isEqual( minRadius, maxRadius ) ||
+        minScale > maxScale   || Carna::base::Math::isEqual( minScale ,  maxScale ) )
     {
         return nullptr;
     }
@@ -563,7 +563,7 @@ void GulsunController::doLimitedDijkstraSteps()
 
     const unsigned int steps = static_cast< unsigned int >(sbMaxDijkstraSteps->value() );
 
-    Carna::CarnaProgressDialog progress
+    Carna::base::qt::CarnaProgressDialog progress
         ( "Performing Dijkstra..."
         , "Abort"
         , gulsun->countExpandedNodes()
@@ -603,7 +603,7 @@ void GulsunController::finishDijkstra()
     const bool detailedDebug = graph.hasDetailedDebug();
     graph.setDetailedDebug( false );
 
-    Carna::CarnaProgressDialog progress
+    Carna::base::qt::CarnaProgressDialog progress
         ( "Performing Dijkstra..."
         , "Abort"
         , 0
@@ -683,7 +683,7 @@ void GulsunController::computeNextMedialness()
 {
     if( successiveMedialness.get() == nullptr )
     {
-        const Carna::Tools::Vector3ui root = fetchRoot();
+        const Carna::base::Vector3ui root = fetchRoot();
         successiveMedialness.reset( new SuccessiveMedialness( graph, root ) );
     }
 
@@ -705,7 +705,7 @@ void GulsunController::segment()
 
     QApplication::setOverrideCursor( Qt::WaitCursor );
 
-    Carna::CarnaProgressDialog progress
+    Carna::base::qt::CarnaProgressDialog progress
         ( "Segmenting..."
         , "Abort"
         , 0
@@ -717,7 +717,7 @@ void GulsunController::segment()
     progress.setWindowTitle( "Gulsun Vessel Segmentation" );
     progress.setAutoClose( false );
 
-    graph.model.setMask( nullptr );
+    graph.model.setVolumeMask( nullptr );
 
     maskFactory.reset( new GulsunSegmentation( *gulsun ) );
 
@@ -745,9 +745,9 @@ void GulsunController::segment()
 
     if( maskFactory->hasMask() )
     {
-        graph.model.setMask(
-            new Carna::BufferedMaskAdapter(
-                new Carna::Tools::Composition< Carna::BufferedMaskAdapter::BinaryMask >(
+        graph.model.setVolumeMask(
+            new Carna::base::model::BufferedMaskAdapter(
+                new Carna::base::Composition< Carna::base::model::BufferedMaskAdapter::BinaryMask >(
                     maskFactory->takeMask() ) ) );
     }
 

@@ -13,7 +13,7 @@
 
 #include "Server.h"
 #include <QWidget>
-#include <Carna/Object3DChooser.h>
+#include <Carna/base/qt/Object3DChooser.h>
 
 class QLabel;
 
@@ -25,7 +25,7 @@ class QLabel;
 
 /** \brief	Widget which represents a point within a \ref PointCloudComposer.
   *
-  * The main UI-element of this widget is a \c Carna::Object3DChooser:
+  * The main UI-element of this widget is a \c Carna::base::qt::Object3DChooser:
   *
   * \image  html    PointCloudComposerSlot.png
   *
@@ -44,9 +44,9 @@ public:
     PointCloudComposerSlot( Record::Server&, int number );
 
 
-    /** \brief	Accesses the visual \c Carna::Object3D choosing component.
+    /** \brief	Accesses the visual \c Carna::base::model::Object3D choosing component.
       */
-    const Carna::Object3DChooser& getObjectChooser() const
+    const Carna::base::qt::Object3DChooser& getObjectChooser() const
     {
         return *objectChooser;
     }
@@ -62,9 +62,9 @@ public slots:
 
 private:
     
-    /** \brief	References the visual \c Carna::Object3D choosing component.
+    /** \brief	References the visual \c Carna::base::model::Object3D choosing component.
       */
-    Carna::Object3DChooser* const objectChooser;
+    Carna::base::qt::Object3DChooser* const objectChooser;
 
     /** \brief	Tells the number of this slot.
       */

@@ -12,7 +12,7 @@
 #pragma once
 
 #include <Carna/Carna.h>
-#include <Carna/noncopyable.h>
+#include <Carna/base/noncopyable.h>
 #include "ScalarField3ui.h"
 
 class PointCloud;
@@ -33,8 +33,8 @@ public:
     typedef ScalarField3ui< unsigned short > MaskType;
 
 
-    Segmentation( const Carna::Model&
-                , const Carna::Object3D& seedPoint
+    Segmentation( const Carna::base::model::Scene&
+                , const Carna::base::model::Object3D& seedPoint
                 , int huv0
                 , int huv1 );
 

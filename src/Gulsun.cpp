@@ -11,7 +11,7 @@
 
 #include "Gulsun.h"
 #include "LeafFinder.h"
-#include <Carna/Polyline.h>
+#include <Carna/base/view/Polyline.h>
 
 
 
@@ -358,7 +358,7 @@ double Gulsun::computePathLength( const std::vector< MedialnessGraph::Node >& pa
     double length = 0;
     walkPath( path, [&]( const MedialnessGraph::Node& from, const MedialnessGraph::Node& to )
         {
-            const Carna::Tools::Vector edgeVector
+            const Carna::base::Vector edgeVector
                     = graph.getNodePosition( from ).toMillimeters()
                     - graph.getNodePosition(   to ).toMillimeters();
 
@@ -374,7 +374,7 @@ double Gulsun::computePathLength( const std::vector< MedialnessGraph::Node >& pa
 
 void Gulsun::deleteCenterlines()
 {
-    std::for_each( centerlines.begin(), centerlines.end(), std::default_delete< Carna::Polyline >() );
+    std::for_each( centerlines.begin(), centerlines.end(), std::default_delete< Carna::base::view::Polyline >() );
     centerlines.clear();
 }
 
@@ -383,13 +383,13 @@ void Gulsun::createCenterline( const std::vector< unsigned int >& path )
 {
     CARNA_ASSERT( path.size() >= 2 );
 
-    centerlines.push_back( new Carna::Polyline( graph.model, Carna::Polyline::lineStrip ) );
+    centerlines.push_back( new Carna::base::view::Polyline( graph.model, Carna::base::view::Polyline::lineStrip ) );
 
     for( auto itr = path.begin(); itr != path.end(); ++itr )
     {
         MedialnessGraph::Node node;
         decompressNode( node, *itr );
-        const Carna::Position position = graph.getNodePosition( node );
+        const Carna::base::model::Position position = graph.getNodePosition( node );
         ( *centerlines.back() ) << position;
     }
 }
@@ -468,7 +468,7 @@ void Gulsun::showCenterlines( bool visible )
 {
     for( auto centerline_itr = centerlines.begin(); centerline_itr != centerlines.end(); ++centerline_itr )
     {
-        Carna::Polyline& centerline = **centerline_itr;
+        Carna::base::view::Polyline& centerline = **centerline_itr;
         centerline.setVisible( visible );
     }
 }

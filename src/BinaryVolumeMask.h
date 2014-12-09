@@ -11,7 +11,7 @@
 
 #pragma once
 
-#include <Carna/Volume.h>
+#include <Carna/base/model/Volume.h>
 
 
 
@@ -24,7 +24,7 @@ class BinaryVolumeMask
 
 public:
 
-    BinaryVolumeMask( int min, int max, const Carna::Volume& volume )
+    BinaryVolumeMask( int min, int max, const Carna::base::model::Volume& volume )
         : min( min )
         , max( max )
         , volume( &volume )
@@ -84,7 +84,7 @@ public:
 
 private:
 
-    const Carna::Volume* volume;
+    const Carna::base::model::Volume* volume;
 
     int min;
 

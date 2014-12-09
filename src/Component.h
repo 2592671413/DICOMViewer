@@ -20,7 +20,7 @@
 #include "Server.h"
 #include "ComponentEmbeddable.h"
 #include "EmbeddablePlacer.h"
-#include <Carna/noncopyable.h>
+#include <Carna/base/noncopyable.h>
 
 class Component;
 

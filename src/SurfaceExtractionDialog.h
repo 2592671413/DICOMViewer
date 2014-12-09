@@ -50,7 +50,7 @@ private:
 
     Record::Server& server;
 
-    Carna::Object3DChooser* const seedPointSelector;
+    Carna::base::qt::Object3DChooser* const seedPointSelector;
 
     QSpinBox* const sbHuv0;
 

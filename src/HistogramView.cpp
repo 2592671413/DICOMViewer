@@ -11,9 +11,9 @@
 
 #include "HistogramView.h"
 #include "CarnaContextClient.h"
-#include <Carna/Model.h>
-#include <Carna/Volume.h>
-#include <Carna/CarnaException.h>
+#include <Carna/base/model/Scene.h>
+#include <Carna/base/model/Volume.h>
+#include <Carna/base/CarnaException.h>
 #include <QPainter>
 #include <QProgressDialog>
 #include <QFontMetrics>
@@ -89,7 +89,7 @@ void HistogramView::init()
 {
     CARNA_ASSERT( !initialized );
 
-    const Carna::Volume& volume = CarnaContextClient( server ).model().volume();
+    const Carna::base::model::Volume& volume = CarnaContextClient( server ).model().volume();
 
     QProgressDialog progress( "Building histogram...", "Abort", 0, volume.size.x - 1, this );
     progress.setWindowModality( Qt::WindowModal );

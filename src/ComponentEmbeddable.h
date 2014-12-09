@@ -16,7 +16,7 @@
   */
 
 #include "Embeddable.h"
-#include <Carna/Singleton.h>
+#include <Carna/base/Singleton.h>
 #include <set>
 
 class QMenu;
@@ -118,7 +118,7 @@ public:
   * \author Leonid Kostrykin
   * \date   1.3.2011
   */
-class NullMenuFactory : public MenuFactory, public Carna::Tools::Singleton< NullMenuFactory >
+class NullMenuFactory : public MenuFactory, public Carna::base::Singleton< NullMenuFactory >
 {
 
 public:

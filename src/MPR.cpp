@@ -13,12 +13,13 @@
 #include "ComponentEmbeddable.h"
 #include "EmbedAreaArray.h"
 #include "CarnaContextClient.h"
-#include <Carna/AxialPlane/AxialPlaneVisualization.h>
-#include <Carna/AxialPlane/AxialPlaneController.h>
-#include <Carna/AxialPlane/AxialPlaneControllerUI.h>
-#include <Carna/AxialPlane/IntersectionSynchronisationFactory.h>
-#include <Carna/Display.h>
-#include <Carna/Scene.h>
+#include <Carna/MPR/DefaultAxialPlaneVisualization.h>
+#include <Carna/MPR/DefaultAxialPlaneRenderer.h>
+#include <Carna/MPR/AxialPlaneController.h>
+#include <Carna/MPR/AxialPlaneControllerUI.h>
+#include <Carna/MPR/IntersectionSynchronisationFactory.h>
+#include <Carna/base/qt/Display.h>
+#include <Carna/base/view/SceneProvider.h>
 #include <QAction>
 
 
@@ -157,7 +158,7 @@ static void adjustInteractionStrategy( MPR::View* view )
 {
     view->doAfterInitialization( [view]
         {
-            static_cast< Carna::AxialPlane::AxialPlaneController& >
+            static_cast< Carna::MPR::AxialPlaneController& >
                 ( view->rawController() )
                 .setParentHavingContextMenu( true );
         }
@@ -177,7 +178,7 @@ const std::string RegistredComponent< MPR >::name = "MPR";
 MPR::MPR( Record::Server& server, ComponentWindowFactory& factory )
     : RegistredComponent< MPR >( server, factory )
     , showDynamicViewAction( new QAction( "Show 3&D View", this ) )
-    , controller( new Carna::AxialPlane::AxialPlaneControllerUI( CarnaContextClient( server ).model() ) )
+    , controller( new Carna::MPR::AxialPlaneControllerUI( CarnaContextClient( server ).model() ) )
     , embeddablePlacer( new MPREmbeddablePlacer() )
     , dynamicViewWindow( nullptr )
 {
@@ -206,7 +207,7 @@ MPR::MPR( Record::Server& server, ComponentWindowFactory& factory )
 
     embeddablePlacer->prepareFor( MPREmbeddablePlacer::front );
     createVitalEmbeddable
-        ( new Carna::Display( frontView, carna.scene() )
+        ( new Carna::base::qt::Display( frontView, carna.scene() )
         , *embeddablePlacer
         , "Front"
         , ComponentEmbeddable::DEFAULT_SUFFIX_CONNECTOR
@@ -214,7 +215,7 @@ MPR::MPR( Record::Server& server, ComponentWindowFactory& factory )
 
     embeddablePlacer->prepareFor( MPREmbeddablePlacer::top );
     createVitalEmbeddable
-        ( new Carna::Display( topView, carna.scene() )
+        ( new Carna::base::qt::Display( topView, carna.scene() )
         , *embeddablePlacer
         , "Top"
         , ComponentEmbeddable::DEFAULT_SUFFIX_CONNECTOR
@@ -222,7 +223,7 @@ MPR::MPR( Record::Server& server, ComponentWindowFactory& factory )
 
     embeddablePlacer->prepareFor( MPREmbeddablePlacer::left );
     createVitalEmbeddable
-        ( new Carna::Display( leftView, carna.scene() )
+        ( new Carna::base::qt::Display( leftView, carna.scene() )
         , *embeddablePlacer
         , "Left"
         , ComponentEmbeddable::DEFAULT_SUFFIX_CONNECTOR
@@ -265,7 +266,7 @@ void MPR::showDynamicView()
 
         embeddablePlacer->prepareFor( MPREmbeddablePlacer::dynamic );
         dynamicViewWindow = &createEmbeddable
-            ( new Carna::Display( dynamicView, CarnaContextClient( server ).scene() )
+            ( new Carna::base::qt::Display( dynamicView, CarnaContextClient( server ).scene() )
             , *embeddablePlacer
             , "3D"
             , ComponentEmbeddable::DEFAULT_SUFFIX_CONNECTOR
@@ -279,7 +280,7 @@ void MPR::showDynamicView()
 
      // sync intersections
 
-        Carna::AxialPlane::IntersectionSynchronisationFactory intersectionSync;
+        Carna::MPR::IntersectionSynchronisationFactory intersectionSync;
 
         initializedRenderersCount = 0;
         const auto onInitialized = [&]

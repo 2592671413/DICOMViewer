@@ -12,7 +12,7 @@
 #pragma once
 
 #include "Server.h"
-#include <Carna/ModelFactory.h>
+#include <Carna/base/model/SceneFactory.h>
 #include <QDialog>
 
 class PointCloud;
@@ -47,7 +47,7 @@ public:
         return mask.get();
     }
 
-    const Carna::ModelFactory::BinarizedScalarField& getMask() const
+    const Carna::base::model::SceneFactory::BinarizedScalarField& getMask() const
     {
         return *mask;
     }
@@ -65,7 +65,7 @@ private slots:
 
 private:
 
-    std::unique_ptr< Carna::ModelFactory::BinarizedScalarField > mask;
+    std::unique_ptr< Carna::base::model::SceneFactory::BinarizedScalarField > mask;
 
     QPushButton* acceptButton;
     

@@ -16,7 +16,7 @@
   */
 
 #include "Object3DEditor.h"
-#include <Carna/Transformation.h>
+#include <Carna/base/Transformation.h>
 #include <QDoubleSpinBox>
 #include <QComboBox>
 #include <QLabel>
@@ -102,7 +102,7 @@ private:
     /** \brief  Holds the current position of the edited object in the
       *         \ref currentUnits "currently specified units".
       */
-    Carna::Tools::Vector currentPosition;
+    Carna::base::Vector currentPosition;
 
 
     /** \brief  Configures the given spin box to correspond to the currently

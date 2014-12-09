@@ -23,7 +23,7 @@
 // ObjectsView
 // ----------------------------------------------------------------------------------
 
-/** \brief  Widget which lists all currently present \c Carna::Object3D instances.
+/** \brief  Widget which lists all currently present \c Carna::base::model::Object3D instances.
   *
   * \author Leonid Kostrykin
   * \date   7.8.12
@@ -44,11 +44,11 @@ public slots:
     
     /** \brief  Does nothing.
       */
-    virtual void addObject( Carna::Object3D& ) override;
+    virtual void addObject( Carna::base::model::Object3D& ) override;
     
     /** \brief  Does nothing.
       */
-    virtual void removeObject( Carna::Object3D& ) override;
+    virtual void removeObject( Carna::base::model::Object3D& ) override;
     
     /** \brief  Does nothing.
       */
@@ -57,9 +57,9 @@ public slots:
 
 protected:
 
-    /** \brief  Shortcut for \c Carna::Object3DEvent
+    /** \brief  Shortcut for \c Carna::base::model::Object3DEvent
       */
-    typedef Carna::Object3DEvent ObjectsView::Objects3DEvent;
+    typedef Carna::base::model::Object3DEvent ObjectsView::Objects3DEvent;
 
 
 protected slots:

@@ -10,8 +10,8 @@
  */
 
 #include "ClippedVolumeMask.h"
-#include <Carna/Position.h>
-#include <Carna/Model.h>
+#include <Carna/base/model/Position.h>
+#include <Carna/base/model/Scene.h>
 
 
 
@@ -19,7 +19,7 @@
 // ClippedVolumeMask :: Line
 // ----------------------------------------------------------------------------------
 
-ClippedVolumeMask::Line::Line( const Carna::Tools::Vector& support, const Carna::Tools::Vector& way, double radius )
+ClippedVolumeMask::Line::Line( const Carna::base::Vector& support, const Carna::base::Vector& way, double radius )
     : support( support )
     , way( way )
     , radius( radius )
@@ -32,7 +32,7 @@ ClippedVolumeMask::Line::Line( const Carna::Tools::Vector& support, const Carna:
 // ClippedVolumeMask :: Setup
 // ----------------------------------------------------------------------------------
 
-ClippedVolumeMask::Setup::Setup( const Carna::Model& model, int min, int max )
+ClippedVolumeMask::Setup::Setup( const Carna::base::model::Scene& model, int min, int max )
     : model( model )
     , min( min )
     , max( max )
@@ -74,7 +74,7 @@ void ClippedVolumeMask::Setup::visitLines( const std::function< bool( const Line
 // ClippedVolumeMask
 // ----------------------------------------------------------------------------------
 
-ClippedVolumeMask::ClippedVolumeMask( const std::function< bool( Carna::Tools::Vector3ui& ) >& accept, const Setup& setup )
+ClippedVolumeMask::ClippedVolumeMask( const std::function< bool( Carna::base::Vector3ui& ) >& accept, const Setup& setup )
     : BinaryVolumeMask( setup.min, setup.max, setup.model.volume() )
     , setup( &setup )
     , accept( accept )
@@ -100,12 +100,12 @@ ClippedVolumeMask& ClippedVolumeMask::operator=( const ClippedVolumeMask& other 
 
 bool ClippedVolumeMask::test( unsigned int x, unsigned int y, unsigned int z ) const
 {
-    if( !accept( Carna::Tools::Vector3ui( x, y, z ) ) )
+    if( !accept( Carna::base::Vector3ui( x, y, z ) ) )
     {
         return false;
     }
 
-    const Carna::Tools::Vector probed_point = Carna::Position::fromVolumeUnits
+    const Carna::base::Vector probed_point = Carna::base::model::Position::fromVolumeUnits
         ( setup->model
         , x / static_cast< double >( setup->model.volume().size.x - 1 )
         , y / static_cast< double >( setup->model.volume().size.y - 1 )
@@ -115,11 +115,11 @@ bool ClippedVolumeMask::test( unsigned int x, unsigned int y, unsigned int z ) c
     const Line* closest_line = nullptr;
     setup->visitLines( [&]( const Line& line )->bool
         {
-            const Carna::Tools::Vector probed_point_to_support = line.support - probed_point;
+            const Carna::base::Vector probed_point_to_support = line.support - probed_point;
 
          // project 'probed_point_to_support' on to 'line.way'
 
-            const Carna::Tools::Vector projected_probed_point_to_way =
+            const Carna::base::Vector projected_probed_point_to_way =
                 ( probed_point_to_support.dot( line.way ) / line.way.dot( line.way ) ) * line.way;
 
          // compute whether 'projected_probed_point_to_way' is reverse to 'line.way'

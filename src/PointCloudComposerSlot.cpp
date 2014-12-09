@@ -22,7 +22,7 @@
 // ----------------------------------------------------------------------------------
 
 PointCloudComposerSlot::PointCloudComposerSlot( Record::Server& server, int number )
-    : objectChooser( new Carna::Object3DChooser( CarnaContextClient( server ).model() ) )
+    : objectChooser( new Carna::base::qt::Object3DChooser( CarnaContextClient( server ).model() ) )
     , laNumber( new QLabel( QString::number( number ) + "." ) )
 {
     this->setLayout( new QHBoxLayout() );

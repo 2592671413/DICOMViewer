@@ -17,19 +17,20 @@
 #include "VolumeViewCameraController.h"
 #include "GulsunComponent.h"
 #include "VolumeView.h"
-#include <Carna/Composition.h>
-#include <Carna/Aggregation.h>
-#include <Carna/VolumeControllerUI.h>
-#include <Carna/VolumeVisualization.h>
-#include <Carna/DefaultCamera.h>
-#include <Carna/Association.h>
-#include <Carna/Scene.h>
-#include <Carna/Monoscopic.h>
-#include <Carna/Philips.h>
-#include <Carna/Zalman.h>
-#include <Carna/CarnaException.h>
-#include <Carna/MIP/MaximumIntensityProjection.h>
-#include <Carna/ExpendableGroupBox.h>
+#include <Carna/base/Composition.h>
+#include <Carna/base/Aggregation.h>
+#include <Carna/VolumeRenderings/VolumeControllerUI.h>
+#include <Carna/VolumeRenderings/VolumeVisualization.h>
+#include <Carna/VolumeRenderings/VolumeRenderer.h>
+#include <Carna/VolumeRenderings/MIP/MaximumIntensityProjection.h>
+#include <Carna/base/view/DefaultCamera.h>
+#include <Carna/base/Association.h>
+#include <Carna/base/view/SceneProvider.h>
+#include <Carna/base/view/Monoscopic.h>
+#include <Carna/base/CarnaException.h>
+#include <Carna/stereoscopic/Philips.h>
+#include <Carna/stereoscopic/Zalman.h>
+#include <Carna/base/qt/ExpandableGroupBox.h>
 #include <CRA/Link.h>
 #include <QVBoxLayout>
 #include <QFormLayout>
@@ -48,7 +49,7 @@
 // VolumeController
 // ----------------------------------------------------------------------------------
 
-VolumeController::VolumeController( Carna::VolumeVisualization& view, Record::Server& server, VolumeView& tool )
+VolumeController::VolumeController( Carna::VolumeRenderings::VolumeVisualization& view, Record::Server& server, VolumeView& tool )
     : tool( tool )
     , view( view )
     , server( server )
@@ -64,7 +65,7 @@ VolumeController::VolumeController( Carna::VolumeVisualization& view, Record::Se
 {
     CARNA_ASSERT( view.isInitialized() );
 
-    Carna::VolumeControllerUI* const mainController = new Carna::VolumeControllerUI( view.renderer(), CarnaContextClient( server ).model() );
+    Carna::VolumeRenderings::VolumeControllerUI* const mainController = new Carna::VolumeRenderings::VolumeControllerUI( view.renderer(), CarnaContextClient( server ).model() );
 
     linkedCameraChooser->setEnabled( server.hasService( Registration::serviceID ) );
 
@@ -112,7 +113,7 @@ VolumeController::VolumeController( Carna::VolumeVisualization& view, Record::Se
 
  // camera setup
 
-    Carna::ExpendableGroupBox* const gbCameraSetup = new Carna::ExpendableGroupBox( "Camera Setup" );
+    Carna::base::qt::ExpandableGroupBox* const gbCameraSetup = new Carna::base::qt::ExpandableGroupBox( "Camera Setup" );
     QFormLayout* const cameraSetup = new QFormLayout();
     gbCameraSetup->child()->setLayout( cameraSetup );
     gbCameraSetup->child()->layout()->setContentsMargins( 0, 0, 0, 0 );
@@ -135,7 +136,7 @@ VolumeController::VolumeController( Carna::VolumeVisualization& view, Record::Se
 
  // camera setup - auto rotate
 
-    view.setController( new Carna::DefaultInteractionStrategy( view, cameraController ) );
+    view.setController( new Carna::base::controller::DefaultInteractionStrategy( view, cameraController ) );
 
     cbAutoRotate->setChecked( cameraController->hasAutoRotate() );
     sbSecondsPerRotation->setEnabled( cameraController->hasAutoRotate() );
@@ -189,9 +190,9 @@ VolumeController::~VolumeController()
 
 void VolumeController::openGulsun()
 {
-    const Carna::Model& model = view.renderer().scene.model;
+    const Carna::base::model::Scene& model = view.renderer().provider.scene;
     IntensitySampler cpu( model );
-    GpuIntensitySampler gpu( view.environment(), view.renderer().scene );
+    GpuIntensitySampler gpu( view.environment(), view.renderer().provider );
 
     const unsigned int z = 20;
     const unsigned int y = 20;
@@ -203,7 +204,7 @@ void VolumeController::openGulsun()
     {
         const double rx = x / double( model.volume().size.x - 1 );
 
-        Carna::Position position = Carna::Position::fromVolumeUnits( model, rx, ry, rz );
+        Carna::base::model::Position position = Carna::base::model::Position::fromVolumeUnits( model, rx, ry, rz );
         const double sample_cpu = cpu.valueAt( position.toMillimeters() );
         const double sample_gpu = gpu.valueAt( position.toMillimeters() );
 
@@ -230,25 +231,25 @@ void VolumeController::gulsunClosed()
 
 void VolumeController::setRenderMode( int renderModeIndex )
 {
-    Carna::Renderer::RenderMode* newRenderMode;
+    Carna::base::view::Renderer::RenderMode* newRenderMode;
     switch( static_cast< RenderMode >( renderModeIndex ) )
     {
         
         case monoscopic:
         {
-            newRenderMode = new Carna::RenderModes::Monoscopic( view.renderer() );
+            newRenderMode = new Carna::base::view::Monoscopic( view.renderer() );
             break;
         }
         
         case philips:
         {
-            newRenderMode = new Carna::RenderModes::Philips( view.renderer() );
+            newRenderMode = new Carna::stereoscopic::Philips( view.renderer() );
             break;
         }
         
         case zalman:
         {
-            newRenderMode = new Carna::RenderModes::Zalman( view.renderer() );
+            newRenderMode = new Carna::stereoscopic::Zalman( view.renderer() );
             break;
         }
 
@@ -315,7 +316,7 @@ void VolumeController::setDefaultCamera()
         case undefinedPreferredProjection:
         default:
         {
-            if( view.renderer().mode().name == Carna::MIP::MaximumIntensityProjection::NAME )
+            if( view.renderer().mode().name == Carna::VolumeRenderings::MIP::MaximumIntensityProjection::NAME )
             {
                 usePerspectiveProjection = false;
             }
@@ -328,8 +329,8 @@ void VolumeController::setDefaultCamera()
 
     }
 
-    Carna::Camera* camera = new Carna::DefaultCamera( view.renderer().scene.model, usePerspectiveProjection );
-    view.renderer().setCamera( new Carna::Tools::Composition< Carna::Camera >( camera ) );
+    Carna::base::view::Camera* camera = new Carna::base::view::DefaultCamera( view.renderer().provider.scene, usePerspectiveProjection );
+    view.renderer().setCamera( new Carna::base::Composition< Carna::base::view::Camera >( camera ) );
 
     cbAutoRotate->setEnabled( true );
     sbSecondsPerRotation->setEnabled( cameraController->hasAutoRotate() );
@@ -354,7 +355,7 @@ void VolumeController::setPreferredCameraMode( int preferredCameraMode_int )
 
 void VolumeController::updateCamera()
 {
-    Carna::DefaultCamera* const camera = dynamic_cast< Carna::DefaultCamera* >( &view.renderer().camera() );
+    Carna::base::view::DefaultCamera* const camera = dynamic_cast< Carna::base::view::DefaultCamera* >( &view.renderer().camera() );
     if( camera )
     {
         switch( preferredCameraMode )
@@ -375,7 +376,7 @@ void VolumeController::updateCamera()
             case undefinedPreferredProjection:
             default:
             {
-                if( view.renderer().mode().name == Carna::MIP::MaximumIntensityProjection::NAME )
+                if( view.renderer().mode().name == Carna::VolumeRenderings::MIP::MaximumIntensityProjection::NAME )
                 {
                     camera->setPerspectiveProjection( false );
                 }
@@ -446,7 +447,7 @@ void VolumeController::setLinkedCamera( CRA::Tool& rb )
     {
         CRA::LinkedCamera* const newCamera = new CRA::LinkedCamera();
 
-        view.renderer().setCamera( new Carna::Tools::Aggregation< Carna::Camera >( *newCamera ) );
+        view.renderer().setCamera( new Carna::base::Aggregation< Carna::base::view::Camera >( *newCamera ) );
 
         linkedCamera.reset( newCamera );
 

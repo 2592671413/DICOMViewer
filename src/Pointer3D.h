@@ -12,8 +12,8 @@
 #pragma once
 
 #include "Server.h"
-#include <Carna/RotatableObject3D.h>
-#include <Carna/RotatingColor.h>
+#include <Carna/base/model/RotatableObject3D.h>
+#include <Carna/base/qt/RotatingColor.h>
 #include <QColor>
 
 
@@ -27,7 +27,7 @@
   * \author Leonid Kostrykin
   * \date   9.8.12
   */
-class Pointer3D : public Carna::RotatableObject3D
+class Pointer3D : public Carna::base::model::RotatableObject3D
 {
 
     Q_OBJECT
@@ -45,11 +45,11 @@ public:
     
     /** \brief  Draws this object.
       */
-    virtual void paint( const Carna::Renderer& ) const override;
+    virtual void paint( const Carna::base::view::Renderer& ) const override;
     
     /** \brief  Draw this object using all-over the specified color.
       */
-    virtual void paintFalseColor( const Carna::Renderer&, const Carna::Tools::Vector3ui& color ) const override;
+    virtual void paintFalseColor( const Carna::base::view::Renderer&, const Carna::base::Vector3ui& color ) const override;
 
 
     /** \brief  Tells the length of this pointer in millimeters.
@@ -64,7 +64,7 @@ public:
 
     const QColor& getShaftColor() const;
 
-    const Carna::Tools::Vector& getShaftDirection() const;
+    const Carna::base::Vector& getShaftDirection() const;
 
     bool isInverseDirection() const;
 
@@ -83,7 +83,7 @@ public slots:
 
     void setShaftColor( const QColor& );
 
-    void setShaftDirection( const Carna::Tools::Vector& );
+    void setShaftDirection( const Carna::base::Vector& );
 
     void setInverseDirection( bool );
 
@@ -98,7 +98,7 @@ signals:
 
     void shaftColorChanged( const QColor& );
 
-    void shaftDirectionChanged( const Carna::Tools::Vector& );
+    void shaftDirectionChanged( const Carna::base::Vector& );
 
     void inverseDirectionChanged( bool );
 
@@ -115,12 +115,12 @@ private:
 
     QColor shaftColor;
 
-    Carna::Tools::Vector shaftDirection;
+    Carna::base::Vector shaftDirection;
 
     bool inverseDirection;
 
 
-    static Carna::Tools::RotatingColor nextHeadColor;
+    static Carna::base::qt::RotatingColor nextHeadColor;
 
 
     void draw( const QColor& headColor, const QColor& shaftColor ) const;

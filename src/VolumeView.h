@@ -22,7 +22,7 @@ class ToolChooser;
 // VolumeView
 // ----------------------------------------------------------------------------------
 
-/** \brief  Provides \c Carna::VolumeView and \c Carna::VolumeController instances.
+/** \brief  Provides \c Carna::base::model::VolumeView and \c Carna::base::model::VolumeController instances.
   *
   * \see    \ref Component
   * \author Leonid Kostrykin
@@ -42,6 +42,6 @@ public:
 
 private:
 
-    Carna::VolumeVisualization* const view;
+    Carna::VolumeRenderings::VolumeVisualization* const view;
 
 }; // VolumeView

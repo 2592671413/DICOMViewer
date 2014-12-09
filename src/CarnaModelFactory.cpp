@@ -13,9 +13,8 @@
 #include "FileChooser.h"
 #include "Importer.h"
 #include "BinaryDumpProcessor.h"
-#include <Carna/DicomController.h>
-#include <Carna/ModelFactory.h>
-#include <Carna/SeriesLoadingRequest.h>
+#include <Carna/dicom/DicomController.h>
+#include <Carna/dicom/DicomSceneFactory.h>
 #include <QTabWidget>
 #include <QVBoxLayout>
 #include <QMetaType>
@@ -40,10 +39,10 @@ CarnaModelFactory::CarnaModelFactory( Record::Server& server, QWidget* parent )
 
  // ----------------------------------------------------------------------------------
 
-    Carna::DicomController* const dicomController = new Carna::DicomController();
+    Carna::dicom::DicomController* const dicomController = new Carna::dicom::DicomController();
     tabs->addTab( dicomController, "DICOM" );
 
-    connect( dicomController, SIGNAL( seriesLoadingRequested( const SeriesLoadingRequest& ) ), this, SLOT( disptach( const SeriesLoadingRequest& ) ) );
+    connect( dicomController, SIGNAL( seriesLoadingRequested( const SeriesLoadingRequest& ) ), this, SLOT( dispatch( const SeriesLoadingRequest& ) ) );
 
  // ----------------------------------------------------------------------------------
 
@@ -61,10 +60,10 @@ CarnaModelFactory::CarnaModelFactory( Record::Server& server, QWidget* parent )
 }
 
 
-void CarnaModelFactory::disptach( const Carna::SeriesLoadingRequest& request )
+void CarnaModelFactory::dispatch( const Carna::dicom::SeriesLoadingRequest& request )
 {
-    Carna::ModelFactory factory( this );
-    Carna::Model* const model = factory.createFromRequest( request );
+    Carna::dicom::DicomSceneFactory factory( this );
+    Carna::base::model::Scene* const model = factory.createFromRequest( request );
 
     if( model != nullptr )
     {
@@ -89,7 +88,7 @@ void CarnaModelFactory::import()
 
     const QString& fileName = fileNames[ 0 ];
     importer->setFile( new QFile( fileName ) );
-    Carna::Model* const model = importer->run();
+    Carna::base::model::Scene* const model = importer->run();
 
     if( model != nullptr )
     {

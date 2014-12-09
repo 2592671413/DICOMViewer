@@ -10,7 +10,7 @@
  */
 
 #include "Differential.h"
-#include <Carna/common.h>
+#include <Carna/base/Math.h>
 
 
 
@@ -92,11 +92,11 @@ void Differential::updateGaussianDerivative( unsigned int samples )
 
  // define mirrored derivative of Gaussian kernel
 
-    const double scale_sq = Carna::Tools::sq( scale );
+    const double scale_sq = Carna::base::Math::sq( scale );
     const double normalization = 1. / std::sqrt( 2 * PI * scale_sq );
     const auto mirroredGaussianDerivativeAt = [&]( double x )->double
     {
-        return normalization * std::exp( -Carna::Tools::sq( -x ) / ( 2 * scale_sq ) ) * x / scale_sq;
+        return normalization * std::exp( -Carna::base::Math::sq( -x ) / ( 2 * scale_sq ) ) * x / scale_sq;
     };
 
  // define samples
@@ -121,11 +121,11 @@ void Differential::updateGaussianDerivative( unsigned int samples )
 }
 
 
-double Differential::partialDerivativeAt( const Carna::Tools::Vector& p0, const Carna::Tools::Vector& _direction ) const
+double Differential::partialDerivativeAt( const Carna::base::Vector& p0, const Carna::base::Vector& _direction ) const
 {
     CARNA_ASSERT( sampler.get() != nullptr );
 
-    const Carna::Tools::Vector direction = _direction.normalized();
+    const Carna::base::Vector direction = _direction.normalized();
     const unsigned int samples = gaussianDerivativeSamples.size();
 
  // compute convolution in p0
@@ -141,9 +141,9 @@ double Differential::partialDerivativeAt( const Carna::Tools::Vector& p0, const 
         const double t1 = gaussianDerivativePositions[ i ];
         const double dt = t1 - t0;
 
-        const Carna::Tools::Vector p = p0 + t1 * direction;
-        const double sampled_value = Carna::Tools::isEqual( g1, 0. ) ? 0 : sampler->valueAt( p );
-        const double clamped_value = Carna::Tools::clamp< double >( sampled_value, minHUV, maxHUV );
+        const Carna::base::Vector p = p0 + t1 * direction;
+        const double sampled_value = Carna::base::Math::isEqual( g1, 0. ) ? 0 : sampler->valueAt( p );
+        const double clamped_value = Carna::base::Math::clamp< double >( sampled_value, minHUV, maxHUV );
 
         const double f1 = clamped_value * g1;
         const double trapeze = ( f0 + f1 ) * dt / 2;

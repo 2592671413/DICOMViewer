@@ -17,9 +17,9 @@
 #include "PointCloud3D.h"
 #include "Pointer3D.h"
 #include "CarnaContextClient.h"
-#include <Carna/Object3D.h>
-#include <Carna/Point3D.h>
-#include <Carna/Polyline.h>
+#include <Carna/base/model/Object3D.h>
+#include <Carna/base/view/Point3D.h>
+#include <Carna/base/view/Polyline.h>
 #include <QApplication>
 #include <QAction>
 #include <QVBoxLayout>
@@ -264,7 +264,7 @@ ObjectsController::ObjectsController( Record::Server& server, ObjectsComponent& 
     editorDetaching->setEnabled( false );
 
     connect( view, SIGNAL( selectionChanged() ), this, SLOT( objectsSelectionChanged() ) );
-    connect( view, SIGNAL( objectDoubleClicked( Carna::Object3D& ) ), this, SLOT( renameObject( Carna::Object3D& ) ) );
+    connect( view, SIGNAL( objectDoubleClicked( Carna::base::model::Object3D& ) ), this, SLOT( renameObject( Carna::base::model::Object3D& ) ) );
 
     objectsSelectionChanged();
 }
@@ -277,7 +277,7 @@ ObjectsController::~ObjectsController()
 
 void ObjectsController::releaseObjects()
 {
-    std::vector< Carna::Object3D* > selectedObjects;
+    std::vector< Carna::base::model::Object3D* > selectedObjects;
     view->fetchSelectedObjects( selectedObjects );
     view->selectNone();
 
@@ -285,7 +285,7 @@ void ObjectsController::releaseObjects()
 
     for( auto it = selectedObjects.begin(); it != selectedObjects.end(); ++it )
     {
-        Carna::Object3D* object = *it;
+        Carna::base::model::Object3D* object = *it;
         delete object;
     }
 
@@ -295,7 +295,7 @@ void ObjectsController::releaseObjects()
 
 void ObjectsController::renameObject()
 {
-    std::vector< Carna::Object3D* > selectedObjects;
+    std::vector< Carna::base::model::Object3D* > selectedObjects;
     view->fetchSelectedObjects( selectedObjects );
 
     if( selectedObjects.size() == 1 )
@@ -305,7 +305,7 @@ void ObjectsController::renameObject()
 }
 
 
-void ObjectsController::renameObject( Carna::Object3D& object )
+void ObjectsController::renameObject( Carna::base::model::Object3D& object )
 {
     bool ok;
 
@@ -326,7 +326,7 @@ void ObjectsController::renameObject( Carna::Object3D& object )
 
 void ObjectsController::openObjectEditor()
 {
-    std::vector< Carna::Object3D* > selectedObjects;
+    std::vector< Carna::base::model::Object3D* > selectedObjects;
     view->fetchSelectedObjects( selectedObjects );
 
     if( selectedObjects.empty() )
@@ -355,7 +355,7 @@ void ObjectsController::closeObjectEditor()
 }
 
 
-void ObjectsController::openObjectEditor( Carna::Object3D& object )
+void ObjectsController::openObjectEditor( Carna::base::model::Object3D& object )
 {
     Object3DEditor* const editor = createObjectEditor( object );
 
@@ -372,7 +372,7 @@ void ObjectsController::detachEditor()
 {
     if( currentObjectEditor )
     {
-        Carna::Object3D& object = currentObjectEditor->editedObject;
+        Carna::base::model::Object3D& object = currentObjectEditor->editedObject;
 
         ComponentEmbeddable* const embeddable = &component.createEmbeddable
                 ( currentObjectEditor
@@ -391,11 +391,11 @@ void ObjectsController::detachEditor()
 }
 
 
-Object3DEditor* ObjectsController::createObjectEditor( Carna::Object3D& object )
+Object3DEditor* ObjectsController::createObjectEditor( Carna::base::model::Object3D& object )
 {
     Object3DEditorFactory::EditorType editorType;
 
-    if( dynamic_cast< Carna::Point3D* >( &object ) )
+    if( dynamic_cast< Carna::base::view::Point3D* >( &object ) )
     {
         editorType = Object3DEditorFactory::pointEditor;
     }
@@ -421,7 +421,7 @@ Object3DEditor* ObjectsController::createObjectEditor( Carna::Object3D& object )
 
 void ObjectsController::objectsSelectionChanged()
 {
-    std::vector< Carna::Object3D* > selectedObjects;
+    std::vector< Carna::base::model::Object3D* > selectedObjects;
     view->fetchSelectedObjects( selectedObjects );
 
     objectReleasing->setEnabled( selectedObjects.size()  > 0 );
@@ -440,14 +440,14 @@ void ObjectsController::objectsSelectionChanged()
 
 void ObjectsController::createPoint3D()
 {
-    new Carna::Point3D( CarnaContextClient( server ).model() );
+    new Carna::base::view::Point3D( CarnaContextClient( server ).model() );
 }
 
 
 void ObjectsController::createTempPoint1()
 {
-    Carna::Model& model = CarnaContextClient( server ).model();
-    new Carna::Point3D( model, Carna::Position::fromVolumeUnits( model, 0.72307533, 0.76862745, 0.33882746 ) );
+    Carna::base::model::Scene& model = CarnaContextClient( server ).model();
+    new Carna::base::view::Point3D( model, Carna::base::model::Position::fromVolumeUnits( model, 0.72307533, 0.76862745, 0.33882746 ) );
 }
 
 
@@ -484,10 +484,10 @@ void ObjectsController::importPolyline()
 
  // create polyline
 
-    Carna::Model& model = CarnaContextClient( server ).model();
-    Carna::Polyline* const line = new Carna::Polyline
+    Carna::base::model::Scene& model = CarnaContextClient( server ).model();
+    Carna::base::view::Polyline* const line = new Carna::base::view::Polyline
         ( model
-        , Carna::Polyline::lineStrip
+        , Carna::base::view::Polyline::lineStrip
         , setup->getLineWidth()
         , setup->getVertexSize() );
 
@@ -528,13 +528,13 @@ void ObjectsController::importPolyline()
 
                 case PolylineImportConfiguration::millimeters:
                 {
-                    ( *line ) << Carna::Position::fromMillimeters( model, x, y, z );
+                    ( *line ) << Carna::base::model::Position::fromMillimeters( model, x, y, z );
                     break;
                 }
 
                 case PolylineImportConfiguration::volumeUnits:
                 {
-                    ( *line ) << Carna::Position::fromVolumeUnits( model, x, y, z );
+                    ( *line ) << Carna::base::model::Position::fromVolumeUnits( model, x, y, z );
                     break;
                 }
 

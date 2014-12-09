@@ -50,14 +50,14 @@ public:
 
 
     void partialDerivativeAt
-        ( const Carna::Tools::Vector& position
-        , const Carna::Tools::Vector& direction
+        ( const Carna::base::Vector& position
+        , const Carna::base::Vector& direction
         , double& partialDerivative
         , double& scale ) const;
 
     double partialDerivativeAt
-        ( const Carna::Tools::Vector& position
-        , const Carna::Tools::Vector& direction ) const;
+        ( const Carna::base::Vector& position
+        , const Carna::base::Vector& direction ) const;
 
 
 private:

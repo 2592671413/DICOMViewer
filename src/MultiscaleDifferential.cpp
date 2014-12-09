@@ -24,8 +24,8 @@ MultiscaleDifferential::MultiscaleDifferential( Differential::Sampler* sampler )
 
 
 void MultiscaleDifferential::partialDerivativeAt
-    ( const Carna::Tools::Vector& position
-    , const Carna::Tools::Vector& direction
+    ( const Carna::base::Vector& position
+    , const Carna::base::Vector& direction
     , double& partialDerivative
     , double& scale ) const
 {
@@ -48,8 +48,8 @@ void MultiscaleDifferential::partialDerivativeAt
 
 
 double MultiscaleDifferential::partialDerivativeAt
-    ( const Carna::Tools::Vector& position
-    , const Carna::Tools::Vector& direction ) const
+    ( const Carna::base::Vector& position
+    , const Carna::base::Vector& direction ) const
 {
     double partialDerivative;
     double scale;
@@ -73,7 +73,7 @@ void MultiscaleDifferential::setScales( double minScale, double maxScale, unsign
     scales.clear();
 
     const double scaleStep = ( maxScale - minScale ) / ( scaleSteps - 1 );
-    for( double scale = minScale; scale < maxScale || Carna::Tools::isEqual( scale, maxScale ); scale += scaleStep )
+    for( double scale = minScale; scale < maxScale || Carna::base::Math::isEqual( scale, maxScale ); scale += scaleStep )
     {
         scales.insert( scale );
     }

@@ -24,7 +24,7 @@
 // ObjectsComponent
 // ----------------------------------------------------------------------------------
 
-/** \brief	\ref Component which allows the user to manage \c Carna::Object3D instances.
+/** \brief	\ref Component which allows the user to manage \c Carna::base::model::Object3D instances.
   *
   * Provides a \ref ObjectsController:
   *

@@ -10,10 +10,10 @@
  */
 
 #include "VolumeNormalizer.h"
-#include <Carna/Model.h>
-#include <Carna/Volume.h>
-#include <Carna/UInt16Volume.h>
-#include <Carna/CarnaException.h>
+#include <Carna/base/model/Scene.h>
+#include <Carna/base/model/Volume.h>
+#include <Carna/base/model/UInt16Volume.h>
+#include <Carna/base/CarnaException.h>
 #include <QProgressDialog>
 #include <QApplication>
 
@@ -23,7 +23,7 @@
 // VolumeNormalizer
 // ----------------------------------------------------------------------------------
 
-VolumeNormalizer::VolumeNormalizer( const Carna::Model& model, QWidget* parent )
+VolumeNormalizer::VolumeNormalizer( const Carna::base::model::Scene& model, QWidget* parent )
     : model( model )
     , parent( parent )
     , threshold( -1024 )
@@ -228,13 +228,13 @@ bool VolumeNormalizer::discardsSliceZ( const unsigned z ) const
 }
 
 
-Carna::Model* VolumeNormalizer::getResult() const
+Carna::base::model::Scene* VolumeNormalizer::getResult() const
 {
     QApplication::setOverrideCursor( Qt::WaitCursor );
 
-    const Carna::Tools::Vector3ui size( maxX - minX + 1, maxY - minY + 1, maxZ - minZ + 1 );
+    const Carna::base::Vector3ui size( maxX - minX + 1, maxY - minY + 1, maxZ - minZ + 1 );
 
-    Carna::UInt16Volume* const new_volume = new Carna::UInt16Volume( size );
+    Carna::base::model::UInt16Volume* const new_volume = new Carna::base::model::UInt16Volume( size );
 
     for( unsigned z = 0; z < size.z; ++z )
     for( unsigned y = 0; y < size.y; ++y )
@@ -244,7 +244,7 @@ Carna::Model* VolumeNormalizer::getResult() const
         new_volume->setVoxel( x, y, z, huv );
     }
 
-    Carna::Model* const new_model = new Carna::Model( new Carna::Tools::Composition< Carna::Volume >( new_volume )
+    Carna::base::model::Scene* const new_model = new Carna::base::model::Scene( new Carna::base::Composition< Carna::base::model::Volume >( new_volume )
                                                     , model.spacingX()
                                                     , model.spacingY()
                                                     , model.spacingZ() );

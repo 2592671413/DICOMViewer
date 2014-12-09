@@ -16,7 +16,7 @@
   */
 
 #include <set>
-#include <Carna/Singleton.h>
+#include <Carna/base/Singleton.h>
 
 class EmbedArea;
 
@@ -35,7 +35,7 @@ class EmbedArea;
   * \author Leonid Kostrykin
   * \date   2010-2011
   */
-class EmbedManager : public Carna::Tools::Singleton< EmbedManager >
+class EmbedManager : public Carna::base::Singleton< EmbedManager >
 {
 
 public:

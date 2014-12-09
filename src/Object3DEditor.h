@@ -24,7 +24,7 @@
 // Object3DEditor
 // ----------------------------------------------------------------------------------
 
-/** \brief  Visual \c Carna::Object3D editor
+/** \brief  Visual \c Carna::base::model::Object3D editor
   *
   * \author Leonid Kostrykin
   * \date   7.8.12
@@ -36,7 +36,7 @@ public:
 
     /** \brief  Instantiates.
       */
-    Object3DEditor( Carna::Object3D& editedObject, QWidget* parent = nullptr );
+    Object3DEditor( Carna::base::model::Object3D& editedObject, QWidget* parent = nullptr );
 
     /** \brief  Releases acquired resources.
       */
@@ -45,7 +45,7 @@ public:
 
     /** \brief  References the server.
       */
-    Carna::Object3D& editedObject;
+    Carna::base::model::Object3D& editedObject;
 
 
     /** \brief  Adds given page to this editor.

@@ -16,7 +16,7 @@
   */
 
 #include <set>
-#include <Carna/Singleton.h>
+#include <Carna/base/Singleton.h>
 
 class GriddedEmbedArea;
 class Embeddable;
@@ -72,7 +72,7 @@ public:
   * \date   2010-2011
   */
 class NullEmbeddablePlacer : public EmbeddablePlacer
-                           , public Carna::Tools::Singleton< NullEmbeddablePlacer >
+                           , public Carna::base::Singleton< NullEmbeddablePlacer >
 {
 
 public:
@@ -100,7 +100,7 @@ public:
   * \date   4.2.2011
   */
 class SingleEmbeddablePlacer : public EmbeddablePlacer
-                             , public Carna::Tools::Singleton< SingleEmbeddablePlacer >
+                             , public Carna::base::Singleton< SingleEmbeddablePlacer >
 {
 
 public:

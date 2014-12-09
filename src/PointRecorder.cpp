@@ -162,7 +162,7 @@ void PointRecorder::updateEnability()
 
 void PointRecorder::shot()
 {
-    Carna::Tools::Transformation bearing;
+    Carna::base::Transformation bearing;
 
     try
     {
@@ -195,7 +195,7 @@ void PointRecorder::shot()
 
     if( recording->isChecked() )
     {
-        const Carna::Tools::Vector pos( bearing.a14(), bearing.a24(), bearing.a34() );
+        const Carna::base::Vector pos( bearing.a14(), bearing.a24(), bearing.a34() );
 
         PointCloud::PointList& data = cloud.getList();
 
@@ -207,7 +207,7 @@ void PointRecorder::shot()
 }
 
 
-void PointRecorder::fetchRelativeBearing( Carna::Tools::Transformation& bearing ) const
+void PointRecorder::fetchRelativeBearing( Carna::base::Transformation& bearing ) const
 {
     // check localizer interface
 
@@ -243,7 +243,7 @@ void PointRecorder::recordSingleShot()
 
     // fetch tool state
 
-    Carna::Tools::Transformation bearing;
+    Carna::base::Transformation bearing;
 
     try
     {
@@ -258,7 +258,7 @@ void PointRecorder::recordSingleShot()
 
     // save
 
-    const Carna::Tools::Vector millimters( bearing.a14(), bearing.a24(), bearing.a34() );
+    const Carna::base::Vector millimters( bearing.a14(), bearing.a24(), bearing.a34() );
 
     PointCloud::PointList& data = cloud.getList();
 

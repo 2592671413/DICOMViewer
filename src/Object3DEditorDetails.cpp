@@ -10,8 +10,8 @@
  */
 
 #include "Object3DEditorDetails.h"
-#include <Carna/Position.h>
-#include <Carna/Object3D.h>
+#include <Carna/base/model/Position.h>
+#include <Carna/base/model/Object3D.h>
 #include <climits>
 
 
@@ -52,7 +52,7 @@ void Object3DEditor::Details::setUnits( int units )
 {
     currentUnits = static_cast< Units >( units );
 
-    const Carna::Model& model = self.editedObject.model;
+    const Carna::base::model::Scene& model = self.editedObject.model;
 
     configure( sbPositionX, 1. / ( model.volume().size.x - 1 ) );
     configure( sbPositionY, 1. / ( model.volume().size.y - 1 ) );
@@ -95,7 +95,7 @@ void Object3DEditor::Details::configure( QDoubleSpinBox* sb, float singleStepInV
 
 void Object3DEditor::Details::updatePosition()
 {
-    const Carna::Position& position = self.editedObject.position();
+    const Carna::base::model::Position& position = self.editedObject.position();
     
     switch( currentUnits )
     {
@@ -156,19 +156,19 @@ void Object3DEditor::Details::setCurrentCoordinate( double value, int coordinate
     if( std::abs( currentPosition[ coordinate ] - value ) > getCurrentEpsilon() )
     {
         currentPosition[ coordinate ] = value;
-        Carna::Model& model = self.editedObject.model;
+        Carna::base::model::Scene& model = self.editedObject.model;
         switch( currentUnits )
         {
 
             case millimeters:
             {
-                self.editedObject.setPosition( Carna::Position::fromMillimeters( model, currentPosition ) );
+                self.editedObject.setPosition( Carna::base::model::Position::fromMillimeters( model, currentPosition ) );
                 break;
             }
 
             case volumeUnits:
             {
-                self.editedObject.setPosition( Carna::Position::fromVolumeUnits( model, currentPosition ) );
+                self.editedObject.setPosition( Carna::base::model::Position::fromVolumeUnits( model, currentPosition ) );
                 break;
             }
 

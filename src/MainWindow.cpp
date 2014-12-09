@@ -27,8 +27,8 @@
 #include "CarnaModelFactory.h"
 #include "MaskingDialog.h"
 #include "GulsunComponent.h"
-#include <Carna/ModelFactory.h>
-#include <Carna/CarnaException.h>
+#include <Carna/base/model/SceneFactory.h>
+#include <Carna/base/CarnaException.h>
 #include <QTabWidget>
 #include <QAction>
 #include <QMenuBar>
@@ -188,7 +188,7 @@ MainWindow::MainWindow( QWidget* parent, Qt::WFlags flags )
 
     content->addWidget( carnaModelFactory );
 
-    connect( carnaModelFactory, SIGNAL( created( Carna::Model* ) ), this, SLOT( init( Carna::Model* ) ) );
+    connect( carnaModelFactory, SIGNAL( created( Carna::base::model::Scene* ) ), this, SLOT( init( Carna::base::model::Scene* ) ) );
 
     tabWidget->setDocumentMode( true );
     content->addWidget( tabWidget );
@@ -207,7 +207,7 @@ MainWindow::~MainWindow()
 }
 
 
-void MainWindow::init( Carna::Model* model )
+void MainWindow::init( Carna::base::model::Scene* model )
 {
     CARNA_ASSERT( model );
     CARNA_ASSERT( !carna.get() );
@@ -244,7 +244,7 @@ void MainWindow::init( Carna::Model* model )
 
 void MainWindow::updateMaskExporting()
 {
-    maskExporting->setEnabled( carna->model().hasMask() );
+    maskExporting->setEnabled( carna->model().hasVolumeMask() );
 }
 
 
@@ -491,7 +491,7 @@ void MainWindow::normalize()
 
     if( QMessageBox::question( this, "Volume Normalization", "The resolution of the normalized volume data is " + sizeLoss + "% of the original. Do you want to close your current data set and load the new one?", QMessageBox::Yes | QMessageBox::No, defaultButton ) == QMessageBox::Yes )
     {
-        Carna::Model* const new_model = normalizer.getResult();
+        Carna::base::model::Scene* const new_model = normalizer.getResult();
         this->closeRecord();
         this->init( new_model );
     }
@@ -505,8 +505,8 @@ void MainWindow::mask()
     {
         CARNA_ASSERT( dlg->hasMask() );
 
-        std::unique_ptr< Carna::ModelFactory > modelFactory( new Carna::ModelFactory( this ) );
-        Carna::Model* const newModel = modelFactory->createFromVolumeMasking( carna->model(), dlg->getMask() );
+        std::unique_ptr< Carna::base::model::SceneFactory > modelFactory( new Carna::base::model::SceneFactory( this ) );
+        Carna::base::model::Scene* const newModel = modelFactory->createFromVolumeMasking( carna->model(), dlg->getMask() );
 
         modelFactory.reset();
         dlg.reset();
@@ -518,8 +518,8 @@ void MainWindow::mask()
 
 void MainWindow::exportMask()
 {
-    CARNA_ASSERT( carna->model().hasMask() );
-    CARNA_ASSERT( carna->model().mask().isBinary() );
+    CARNA_ASSERT( carna->model().hasVolumeMask() );
+    CARNA_ASSERT( carna->model().volumeMask().isBinary() );
     CARNA_ASSERT( sizeof( unsigned char ) == sizeof( uint8_t ) );
 
     const QString filename
@@ -547,7 +547,7 @@ void MainWindow::exportMask()
     QApplication::setOverrideCursor( Qt::WaitCursor );
     QDataStream out( &file );
 
-    const Carna::BufferedMaskAdapter::BinaryMask& mask = carna->model().mask().binary();
+    const Carna::base::model::BufferedMaskAdapter::BinaryMask& mask = carna->model().volumeMask().binary();
     out << mask.size.x << mask.size.y << mask.size.z;
 
     QProgressDialog progress( "Exporting binary mask...", "", 0, mask.size.z, this );
@@ -601,7 +601,7 @@ void MainWindow::importMask()
 
     QDataStream in( &file );
 
-    Carna::Tools::Vector3ui size;
+    Carna::base::Vector3ui size;
     in >> size.x >> size.y >> size.z;
 
     if( size.x != carna->model().volume().size.x ||
@@ -617,7 +617,7 @@ void MainWindow::importMask()
 
     QApplication::setOverrideCursor( Qt::WaitCursor );
 
-    Carna::BufferedMaskAdapter::BinaryMask* const mask = new Carna::BufferedMaskAdapter::BinaryMask( size );
+    Carna::base::model::BufferedMaskAdapter::BinaryMask* const mask = new Carna::base::model::BufferedMaskAdapter::BinaryMask( size );
 
     QProgressDialog progress( "Importing binary mask...", "", 0, size.z, this );
     progress.setCancelButton( nullptr );
@@ -645,9 +645,9 @@ void MainWindow::importMask()
 
     file.close();
 
-    carna->model().setMask(
-        new Carna::BufferedMaskAdapter(
-            new Carna::Tools::Composition< Carna::BufferedMaskAdapter::BinaryMask >(
+    carna->model().setVolumeMask(
+        new Carna::base::model::BufferedMaskAdapter(
+            new Carna::base::Composition< Carna::base::model::BufferedMaskAdapter::BinaryMask >(
                 mask ) ) );
 
     QApplication::restoreOverrideCursor();

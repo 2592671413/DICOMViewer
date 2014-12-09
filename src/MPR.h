@@ -40,7 +40,7 @@ class MPR : public RegistredComponent< MPR >, private MenuFactory
 
 public:
 
-    typedef Carna::AxialPlane::AxialPlaneVisualization View;
+    typedef Carna::MPR::DefaultAxialPlaneVisualization View;
 
 
     /** \brief  Instantiates.
@@ -70,7 +70,7 @@ private:
       */
     QAction* const showDynamicViewAction;
 
-    Carna::AxialPlane::AxialPlaneControllerUI* const controller;
+    Carna::MPR::AxialPlaneControllerUI* const controller;
 
     const std::unique_ptr< MPREmbeddablePlacer > embeddablePlacer;
 

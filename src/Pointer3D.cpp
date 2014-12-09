@@ -12,9 +12,9 @@
 #include "glew.h"
 #include "Pointer3D.h"
 #include "CarnaContextClient.h"
-#include <Carna/Transformation.h>
-#include <Carna/Position.h>
-#include <Carna/Object3DEvent.h>
+#include <Carna/base/Transformation.h>
+#include <Carna/base/model/Position.h>
+#include <Carna/base/model/Object3DEvent.h>
 
 
 
@@ -22,11 +22,11 @@
 // Pointer3D
 // ----------------------------------------------------------------------------------
 
-Carna::Tools::RotatingColor Pointer3D::nextHeadColor( Carna::Tools::RotatingColor::violet );
+Carna::base::qt::RotatingColor Pointer3D::nextHeadColor( Carna::base::qt::RotatingColor::violet );
 
 
 Pointer3D::Pointer3D( Record::Server& server )
-    : Carna::RotatableObject3D( CarnaContextClient( server ).model(), "Pointer" )
+    : Carna::base::model::RotatableObject3D( CarnaContextClient( server ).model(), "Pointer" )
     , length( 290. /* millimeters */ )
     , width( 4. )
     , headColor( nextHeadColor )
@@ -50,9 +50,9 @@ void Pointer3D::draw( const QColor& headColor, const QColor& shaftColor ) const
     glEnable( GL_BLEND );
     glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
 
-    using Carna::Tools::Transformation;
-    using Carna::Tools::Vector;
-    using Carna::Position;
+    using Carna::base::Transformation;
+    using Carna::base::Vector;
+    using Carna::base::model::Position;
 
     const Vector& t = this->position().toVolumeUnits();
     const Transformation m = Transformation( this->rotation() ).translate( t.x(), t.y(), t.z() );
@@ -77,13 +77,13 @@ void Pointer3D::draw( const QColor& headColor, const QColor& shaftColor ) const
 }
 
     
-void Pointer3D::paint( const Carna::Renderer& ) const
+void Pointer3D::paint( const Carna::base::view::Renderer& ) const
 {
     draw( this->headColor, this->shaftColor );
 }
     
 
-void Pointer3D::paintFalseColor( const Carna::Renderer&, const Carna::Tools::Vector3ui& color ) const
+void Pointer3D::paintFalseColor( const Carna::base::view::Renderer&, const Carna::base::Vector3ui& color ) const
 {
     const QColor qcolor( color.x, color.y, color.z );
     draw( qcolor, qcolor );
@@ -102,7 +102,7 @@ void Pointer3D::setLength( double length )
     {
         this->length = length;
 
-        invalidateObjects3D( Carna::Object3DEvent( Carna::Object3DEvent::shape ) );
+        invalidateObjects3D( Carna::base::model::Object3DEvent( Carna::base::model::Object3DEvent::shape ) );
 
         emit lengthChanged( this->length );
     }
@@ -121,7 +121,7 @@ void Pointer3D::setWidth( double width )
     {
         this->width = width;
 
-        invalidateObjects3D( Carna::Object3DEvent( Carna::Object3DEvent::shape ) );
+        invalidateObjects3D( Carna::base::model::Object3DEvent( Carna::base::model::Object3DEvent::shape ) );
 
         emit widthChanged( this->width );
     }
@@ -140,7 +140,7 @@ void Pointer3D::setHeadColor( const QColor& headColor )
     {
         this->headColor = headColor;
 
-        invalidateObjects3D( Carna::Object3DEvent( Carna::Object3DEvent::shape ) );
+        invalidateObjects3D( Carna::base::model::Object3DEvent( Carna::base::model::Object3DEvent::shape ) );
 
         emit headColorChanged( this->headColor );
     }
@@ -159,7 +159,7 @@ void Pointer3D::setShaftColor( const QColor& shaftColor )
     {
         this->shaftColor = shaftColor;
 
-        invalidateObjects3D( Carna::Object3DEvent( Carna::Object3DEvent::shape ) );
+        invalidateObjects3D( Carna::base::model::Object3DEvent( Carna::base::model::Object3DEvent::shape ) );
 
         emit shaftColorChanged( this->shaftColor );
     }
@@ -178,20 +178,20 @@ void Pointer3D::setInverseDirection( bool inverseDirection )
     {
         this->inverseDirection = inverseDirection;
 
-        invalidateObjects3D( Carna::Object3DEvent( Carna::Object3DEvent::shape ) );
+        invalidateObjects3D( Carna::base::model::Object3DEvent( Carna::base::model::Object3DEvent::shape ) );
 
         emit inverseDirectionChanged( this->inverseDirection );
     }
 }
 
 
-const Carna::Tools::Vector& Pointer3D::getShaftDirection() const
+const Carna::base::Vector& Pointer3D::getShaftDirection() const
 {
     return shaftDirection;
 }
 
 
-void Pointer3D::setShaftDirection( const Carna::Tools::Vector& shaftDirection )
+void Pointer3D::setShaftDirection( const Carna::base::Vector& shaftDirection )
 {
     if( std::abs( shaftDirection.norm() - 1. ) > 0.1 )
     {
@@ -201,7 +201,7 @@ void Pointer3D::setShaftDirection( const Carna::Tools::Vector& shaftDirection )
     {
         this->shaftDirection = shaftDirection;
 
-        invalidateObjects3D( Carna::Object3DEvent( Carna::Object3DEvent::shape ) );
+        invalidateObjects3D( Carna::base::model::Object3DEvent( Carna::base::model::Object3DEvent::shape ) );
 
         emit shaftDirectionChanged( this->shaftDirection );
     }

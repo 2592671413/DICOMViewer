@@ -60,9 +60,9 @@ void ICP::perform( const RegistrationArguments& args
         throw std::runtime_error( ss.str() );
     }
 
-    const static Carna::Tools::Transformation identity;
+    const static Carna::base::Transformation identity;
 
-    const Carna::Tools::Transformation& initialization =
+    const Carna::base::Transformation& initialization =
             ( server.hasService( Registration::serviceID )
             ? RegistrationClient( server )->getTransformation()
             : identity );
@@ -119,7 +119,7 @@ void ICP::perform( const RegistrationArguments& args
 
     const double rms = icp.compute();
 
-    controller.setRegistration( args.referenceBase, Carna::Tools::Transformation( icp.getTransformation() ), rms );
+    controller.setRegistration( args.referenceBase, Carna::base::Transformation( icp.getTransformation() ), rms );
 }
 
 

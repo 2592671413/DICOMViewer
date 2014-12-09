@@ -58,7 +58,7 @@ public:
 
     GulsunController
         ( Record::Server& server
-        , Carna::VisualizationEnvironment* acceleration = nullptr
+        , Carna::base::VisualizationEnvironment* acceleration = nullptr
         , QWidget* parent = nullptr );
 
     virtual ~GulsunController();
@@ -69,7 +69,7 @@ private:
 
     Record::Server& server;
 
-    Carna::Object3DChooser* const seedChooser;
+    Carna::base::qt::Object3DChooser* const seedChooser;
 
     QLabel* const laSeedHUV;
 
@@ -145,7 +145,7 @@ private:
 
     QCheckBox* const cbSmoothedRadiuses;
 
-    Carna::Object3D* selectedSeed;
+    Carna::base::model::Object3D* selectedSeed;
 
     MedialnessGraph graph;
 

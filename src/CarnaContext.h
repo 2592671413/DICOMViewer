@@ -34,9 +34,9 @@ public:
 
     /** \brief	References the Carna resource sharing context.
       */
-    virtual Carna::Scene& scene() const = 0;
+    virtual Carna::base::view::SceneProvider& scene() const = 0;
 
-    virtual Carna::Model& model() const = 0;
+    virtual Carna::base::model::Scene& model() const = 0;
     
 }; // CarnaContext
 

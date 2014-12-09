@@ -17,9 +17,9 @@
 #include "DataSize.h"
 #include "CarnaContextClient.h"
 #include "OptimizedVolumeDecorator.h"
-#include <Carna/Model.h>
-#include <Carna/ModelFactory.h>
-#include <Carna/UInt16Volume.h>
+#include <Carna/base/model/Scene.h>
+#include <Carna/base/model/SceneFactory.h>
+#include <Carna/base/model/UInt16Volume.h>
 #include <QDialog>
 #include <QProgressDialog>
 #include <functional>
@@ -32,7 +32,7 @@
 // ----------------------------------------------------------------------------------
 
 template< typename VoxelType >
-static void dumpSlice( QDataStream& out, const Carna::Volume& volume, unsigned int z )
+static void dumpSlice( QDataStream& out, const Carna::base::model::Volume& volume, unsigned int z )
 {
     for( unsigned int y = 0; y < volume.size.y; ++y )
     for( unsigned int x = 0; x < volume.size.x; ++x )
@@ -49,13 +49,13 @@ static void dumpSlice( QDataStream& out, const Carna::Volume& volume, unsigned i
 // ----------------------------------------------------------------------------------
 
 template< typename VoxelType >
-static std::function< Carna::UInt16Volume::VoxelType( QDataStream& ) > createVoxelReader()
+static std::function< Carna::base::model::UInt16Volume::VoxelType( QDataStream& ) > createVoxelReader()
 {
-    return []( QDataStream& in )->Carna::UInt16Volume::VoxelType
+    return []( QDataStream& in )->Carna::base::model::UInt16Volume::VoxelType
     {
         VoxelType huv;
         in >> huv;
-        return static_cast< Carna::UInt16Volume::VoxelType >( huv + 1024 ) << 4;
+        return static_cast< Carna::base::model::UInt16Volume::VoxelType >( huv + 1024 ) << 4;
     };
 }
 
@@ -93,8 +93,8 @@ void BinaryDumpProcessor::doExport( Exporter& exporter )
     file.open( QIODevice::WriteOnly | QIODevice::Truncate );
     QDataStream out( &file );
 
-    const Carna::Model& model = CarnaContextClient( exporter.server ).model();
-    const Carna::Volume& volume = model.volume();
+    const Carna::base::model::Scene& model = CarnaContextClient( exporter.server ).model();
+    const Carna::base::model::Volume& volume = model.volume();
 
  // compute dump size
 
@@ -177,7 +177,7 @@ void BinaryDumpProcessor::doExport( Exporter& exporter )
 }
 
 
-Carna::Model* BinaryDumpProcessor::doImport( Importer& importer )
+Carna::base::model::Scene* BinaryDumpProcessor::doImport( Importer& importer )
 {
     ImportDialog import_settings( importer.parent );
     if( import_settings.exec() != QDialog::Accepted )
@@ -264,13 +264,13 @@ Carna::Model* BinaryDumpProcessor::doImport( Importer& importer )
     status.setWindowModality( Qt::WindowModal );
     status.show();
 
-    const Carna::Tools::Vector3ui size( width, height, depth );
+    const Carna::base::Vector3ui size( width, height, depth );
 
-    Carna::UInt16Volume::BufferType* const buffer = new Carna::UInt16Volume::BufferType( size.x * size.y * size.z );
+    Carna::base::model::UInt16Volume::BufferType* const buffer = new Carna::base::model::UInt16Volume::BufferType( size.x * size.y * size.z );
 
-    Carna::UInt16Volume* const volume = new Carna::UInt16Volume( size, new Carna::Tools::Composition< Carna::UInt16Volume::BufferType >( buffer ) );
+    Carna::base::model::UInt16Volume* const volume = new Carna::base::model::UInt16Volume( size, new Carna::base::Composition< Carna::base::model::UInt16Volume::BufferType >( buffer ) );
 
-    std::function< Carna::UInt16Volume::VoxelType( QDataStream& ) > readVoxel;
+    std::function< Carna::base::model::UInt16Volume::VoxelType( QDataStream& ) > readVoxel;
     switch( import_settings.voxelFormat.value() )
     {
 
@@ -300,7 +300,7 @@ Carna::Model* BinaryDumpProcessor::doImport( Importer& importer )
             break;
         }
 
-        const Carna::UInt16Volume::VoxelType voxel = readVoxel( in );
+        const Carna::base::model::UInt16Volume::VoxelType voxel = readVoxel( in );
 
         ( *buffer )[ i ] = voxel;
 
@@ -312,25 +312,25 @@ Carna::Model* BinaryDumpProcessor::doImport( Importer& importer )
 
     /*
     OptimizedVolumeDecorator* optimizedVolume = new OptimizedVolumeDecorator
-        ( new Carna::Tools::Composition< const Carna::Volume >( volume )
+        ( new Carna::base::Composition< const Carna::base::model::Volume >( volume )
         , spacingX
         , spacingY
         , spacingZ );
         
-    Carna::Model* const model = new Carna::Model
-        ( new Carna::Tools::Composition< Carna::Volume >( optimizedVolume )
+    Carna::base::model::Scene* const model = new Carna::base::model::Scene
+        ( new Carna::base::Composition< Carna::base::model::Volume >( optimizedVolume )
         , spacingX
         , spacingY
         , spacingZ );
         */
 
-    Carna::Model* const model = new Carna::Model
-        ( new Carna::Tools::Composition< Carna::Volume >( volume )
+    Carna::base::model::Scene* const model = new Carna::base::model::Scene
+        ( new Carna::base::Composition< Carna::base::model::Volume >( volume )
         , spacingX
         , spacingY
         , spacingZ );
 
-    model->setRecommendedVoidThreshold( Carna::ModelFactory::computeVoidThreshold( *volume ) );
+    model->setRecommendedVoidThreshold( Carna::base::model::SceneFactory::computeVoidThreshold( *volume ) );
 
     file.close();
 

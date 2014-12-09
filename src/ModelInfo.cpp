@@ -11,8 +11,8 @@
 
 #include "ModelInfo.h"
 #include "CarnaContextClient.h"
-#include <Carna/Model.h>
-#include <Carna/Volume.h>
+#include <Carna/base/model/Scene.h>
+#include <Carna/base/model/Volume.h>
 #include <QLabel>
 #include <QFormLayout>
 
@@ -30,7 +30,7 @@ ModelInfoWidget::ModelInfoWidget( Record::Server& server )
 
     layout->setLabelAlignment( Qt::AlignRight );
 
-    Carna::Model& model = CarnaContextClient( server ).model();
+    Carna::base::model::Scene& model = CarnaContextClient( server ).model();
 
     layout->addRow( "Width:" , new QLabel( QString::number( model.volume().size.x ) ) );
     layout->addRow( "Height:", new QLabel( QString::number( model.volume().size.y ) ) );

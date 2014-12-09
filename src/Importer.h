@@ -13,7 +13,7 @@
 
 #include "Server.h"
 #include <Carna/Carna.h>
-#include <Carna/noncopyable.h>
+#include <Carna/base/noncopyable.h>
 #include <QFile>
 #include <set>
 
@@ -50,7 +50,7 @@ public:
 
     void install( ImportProcessor* );
 
-    Carna::Model* run();
+    Carna::base::model::Scene* run();
 
 
     QFile& file()

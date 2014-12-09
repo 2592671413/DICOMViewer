@@ -17,7 +17,7 @@
 #include "NotificationsClient.h"
 #include "ToolCalibrator.h"
 #include "LocalizerComponent.h"
-#include <Carna/Object3DChooser.h>
+#include <Carna/base/qt/Object3DChooser.h>
 #include <CRA/Link.h>
 #include <QLabel>
 #include <QPushButton>
@@ -43,7 +43,7 @@ ToolEditor::ToolEditor( LocalizerComponent& component, Record::Server& server, c
     , laVisibility( new QLabel( rbIsInvisibleText ) )
     , laPort( new QLabel( QString::fromStdString( port ) ) )
     , buName( new QPushButton( QString::fromStdString( tool.getName() ) ) )
-    , objectChooser( new Carna::Object3DChooser( CarnaContextClient( server ).model() ) )
+    , objectChooser( new Carna::base::qt::Object3DChooser( CarnaContextClient( server ).model() ) )
     , recentlyLinkedObject( nullptr )
     , calibratorWindow( nullptr )
     , recentlyVisible( false )
@@ -136,7 +136,7 @@ void ToolEditor::processRemovedService( const std::string& serviceID )
 }
 
 
-void ToolEditor::setLinkedObject3D( Carna::Object3D& object )
+void ToolEditor::setLinkedObject3D( Carna::base::model::Object3D& object )
 {
     if( server.hasService( Registration::serviceID ) )
     {

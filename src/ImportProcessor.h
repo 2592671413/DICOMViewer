@@ -11,7 +11,7 @@
 
 #pragma once
 
-#include <Carna/noncopyable.h>
+#include <Carna/base/noncopyable.h>
 #include <Carna/Carna.h>
 #include <string>
 
@@ -45,6 +45,6 @@ public:
     virtual const std::string& pattern() = 0;
 
 
-    virtual Carna::Model* doImport( Importer& ) = 0;
+    virtual Carna::base::model::Scene* doImport( Importer& ) = 0;
     
 }; // ImportProcessor

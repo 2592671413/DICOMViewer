@@ -13,8 +13,8 @@
 
 #include "Medialness.h"
 #include <Carna/Carna.h>
-#include <Carna/Vector3.h>
-#include <Carna/Position.h>
+#include <Carna/base/Vector3.h>
+#include <Carna/base/model/Position.h>
 #include <map>
 
 class QGLFramebufferObject;
@@ -28,14 +28,14 @@ class QGLFramebufferObject;
 class IntensitySampler : public Differential::Sampler
 {
 
-    const Carna::Model& model;
+    const Carna::base::model::Scene& model;
 
 public:
 
-    IntensitySampler( const Carna::Model& );
+    IntensitySampler( const Carna::base::model::Scene& );
 
 
-    virtual double valueAt( const Carna::Tools::Vector& ) const override;
+    virtual double valueAt( const Carna::base::Vector& ) const override;
 
 }; // IntensitySampler
 
@@ -45,19 +45,19 @@ public:
 // GpuIntensitySampler
 // ----------------------------------------------------------------------------------
 
-class GpuIntensitySampler : public Carna::Scene::ResourceContext, public Differential::Sampler
+class GpuIntensitySampler : public Carna::base::view::SceneProvider::ResourceClient, public Differential::Sampler
 {
 
     std::unique_ptr< QGLFramebufferObject > fbo;
 
 public:
 
-    GpuIntensitySampler( Carna::VisualizationEnvironment&, Carna::Scene& );
+    GpuIntensitySampler( Carna::base::VisualizationEnvironment&, Carna::base::view::SceneProvider& );
 
     virtual ~GpuIntensitySampler();
 
 
-    virtual double valueAt( const Carna::Tools::Vector& ) const override;
+    virtual double valueAt( const Carna::base::Vector& ) const override;
 
 }; // GpuIntensitySampler
 
@@ -72,7 +72,7 @@ class MedialnessGraph
 
 public:
 
-    Carna::Model& model;
+    Carna::base::model::Scene& model;
 
     struct Setup
     {
@@ -136,7 +136,7 @@ public:
 
     }; // Setup
 
-    typedef Carna::Tools::Vector3ui Node;
+    typedef Carna::base::Vector3ui Node;
     typedef std::multimap< double, Node > OrderedEdges;
 
     typedef std::function< void( const Node&, const Node&, double ) > EdgeRadiusConsumer;
@@ -167,7 +167,7 @@ public:
 
  // ----------------------------------------------------------------------------------
 
-    MedialnessGraph( Differential::Sampler*, Carna::Model&, const Setup&, const EdgeRadiusConsumer& );
+    MedialnessGraph( Differential::Sampler*, Carna::base::model::Scene&, const Setup&, const EdgeRadiusConsumer& );
 
     ~MedialnessGraph();
 
@@ -194,13 +194,13 @@ public:
 
  // ----------------------------------------------------------------------------------
 
-    Carna::Position getNodePosition( const Node& node ) const;
+    Carna::base::model::Position getNodePosition( const Node& node ) const;
 
     unsigned int computeNodeIndex( const Node& node ) const;
 
     void fetchNodeByIndex( Node& node, const unsigned int index ) const;
 
-    Node pickNode( const Carna::Position& ) const;
+    Node pickNode( const Carna::base::model::Position& ) const;
 
  // ----------------------------------------------------------------------------------
 
@@ -214,10 +214,10 @@ private:
 
     bool detailedDebug;
 
-    const Carna::Tools::Vector3ui size;
+    const Carna::base::Vector3ui size;
 
  // ----------------------------------------------------------------------------------
 
-    void computeEdge( const Carna::Tools::Vector& p0, const Carna::Tools::Vector& p1, double& medialness, double& radius ) const;
+    void computeEdge( const Carna::base::Vector& p0, const Carna::base::Vector& p1, double& medialness, double& radius ) const;
 
 }; // MedialnessGraph

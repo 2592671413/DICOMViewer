@@ -12,9 +12,9 @@
 #pragma once
 
 #include "Server.h"
-#include <Carna/noncopyable.h>
-#include <Carna/Transformation.h>
-#include <Carna/Position.h>
+#include <Carna/base/noncopyable.h>
+#include <Carna/base/Transformation.h>
+#include <Carna/base/model/Position.h>
 #include <vector>
 #include <QObject>
 
@@ -59,7 +59,7 @@ public:
 
     /** \brief	Defines point data type.
       */
-    typedef Carna::Tools::Vector Point;
+    typedef Carna::base::Vector Point;
 
     /** \brief	Defines list of Point instances.
       */
@@ -100,7 +100,7 @@ public:
 
     /** \brief  Tells the position of some point.
       */
-    Carna::Position getPoint( unsigned int index ) const;
+    Carna::base::model::Position getPoint( unsigned int index ) const;
 
 
     /** \brief	Tells the name of this point cloud.

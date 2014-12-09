@@ -11,10 +11,10 @@
 
 #pragma once
 
-#include <Carna/Volume.h>
+#include <Carna/base/model/Volume.h>
 #include <Carna/Carna.h>
-#include <Carna/Association.h>
-#include <Carna/UInt16Volume.h>
+#include <Carna/base/Association.h>
+#include <Carna/base/model/UInt16Volume.h>
 
 
 
@@ -22,20 +22,20 @@
 // OptimizedVolumeDecorator
 // ----------------------------------------------------------------------------------
 
-class OptimizedVolumeDecorator : public Carna::Volume
+class OptimizedVolumeDecorator : public Carna::base::model::Volume
 {
 
 public:
 
     OptimizedVolumeDecorator
-        ( Carna::Tools::Association< const Carna::Volume >*
+        ( Carna::base::Association< const Carna::base::model::Volume >*
         , float spacingX
         , float spacingY
         , float spacingZ );
 
     virtual ~OptimizedVolumeDecorator();
     
-    const Carna::Volume& original() const;
+    const Carna::base::model::Volume& original() const;
 
 
     virtual void uploadTexture() const override;
@@ -45,7 +45,7 @@ public:
         , unsigned int y
         , unsigned int z ) const override;
 
-    virtual signed short operator()( const Carna::Tools::Vector3ui& at ) const override;
+    virtual signed short operator()( const Carna::base::Vector3ui& at ) const override;
 
 
     bool testCacheHit( unsigned int x, unsigned int y, unsigned int z ) const;
@@ -55,9 +55,9 @@ public:
 
 private:
 
-    const std::unique_ptr< Carna::Tools::Association< const Carna::Volume > > originalPtr;
+    const std::unique_ptr< Carna::base::Association< const Carna::base::model::Volume > > originalPtr;
 
-    mutable std::unique_ptr< Carna::UInt16Volume > buffer;
+    mutable std::unique_ptr< Carna::base::model::UInt16Volume > buffer;
 
     mutable bool bufferIsValid;
 

@@ -16,10 +16,11 @@
 #include "PointCloudsClient.h"
 #include "RegistrationClient.h"
 #include "NotificationsClient.h"
-#include <Carna/ShaderBundle.h>
-#include <Carna/ShaderProgram.h>
-#include <Carna/Object3DEvent.h>
-#include <Carna/Renderer.h>
+#include <Carna/base/view/ShaderBundle.h>
+#include <Carna/base/view/ShaderProgram.h>
+#include <Carna/base/model/Object3DEvent.h>
+#include <Carna/base/view/Renderer.h>
+#include <Carna/base/Transformation.h>
 #include <climits>
 #include <algorithm>
 #include <QApplication>
@@ -40,7 +41,7 @@ const static std::string shaderId = "point-cloud";
 // ----------------------------------------------------------------------------------
 
 PointCloud3D::PointCloud3D( Record::Server& server, const PointCloud& cloud, QWidget* modalityParent )
-    : Carna::Object3D( CarnaContextClient( server ).model(), cloud.getName() )
+    : Carna::base::model::Object3D( CarnaContextClient( server ).model(), cloud.getName() )
     , server( server )
     , points()
     , ready( false )
@@ -68,19 +69,19 @@ PointCloud3D::PointCloud3D( Record::Server& server, const PointCloud& cloud, QWi
                                                it != cloud.getList().end();
                                              ++it )
     {
-        const Carna::Tools::Vector& p = *it;
+        const Carna::base::Vector& p = *it;
 
-        std::unique_ptr< Carna::Position > pos;
+        std::unique_ptr< Carna::base::model::Position > pos;
 
         switch( cloud.getFormat() )
         {
 
         case PointCloud::millimeters:
-            pos.reset( new Carna::Position( Carna::Position::fromMillimeters( model, p.x(), p.y(), p.z() ) ) );
+            pos.reset( new Carna::base::model::Position( Carna::base::model::Position::fromMillimeters( model, p.x(), p.y(), p.z() ) ) );
             break;
 
         case PointCloud::volumeUnits:
-            pos.reset( new Carna::Position( Carna::Position::fromVolumeUnits( model, p.x(), p.y(), p.z() ) ) );
+            pos.reset( new Carna::base::model::Position( Carna::base::model::Position::fromVolumeUnits( model, p.x(), p.y(), p.z() ) ) );
             break;
 
         default:
@@ -88,7 +89,7 @@ PointCloud3D::PointCloud3D( Record::Server& server, const PointCloud& cloud, QWi
 
         }
 
-        const Carna::Tools::Vector& modelSpace = pos->toVolumeUnits();
+        const Carna::base::Vector& modelSpace = pos->toVolumeUnits();
 
         points[ it - cloud.getList().begin() ] = modelSpace;
 
@@ -116,7 +117,7 @@ PointCloud3D::PointCloud3D( Record::Server& server, const PointCloud& cloud, QWi
         unsigned int sample_count = 0;
         for( unsigned int i = 0; i < points.size(); i += step )
         {
-            const Carna::Tools::Vector& position = points[ i ];
+            const Carna::base::Vector& position = points[ i ];
 
             ++sample_count;
 
@@ -162,7 +163,7 @@ PointCloud3D::~PointCloud3D()
 }
 
 
-void PointCloud3D::draw( const Carna::Renderer& renderer, const Carna::Tools::Vector3ui& color, bool simplified ) const
+void PointCloud3D::draw( const Carna::base::view::Renderer& renderer, const Carna::base::Vector3ui& color, bool simplified ) const
 {
     if( !ready )
     {
@@ -171,21 +172,19 @@ void PointCloud3D::draw( const Carna::Renderer& renderer, const Carna::Tools::Ve
 
     glPushMatrix();
 
-    const Carna::Tools::Vector& position = this->position().toVolumeUnits();
+    const Carna::base::Vector& position = this->position().toVolumeUnits();
     glTranslatef( position.x(), position.y(), position.z() );
 
     if( applyRegistration )
     {
         try
         {
-            using Carna::Tools::glMultMatrix;
-            using Carna::Tools::glTranslate;
-            using Carna::Tools::Transformation;
-            using Carna::Tools::Vector;
-            using Carna::Position;
+            using Carna::base::Transformation;
+            using Carna::base::Vector;
+            using Carna::base::model::Position;
 
             const Transformation trafo = RegistrationClient( server )->getTransformation();
-            const Carna::Model& model = CarnaContextClient( server ).model();
+            const Carna::base::model::Scene& model = CarnaContextClient( server ).model();
 
             glMultMatrix( Position::toVolumeUnitsTransformation( model ) );
             glMultMatrix( trafo );
@@ -205,7 +204,7 @@ void PointCloud3D::draw( const Carna::Renderer& renderer, const Carna::Tools::Ve
 
         for( auto it = points.begin(); it != points.end(); ++it )
         {
-            const Carna::Tools::Vector& point = *it;
+            const Carna::base::Vector& point = *it;
 
             glVertex3f( point.x(), point.y(), point.z() );
         }
@@ -221,7 +220,7 @@ void PointCloud3D::draw( const Carna::Renderer& renderer, const Carna::Tools::Ve
     {
         glPushAttrib( GL_ALL_ATTRIB_BITS );
 
-        Carna::ShaderProgram::Binding shader( renderer.shader( shaderId ) );
+        Carna::base::view::ShaderProgram::Binding shader( renderer.shader( shaderId ) );
 
         glDepthMask( GL_TRUE );
         glEnable( GL_DEPTH_TEST );
@@ -274,9 +273,9 @@ void PointCloud3D::draw( const Carna::Renderer& renderer, const Carna::Tools::Ve
 }
 
 
-void PointCloud3D::paint( const Carna::Renderer& renderer ) const
+void PointCloud3D::paint( const Carna::base::view::Renderer& renderer ) const
 {
-    draw( renderer, Carna::Tools::Vector3ui
+    draw( renderer, Carna::base::Vector3ui
                                     ( pointColor.red()
                                     , pointColor.green()
                                     , pointColor.blue()
@@ -284,7 +283,7 @@ void PointCloud3D::paint( const Carna::Renderer& renderer ) const
 }
 
 
-void PointCloud3D::paintFalseColor( const Carna::Renderer& renderer, const Carna::Tools::Vector3ui& color ) const
+void PointCloud3D::paintFalseColor( const Carna::base::view::Renderer& renderer, const Carna::base::Vector3ui& color ) const
 {
     draw( renderer, color, true );
 }
@@ -308,7 +307,7 @@ void PointCloud3D::setPointSize( double size )
     {
         this->pointSize = size;
 
-        invalidateObjects3D( Carna::Object3DEvent( Carna::Object3DEvent::shape ) );
+        invalidateObjects3D( Carna::base::model::Object3DEvent( Carna::base::model::Object3DEvent::shape ) );
 
         emit pointSizeChanged( this->pointSize );
     }
@@ -321,7 +320,7 @@ void PointCloud3D::setPointColor( const QColor& color )
     {
         this->pointColor = color;
 
-        invalidateObjects3D( Carna::Object3DEvent( Carna::Object3DEvent::shape ) );
+        invalidateObjects3D( Carna::base::model::Object3DEvent( Carna::base::model::Object3DEvent::shape ) );
 
         emit pointColorChanged( this->pointColor );
     }
@@ -340,7 +339,7 @@ void PointCloud3D::setBrightnessByDistanceModulation( bool modulateBrightnessByD
     {
         this->modulateBrightnessByDistance = modulateBrightnessByDistance;
 
-        invalidateObjects3D( Carna::Object3DEvent( Carna::Object3DEvent::shape ) );
+        invalidateObjects3D( Carna::base::model::Object3DEvent( Carna::base::model::Object3DEvent::shape ) );
 
         emit brightnessByDistanceModulationChanged( this->modulateBrightnessByDistance );
     }
@@ -359,7 +358,7 @@ void PointCloud3D::setBoundingBoxDrawing( bool drawBoundingBox )
     {
         this->drawBoundingBox = drawBoundingBox;
 
-        invalidateObjects3D( Carna::Object3DEvent( Carna::Object3DEvent::shape ) );
+        invalidateObjects3D( Carna::base::model::Object3DEvent( Carna::base::model::Object3DEvent::shape ) );
 
         emit boundingBoxDrawingChanged( this->drawBoundingBox );
     }
@@ -380,7 +379,7 @@ void PointCloud3D::setRegistrationApplication( bool applyRegistration )
 
         if( server.hasService( Registration::serviceID ) )
         {
-            invalidateObjects3D( Carna::Object3DEvent( Carna::Object3DEvent::position ) );
+            invalidateObjects3D( Carna::base::model::Object3DEvent( Carna::base::model::Object3DEvent::position ) );
         }
 
         emit registrationApplicationChanged( this->applyRegistration );
@@ -402,6 +401,6 @@ void PointCloud3D::transformationChanged()
 {
     if( this->applyRegistration )
     {
-        invalidateObjects3D( Carna::Object3DEvent( Carna::Object3DEvent::position ) );
+        invalidateObjects3D( Carna::base::model::Object3DEvent( Carna::base::model::Object3DEvent::position ) );
     }
 }

@@ -113,7 +113,7 @@ private:
     
     /** \brief	User-interface element
       */
-    Carna::Object3DChooser* objectChooser;
+    Carna::base::qt::Object3DChooser* objectChooser;
 
 
     /** \brief	Holds the description of the scene element which the represented tool has been linked to lastly.
@@ -127,7 +127,7 @@ private:
 
     /** \brief	Type of a Carna 3D-object.
       */
-    typedef Carna::Object3D Object3D;
+    typedef Carna::base::model::Object3D Object3D;
 
 
 private slots:
