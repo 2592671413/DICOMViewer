@@ -42,7 +42,11 @@ CarnaModelFactory::CarnaModelFactory( Record::Server& server, QWidget* parent )
     Carna::dicom::DicomController* const dicomController = new Carna::dicom::DicomController();
     tabs->addTab( dicomController, "DICOM" );
 
-    connect( dicomController, SIGNAL( seriesLoadingRequested( const SeriesLoadingRequest& ) ), this, SLOT( dispatch( const SeriesLoadingRequest& ) ) );
+    connect
+        ( dicomController
+        , SIGNAL( seriesLoadingRequested( const Carna::dicom::SeriesLoadingRequest& ) )
+        , this
+        , SLOT( dispatch( const Carna::dicom::SeriesLoadingRequest& ) ) );
 
  // ----------------------------------------------------------------------------------
 

@@ -44,8 +44,6 @@ signals:
 
 private:
 
-    typedef Carna::dicom::SeriesLoadingRequest SeriesLoadingRequest;
-
     QTabWidget* const tabs;
 
     std::unique_ptr< Importer > importer;
@@ -55,7 +53,7 @@ private:
 
 private slots:
 
-    void dispatch( const SeriesLoadingRequest& );
+    void dispatch( const Carna::dicom::SeriesLoadingRequest& );
     void closeImporter();
     void import();
     
