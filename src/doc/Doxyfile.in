@@ -81,7 +81,7 @@ HTML_FOOTER            = ./footer.html
 HTML_STYLESHEET        = ./customdoxygen.css
 HTML_DYNAMIC_SECTIONS  = YES
 USE_MATHJAX            = YES
-MATHJAX_RELPATH        = http://cdn.mathjax.org/mathjax/latest
+MATHJAX_RELPATH        = https://cdn.mathjax.org/mathjax/latest
 
 #---------------------------------------------------------------------------
 # Configuration options related to the LaTeX output
