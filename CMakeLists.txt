@@ -74,7 +74,8 @@ find_package( CarnaDICOM REQUIRED )
 include_directories( ${CARNADICOM_INCLUDE_DIR} )
 
 # CRA
-include( $ENV{MEDITEC_LIBS}/CRA/1.16.0/configure.cmake )
+find_package( CRA REQUIRED )
+include_directories( ${CRA_INCLUDE_DIR} )
 
 # Eigen
 find_package( Eigen3 3.0.5 REQUIRED )
@@ -83,6 +84,10 @@ include_directories( ${EIGEN3_INCLUDE_DIR} )
 # TRTK
 find_package( TRTK 0.13.1 REQUIRED )
 include_directories( ${TRTK_INCLUDE_DIR} )
+
+# Flann
+find_package( Flann 1.7.1 REQUIRED )
+include_directories( ${FLANN_INCLUDE_DIR} )
 
 ############################################
 # Project
@@ -363,12 +368,13 @@ endif( MSVC )
 target_link_libraries( ${TARGET_NAME}
 			opengl32
 			glu32
-			${GLEW_LIBLIST}
+			${GLEW_LIBRARIES}
 			${QT_LIBRARIES}
-			${TRTK_LIBLIST}
-			${CARNA_LIBLIST}
-			${CARNA_DICOM_LIBLIST}
-			${CRA_LIBLIST}
+			${TRTK_LIBRARIES}
+			${CARNA_LIBRARIES}
+			${CARNADICOM_LIBRARIES}
+			${CRA_LIBRARIES}
+			${FLANN_LIBRARIES}
 		)
 
 ############################################
