@@ -1,49 +1,59 @@
-cmake_minimum_required(VERSION 2.8.7)
+cmake_minimum_required(VERSION 3.0.2)
+project( DICOMViewer )
+
+set( MAJOR_VERSION	 3 )
+set( MINOR_VERSION	 1 )
+set( PATCH_VERSION	16 )
 
 set( CMAKE_DEBUG_POSTFIX d )
 set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR}/bin )
 set( LIBRARY_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR}/bin )
+set( FULL_VERSION ${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION} )
+set( TARGET_NAME ${PROJECT_NAME}-${FULL_VERSION} )
 
 ############################################
-# Project name
-############################################
-project( DICOMViewer )
-############################################
-
-############################################
-# Version declaration
-# Target file will be named with version suffix
-############################################
-set( MAJOR_VERSION		 3 )
-set( MINOR_VERSION		 1 )
-set( PATCH_VERSION		16 )
-
-set( FULL_VERSION		${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION} )
-
-set( TARGET_NAME		${PROJECT_NAME}-${FULL_VERSION} )
-
-configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/misc/${PROJECT_NAME}.bat.in ${CMAKE_CURRENT_SOURCE_DIR}/${TARGET_NAME}.bat @ONLY )
-configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/src/doc/Doxyfile.in ${CMAKE_CURRENT_SOURCE_DIR}/src/doc/Doxyfile @ONLY )
+# Options
+# Set default options for this build
 ############################################
 
+option(BUILD_DOC	"Build and install the API documentation"	OFF)
+option(BUILD_TEST	"Build the unit tests"						OFF)
+
+############################################
+# Locate Find<ModuleName>.cmake scripts
+############################################
+
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/misc/CMake-Modules)
+
+############################################
+# Run MediTEC compatiblity script
+############################################
+
+add_subdirectory(misc/MediTEC)
+
+############################################
+
+configure_file(	${CMAKE_CURRENT_SOURCE_DIR}/misc/${PROJECT_NAME}.bat.in
+				${CMAKE_CURRENT_SOURCE_DIR}/${TARGET_NAME}.bat @ONLY )
+				
+configure_file(	${CMAKE_CURRENT_SOURCE_DIR}/src/doc/Doxyfile.in
+				${CMAKE_CURRENT_SOURCE_DIR}/src/doc/Doxyfile @ONLY )
 
 ############################################
 # Setup the visual studio project properly
 ############################################
-set( VSXPROJ_USER	${CMAKE_CURRENT_BINARY_DIR}/${TARGET_NAME}.vcxproj.user )
+
+set( VSXPROJ_USER ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_NAME}.vcxproj.user )
 if( NOT EXISTS ${VSXPROJ_USER} )
 	string( REGEX REPLACE "/" "\\\\" WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} )
 	configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/misc/DICOMViewer.vcxproj.user.in ${VSXPROJ_USER} @ONLY )
 endif()
-############################################
-
 
 ############################################
-# Find dependencies and add them later to the linker (see below)
+# Find required dependencies
 ############################################
 
 # Qt
-
 set( QT_USE_QTMAIN		TRUE )
 set( QT_USE_QTOPENGL	TRUE )
 set( QT_USE_QTXML		TRUE )
@@ -52,22 +62,31 @@ include( ${QT_USE_FILE} )
 add_definitions( ${QT_DEFINITIONS} )
 
 # GLEW
-
-include( $ENV{MEDITEC_LIBS}/GLEW/1.7.0/configure.cmake )
+find_package( GLEW 1.7.0 REQUIRED )
+include_directories( ${GLEW_INCLUDE_DIRS} )
 
 # Carna
-
-include( $ENV{MEDITEC_LIBS}/Carna/2.5.0/configure.cmake )
+find_package( Carna REQUIRED )
+include_directories( ${CARNA_INCLUDE_DIR} )
 
 # Carna-DICOM
-
-include( $ENV{MEDITEC_LIBS}/Carna-DICOM/0.1.0/configure.cmake )
+find_package( CarnaDICOM REQUIRED )
+include_directories( ${CARNADICOM_INCLUDE_DIR} )
 
 # CRA
-
 include( $ENV{MEDITEC_LIBS}/CRA/1.16.0/configure.cmake )
 
+# Eigen
+find_package( Eigen3 3.0.5 REQUIRED )
+include_directories( ${EIGEN3_INCLUDE_DIR} )
+
+# TRTK
+find_package( TRTK 0.13.1 REQUIRED )
+include_directories( ${TRTK_INCLUDE_DIR} )
+
+############################################
 # Project
+############################################
 
 include_directories(${CMAKE_PROJECT_DIR}src)
 set( QOBJECT_HEADERS
@@ -280,7 +299,9 @@ set( RESOURCES
 		src/shaders.qrc
 		src/Icons.qrc
 	)
-	
+
+############################################
+
 QT4_WRAP_CPP( HEADERS_MOC ${QOBJECT_HEADERS} )
 QT4_WRAP_UI( FORMS_HEADERS ${FORMS} )
 QT4_ADD_RESOURCES( RESOURCES_RCC ${RESOURCES} )
@@ -289,16 +310,17 @@ QT4_ADD_RESOURCES( RESOURCES_RCC ${RESOURCES} )
 # Exclude all source files from build,
 # since we are using unity build.
 ############################################
+
 set_source_files_properties(	${SRC}
 								${HEADERS_MOC}
 								${FORMS_HEADERS}
 	PROPERTIES
 	HEADER_FILE_ONLY TRUE )
-############################################
-	
+
 ############################################
 # Write unity build file
 ############################################
+
 set( UNITY_BUILD_FILE	${CMAKE_CURRENT_BINARY_DIR}/unity_build.cpp )
 
 file( REMOVE	${UNITY_BUILD_FILE} )
@@ -312,9 +334,10 @@ endforeach( SOURCE_FILE )
 foreach( QT_GENERATED_SOURCE_FILE ${HEADERS_MOC} ${FORMS_HEADERS} )
 	file( APPEND	${UNITY_BUILD_FILE}	"#include \"${QT_GENERATED_SOURCE_FILE}\"\n" )
 endforeach( QT_GENERATED_SOURCE_FILE )
-############################################
 
+############################################	
 include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
+############################################
 
 add_executable( ${TARGET_NAME} WIN32
 			${SRC}
@@ -325,12 +348,13 @@ add_executable( ${TARGET_NAME} WIN32
 			${RESOURCES_RCC}
 		)
 
+############################################
+
 add_definitions( -DNOMINMAX -D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS )
 
 if( MSVC )
    add_definitions( /arch:SSE2 )
 endif( MSVC )
-
 
 ############################################
 # Add dependencies to the linker
@@ -347,21 +371,12 @@ target_link_libraries( ${TARGET_NAME}
 			${CRA_LIBLIST}
 		)
 
+############################################
+# Define installation routines
+############################################
 
+install(TARGETS	${TARGET_NAME}
+		RUNTIME	DESTINATION	${CMAKE_CURRENT_SOURCE_DIR}/bin/debug	CONFIGURATIONS Debug)
 
-
-
-
-#vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-##vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-### NO CHANGES EVER NECESSARY BELOW THIS POINT!!
-##vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-#vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-
-install(	TARGETS	${TARGET_NAME}
-		RUNTIME	DESTINATION	${CMAKE_CURRENT_SOURCE_DIR}/bin/debug	CONFIGURATIONS Debug
-		)
-
-install(	TARGETS	${TARGET_NAME}
-		RUNTIME	DESTINATION	${CMAKE_CURRENT_SOURCE_DIR}/bin/release	CONFIGURATIONS Release
-		)
+install(TARGETS	${TARGET_NAME}
+		RUNTIME	DESTINATION	${CMAKE_CURRENT_SOURCE_DIR}/bin/release	CONFIGURATIONS Release)
