@@ -1,8 +1,10 @@
-﻿DICOMViewer
+DICOMViewer
 ===========
 
 GUI for Visualization of DICOM datasets using
 [Carna](https://github.com/RWTHmediTEC/Carna)
+
+<img src="https://rwthmeditec.github.io/DICOMViewer/dicomviewer01.png">
 
 ---
 ## Contents
