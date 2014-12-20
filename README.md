@@ -26,6 +26,7 @@ Required:
 * [Carna-DICOM](https://github.com/RWTHmediTEC/Carna-DICOM) = 0.1
 * [TRTK](https://github.com/Haenisch/TRTK) ≥ 0.13.1
 * [Eigen](http://eigen.tuxfamily.org/) ≥ 3.0.5
+* OpenGL 2.1
 
 Optional:
 
