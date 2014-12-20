@@ -119,3 +119,11 @@ cd ..\nmake_release
 cmake -G"NMake Makefiles" -DCMAKE_BUILD_TYPE=Release ..\..
 nmake
 ```
+
+### 2.3. The MediTEC-way
+
+Make sure you have the environmental variable `%MEDITEC_LIBS%` set
+and it is poiting to an existing directory, than
+
+* run `create_msvc10_project.bat` to create the Visual Studio project files, or
+* run `win32_msvc10_build.bat` to build the whole package.
