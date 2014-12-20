@@ -39,10 +39,12 @@ public:
       */
     enum EditorType
     {
-        genericEditor,
-        pointEditor,
-        pointCloudEditor,
-        pointerEditor
+          genericEditor
+        , pointEditor
+        , pointCloudEditor
+#ifndef NO_CRA
+        , pointerEditor
+#endif
     };
 
 

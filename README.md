@@ -16,13 +16,18 @@ GUI for Visualization of DICOM datasets using
 ---
 ## 1. Dependencies
 
+Required:
+
 * Qt ≥ 4.8
 * GLEW ≥ 1.7
 * [Carna](https://github.com/RWTHmediTEC/Carna) = 2.5
 * [Carna-DICOM](https://github.com/RWTHmediTEC/Carna-DICOM) = 0.1
-* [CRA](https://github.com/RWTHmediTEC/CRA) = 1.16
 * [TRTK](https://github.com/Haenisch/TRTK) ≥ 0.13.1
 * [Eigen](http://eigen.tuxfamily.org/) ≥ 3.0.5
+
+Optional:
+
+* [CRA](https://github.com/RWTHmediTEC/CRA) = 1.16
 
 ---
 ## 2. Build instructions

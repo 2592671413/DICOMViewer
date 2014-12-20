@@ -80,6 +80,8 @@ PointCloud3DEditor::PointCloud3DEditor( PointCloud3D& editedObject, QWidget* par
 
  // apply registration
 
+#ifndef NO_CRA
+
     QCheckBox* const cbApplyRegistration = new QCheckBox( "Apply registration" );
     cbApplyRegistration->setChecked( editedPointCloud.appliesRegistration() );
     registration->addRow( cbApplyRegistration );
@@ -100,8 +102,15 @@ PointCloud3DEditor::PointCloud3DEditor( PointCloud3D& editedObject, QWidget* par
     connect( cbApplyRegistration, SIGNAL( toggled( bool ) ), &editedPointCloud, SLOT( setRegistrationApplication( bool ) ) );
     connect( &editedPointCloud, SIGNAL( registrationApplicationChanged( bool ) ), cbApplyRegistration, SLOT( setChecked( bool ) ) );
 
+#endif
+
  // finish
 
     addPage( colorAndSizePage );
+
+#ifndef NO_CRA
+
     addPage( registrationPage );
+
+#endif
 }

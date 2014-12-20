@@ -159,9 +159,17 @@ private:
       */
     QAction* const acquiringViewTab;
 
+#ifndef NO_CRA
+
     /** \brief	Acquires the localizer component.
       */
     QAction* const acquiringLocalizer;
+
+    /** \brief	Acquires the registrations management component.
+      */
+    QAction* const acquiringRegistration;
+
+#endif
 
     /** \brief	Acquires the record info component.
       */
@@ -174,10 +182,6 @@ private:
     /** \brief	Acquires the point clouds management component.
       */
     QAction* const acquiringPointClouds;
-
-    /** \brief	Acquires the registrations management component.
-      */
-    QAction* const acquiringRegistration;
 
     QAction* const acquiringGulsun;
 
@@ -238,18 +242,6 @@ private slots:
       */
     void tabCloseRequested( int index );
 
-    /** \brief  Acquires the localizer component.
-      *
-      * Disables user interface option for localizer component acquisition.
-      */
-    void acquireLocalizer();
-
-    /** \brief  Indicates that the localizer component has been released.
-      *
-      * Enabled user interface option for localizer component acquisition.
-      */
-    void localizerReleased();
-
     /** \brief  Acquires the record info component.
       *
       * Disables user interface option for record info component acquisition.
@@ -285,8 +277,22 @@ private slots:
       * Enabled user interface option for point clouds management component acquisition.
       */
     void pointCloudsReleased();
+
+#ifndef NO_CRA
+
+    /** \brief  Acquires the localizer component.
+      *
+      * Disables user interface option for localizer component acquisition.
+      */
+    void acquireLocalizer();
+
+    /** \brief  Indicates that the localizer component has been released.
+      *
+      * Enabled user interface option for localizer component acquisition.
+      */
+    void localizerReleased();
     
-    /** \brief	Acquires the registrations management component.
+    /** \brief  Acquires the registrations management component.
       *
       * Disables user interface option for registrations management component acquisition.
       */
@@ -297,6 +303,8 @@ private slots:
       * Enabled user interface option for registrations management component acquisition.
       */
     void registrationReleased();
+
+#endif
 
     void acquireGulsun();
 

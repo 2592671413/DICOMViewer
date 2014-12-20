@@ -65,7 +65,11 @@ public:
 
     bool drawsBoundingBox() const;
 
+#ifndef NO_CRA
+
     bool appliesRegistration() const;
+
+#endif
 
 
 public slots:
@@ -78,7 +82,11 @@ public slots:
 
     void setBoundingBoxDrawing( bool );
 
+#ifndef NO_CRA
+
     void setRegistrationApplication( bool );
+
+#endif
 
 
 signals:
@@ -91,14 +99,22 @@ signals:
 
     void boundingBoxDrawingChanged( bool );
 
+#ifndef NO_CRA
+
     void registrationApplicationChanged( bool );
+
+#endif
 
 
 private slots:
 
     void serviceProvided( const std::string& serviceID );
 
+#ifndef NO_CRA
+
     void transformationChanged();
+
+#endif
 
 
 private:
@@ -152,7 +168,11 @@ private:
 
     bool drawBoundingBox;
 
+#ifndef NO_CRA
+
     bool applyRegistration;
+
+#endif
 
 
     /** \brief  Draws the geometry.

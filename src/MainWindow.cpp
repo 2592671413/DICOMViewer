@@ -91,11 +91,13 @@ MainWindow::MainWindow( QWidget* parent, Qt::WFlags flags )
     , closing( new QAction( "&Close", this ) )
    // View Menu  --------------------------------------------------------------------
     , acquiringViewTab( new QAction( "New &Tab", this ) )
+#ifndef NO_CRA
     , acquiringLocalizer( new QAction( "&Localizer", this ) )
+    , acquiringRegistration( new QAction( "&Registration...", this ) )
+#endif
     , acquiringModelInfo( new QAction( "&Properties", this ) )
     , acquiringObjectsManager( new QAction( "Objects...", this ) )
     , acquiringPointClouds( new QAction( "&Point Clouds...", this ) )
-    , acquiringRegistration( new QAction( "&Registration...", this ) )
     , acquiringGulsun( new QAction( "&Gulsun Vessel Segmentation", this ) )
     , maskExporting( new QAction( "&Export Binary Mask...", this ) )
     , maskImporting( new QAction( "&Import Binary Mask...", this ) )
@@ -143,13 +145,16 @@ MainWindow::MainWindow( QWidget* parent, Qt::WFlags flags )
 
     // -----------------------------------------------------------------
 
-    acquiringLocalizer->setCheckable( true );
     acquiringObjectsManager->setCheckable( true );
     acquiringPointClouds->setCheckable( true );
-    acquiringRegistration->setCheckable( true );
     acquiringModelInfo->setCheckable( true );
     acquiringObjectsManager->setCheckable( true );
     acquiringGulsun->setCheckable( true );
+
+#ifndef NO_CRA
+    acquiringLocalizer->setCheckable( true );
+    acquiringRegistration->setCheckable( true );
+#endif
 
     QMenu* menuView = menuBar()->addMenu( "&View" );
     menuView->addAction( acquiringViewTab );
@@ -157,32 +162,44 @@ MainWindow::MainWindow( QWidget* parent, Qt::WFlags flags )
     menuView->addAction( acquiringObjectsManager );
     menuView->addAction( acquiringPointClouds );
     menuView->addAction( acquiringGulsun );
+
+#ifndef NO_CRA
     menuView->addSeparator();
     menuView->addAction( acquiringLocalizer );
     menuView->addAction( acquiringRegistration );
+#endif
 
     acquiringViewTab       ->setEnabled( false );
-    acquiringLocalizer     ->setEnabled( false );
     acquiringModelInfo     ->setEnabled( false );
     acquiringObjectsManager->setEnabled( false );
     acquiringPointClouds   ->setEnabled( false );
-    acquiringRegistration  ->setEnabled( false );
     acquiringGulsun        ->setEnabled( false );
+
+#ifndef NO_CRA
+    acquiringLocalizer   ->setEnabled( false );
+    acquiringRegistration->setEnabled( false );
+#endif
 
     acquiringViewTab->setShortcut( QKeySequence::AddTab );
     acquiringGulsun->setShortcut( Qt::Key_F8 );
     acquiringObjectsManager->setShortcut( Qt::Key_F9 );
     acquiringPointClouds->setShortcut( Qt::Key_F10 );
+
+#ifndef NO_CRA
     acquiringLocalizer->setShortcut( Qt::Key_F11 );
     acquiringRegistration->setShortcut( Qt::Key_F12 );
+#endif
 
     connect( acquiringViewTab       , SIGNAL( triggered() ), this, SLOT(           acquireViewTab() ) );
-    connect( acquiringLocalizer     , SIGNAL( triggered() ), this, SLOT(         acquireLocalizer() ) );
     connect( acquiringModelInfo     , SIGNAL( triggered() ), this, SLOT(         acquireModelInfo() ) );
     connect( acquiringObjectsManager, SIGNAL( triggered() ), this, SLOT(    acquireObjectsManager() ) );
     connect( acquiringPointClouds   , SIGNAL( triggered() ), this, SLOT(       acquirePointClouds() ) );
-    connect( acquiringRegistration  , SIGNAL( triggered() ), this, SLOT(      acquireRegistration() ) );
     connect( acquiringGulsun        , SIGNAL( triggered() ), this, SLOT(            acquireGulsun() ) );
+
+#ifndef NO_CRA
+    connect( acquiringLocalizer   , SIGNAL( triggered() ), this, SLOT(    acquireLocalizer() ) );
+    connect( acquiringRegistration, SIGNAL( triggered() ), this, SLOT( acquireRegistration() ) );
+#endif
 
     // -----------------------------------------------------------------
 
@@ -218,18 +235,21 @@ void MainWindow::init( Carna::base::model::Scene* model )
 
     // -----------------------------------------------------------------
 
-    normalizing->setEnabled( true );
-    masking->setEnabled( true );
-    exporting->setEnabled( true );
-    closing->setEnabled( true );
-    maskImporting->setEnabled( true );
-    acquiringViewTab->setEnabled( true );
-    acquiringLocalizer->setEnabled( true );
-    acquiringModelInfo->setEnabled( true );
+    normalizing            ->setEnabled( true );
+    masking                ->setEnabled( true );
+    exporting              ->setEnabled( true );
+    closing                ->setEnabled( true );
+    maskImporting          ->setEnabled( true );
+    acquiringViewTab       ->setEnabled( true );
+    acquiringModelInfo     ->setEnabled( true );
     acquiringObjectsManager->setEnabled( true );
-    acquiringPointClouds->setEnabled( true );
+    acquiringPointClouds   ->setEnabled( true );
+    acquiringGulsun        ->setEnabled( true );
+
+#ifndef NO_CRA
+    acquiringLocalizer   ->setEnabled( true );
     acquiringRegistration->setEnabled( true );
-    acquiringGulsun->setEnabled( true );
+#endif
 
     updateMaskExporting();
     connect( model, SIGNAL( maskExchanged() ), this, SLOT( updateMaskExporting() ) );
@@ -245,25 +265,6 @@ void MainWindow::init( Carna::base::model::Scene* model )
 void MainWindow::updateMaskExporting()
 {
     maskExporting->setEnabled( carna->model().hasVolumeMask() );
-}
-
-
-void MainWindow::acquireLocalizer()
-{
-    acquiringLocalizer->setEnabled( false );
-    acquiringLocalizer->setChecked( true );
-
-    LocalizerComponent* localizer = new LocalizerComponent( server, componentWindowFactory );
-    components->takeComponent( localizer );
-
-    connect( localizer, SIGNAL( destroyed() ), this, SLOT( localizerReleased() ) );
-}
-
-
-void MainWindow::localizerReleased()
-{
-    acquiringLocalizer->setEnabled( true );
-    acquiringLocalizer->setChecked( false );
 }
 
 
@@ -323,19 +324,22 @@ void MainWindow::closeRecord()
     carna.reset();
     QApplication::processEvents();
 
-    normalizing->setEnabled( false );
-    masking->setEnabled( false );
-    exporting->setEnabled( false );
-    closing->setEnabled( false );
-    maskExporting->setEnabled( false );
-    maskImporting->setEnabled( false );
-    acquiringViewTab->setEnabled( false );
-    acquiringLocalizer->setEnabled( false );
-    acquiringModelInfo->setEnabled( false );
+    normalizing            ->setEnabled( false );
+    masking                ->setEnabled( false );
+    exporting              ->setEnabled( false );
+    closing                ->setEnabled( false );
+    maskExporting          ->setEnabled( false );
+    maskImporting          ->setEnabled( false );
+    acquiringViewTab       ->setEnabled( false );
+    acquiringModelInfo     ->setEnabled( false );
     acquiringObjectsManager->setEnabled( false );
-    acquiringPointClouds->setEnabled( false );
+    acquiringPointClouds   ->setEnabled( false );
+    acquiringGulsun        ->setEnabled( false );
+
+#ifndef NO_CRA
+    acquiringLocalizer   ->setEnabled( false );
     acquiringRegistration->setEnabled( false );
-    acquiringGulsun->setEnabled( false );
+#endif
 
     tabWidget->clear();
     content->setCurrentWidget( carnaModelFactory );
@@ -363,6 +367,27 @@ void MainWindow::pointCloudsReleased()
 }
 
 
+#ifndef NO_CRA
+
+void MainWindow::acquireLocalizer()
+{
+    acquiringLocalizer->setEnabled( false );
+    acquiringLocalizer->setChecked( true );
+
+    LocalizerComponent* localizer = new LocalizerComponent( server, componentWindowFactory );
+    components->takeComponent( localizer );
+
+    connect( localizer, SIGNAL( destroyed() ), this, SLOT( localizerReleased() ) );
+}
+
+
+void MainWindow::localizerReleased()
+{
+    acquiringLocalizer->setEnabled( true );
+    acquiringLocalizer->setChecked( false );
+}
+
+
 void MainWindow::acquireRegistration()
 {
     acquiringRegistration->setEnabled( false );
@@ -380,6 +405,8 @@ void MainWindow::registrationReleased()
     acquiringRegistration->setEnabled( true );
     acquiringRegistration->setChecked( false );
 }
+
+#endif  // NO_CRA
 
 
 void MainWindow::acquireGulsun()

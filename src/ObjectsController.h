@@ -94,9 +94,13 @@ public slots:
       */
     void createPoint3D();
     
+#ifndef NO_CRA
+
     /** \brief  Instantiates \ref Pointer3D.
       */
     void createPointer3D();
+
+#endif
 
     /** \brief  Instantiates \c Carna::base::view::Polyline.
       */

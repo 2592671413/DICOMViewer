@@ -15,7 +15,6 @@
 #include "Object3DEditor.h"
 #include "Object3DEditorFactory.h"
 #include "PointCloud3D.h"
-#include "Pointer3D.h"
 #include "CarnaContextClient.h"
 #include <Carna/base/model/Object3D.h>
 #include <Carna/base/view/Point3D.h>
@@ -35,6 +34,10 @@
 #include <QRegExp>
 #include <QFileDialog>
 #include <QMessageBox>
+
+#ifndef NO_CRA
+#include "Pointer3D.h"
+#endif
 
 
 
@@ -247,9 +250,12 @@ ObjectsController::ObjectsController( Record::Server& server, ObjectsComponent& 
     toolBar->addAction( editorDetaching );
 
     connect( pointCreation, SIGNAL( triggered() ), this, SLOT( createPoint3D() ) );
-    connect( pointerCreation, SIGNAL( triggered() ), this, SLOT( createPointer3D() ) );
     connect( polylineImport, SIGNAL( triggered() ), this, SLOT( importPolyline() ) );
     connect( tempPointCreation, SIGNAL( triggered() ), this, SLOT( createTempPoint1() ) );
+
+#ifndef NO_CRA
+    connect( pointerCreation, SIGNAL( triggered() ), this, SLOT( createPointer3D() ) );
+#endif
 
     this->setMinimumWidth( toolBar->sizeHint().width() );
     this->setLayout( new QVBoxLayout() );
@@ -404,11 +410,13 @@ Object3DEditor* ObjectsController::createObjectEditor( Carna::base::model::Objec
     {
         editorType = Object3DEditorFactory::pointCloudEditor;
     }
+#ifndef NO_CRA
     else
     if( dynamic_cast< Pointer3D* >( &object ) )
     {
         editorType = Object3DEditorFactory::pointerEditor;
     }
+#endif
     else
     {
         editorType = Object3DEditorFactory::genericEditor;
@@ -448,12 +456,6 @@ void ObjectsController::createTempPoint1()
 {
     Carna::base::model::Scene& model = CarnaContextClient( server ).model();
     new Carna::base::view::Point3D( model, Carna::base::model::Position::fromVolumeUnits( model, 0.72307533, 0.76862745, 0.33882746 ) );
-}
-
-
-void ObjectsController::createPointer3D()
-{
-    new Pointer3D( server );
 }
 
 
@@ -551,3 +553,13 @@ void ObjectsController::importPolyline()
 
     QApplication::restoreOverrideCursor();
 }
+
+
+#ifndef NO_CRA
+
+void ObjectsController::createPointer3D()
+{
+    new Pointer3D( server );
+}
+
+#endif  // NO_CRA

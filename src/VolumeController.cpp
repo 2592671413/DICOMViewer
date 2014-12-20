@@ -11,8 +11,6 @@
 
 #include "VolumeController.h"
 #include "CarnaContextClient.h"
-#include "ToolChooser.h"
-#include "RegistrationClient.h"
 #include "NotificationsClient.h"
 #include "VolumeViewCameraController.h"
 #include "GulsunComponent.h"
@@ -31,7 +29,6 @@
 #include <Carna/stereoscopic/Philips.h>
 #include <Carna/stereoscopic/Zalman.h>
 #include <Carna/base/qt/ExpandableGroupBox.h>
-#include <CRA/Link.h>
 #include <QVBoxLayout>
 #include <QFormLayout>
 #include <QPushButton>
@@ -42,6 +39,12 @@
 #include <QCheckBox>
 #include <QSpinBox>
 #include <QDoubleSpinBox>
+
+#ifndef NO_CRA
+#include "ToolChooser.h"
+#include "RegistrationClient.h"
+#include <CRA/Link.h>
+#endif
 
 
 
@@ -54,8 +57,9 @@ VolumeController::VolumeController( Carna::VolumeRenderings::VolumeVisualization
     , view( view )
     , server( server )
     , cameraController( new VolumeViewCameraController( view ) )
-    , cbCameraChooser( new QComboBox() )
+#ifndef NO_CRA
     , linkedCameraChooser( new ToolChooser( server ) )
+#endif
     , preferredCameraMode( undefinedPreferredProjection )
     , cbAutoRotate( new QCheckBox( "Auto-rotate with:" ) )
     , sbSecondsPerRotation( new QDoubleSpinBox() )
@@ -65,7 +69,10 @@ VolumeController::VolumeController( Carna::VolumeRenderings::VolumeVisualization
 {
     CARNA_ASSERT( view.isInitialized() );
 
-    Carna::VolumeRenderings::VolumeControllerUI* const mainController = new Carna::VolumeRenderings::VolumeControllerUI( view.renderer(), CarnaContextClient( server ).model() );
+    Carna::VolumeRenderings::VolumeControllerUI* const mainController
+        = new Carna::VolumeRenderings::VolumeControllerUI( view.renderer(), CarnaContextClient( server ).model() );
+
+#ifndef NO_CRA
 
     linkedCameraChooser->setEnabled( server.hasService( Registration::serviceID ) );
 
@@ -81,11 +88,15 @@ VolumeController::VolumeController( Carna::VolumeRenderings::VolumeVisualization
         , this
         , SLOT( releaseLinkedCamera() ) );
 
+#endif
+
     NotificationsClient( server ).connectServiceProvided( this, SLOT( processAddedService  ( const std::string& ) ) );
     NotificationsClient( server ).connectServiceRemoved ( this, SLOT( processRemovedService( const std::string& ) ) );
 
     QVBoxLayout* const global = new QVBoxLayout();
     QFormLayout* const header = new QFormLayout();
+
+#ifndef NO_CRA
 
     QPushButton* const buResetCamera = new QPushButton( QIcon( ":/icons/home.png" ), "" );
     buResetCamera->setToolTip( "Reset Camera" );
@@ -98,6 +109,8 @@ VolumeController::VolumeController( Carna::VolumeRenderings::VolumeVisualization
     cameraManager->layout()->addWidget( buResetCamera );
 
     header->addRow( "Camera linked to:", cameraManager );
+
+#endif
 
  // render modes
 
@@ -172,9 +185,9 @@ VolumeController::VolumeController( Carna::VolumeRenderings::VolumeVisualization
     global->addLayout( header );
     global->addSpacing( 10 );
     global->addWidget( mainController );
-	/*
+    /*
     global->addWidget( buGulsun );
-	*/
+    */
 
     mainController->layout()->setContentsMargins( 0, 0, 0, 0 );
 
@@ -184,7 +197,9 @@ VolumeController::VolumeController( Carna::VolumeRenderings::VolumeVisualization
 
 VolumeController::~VolumeController()
 {
+#ifndef NO_CRA
     releaseLinkedCamera();
+#endif
 }
 
 
@@ -262,80 +277,26 @@ void VolumeController::setRenderMode( int renderModeIndex )
 }
 
 
-void VolumeController::resetCamera()
-{
-    if( linkedCameraChooser->isToolSelected() )
-    {
-        linkedCameraChooser->selectNone();
-    }
-    else
-    {
-        this->setDefaultCamera();
-        view.renderer().invalidate();
-    }
-}
-
-
 void VolumeController::processAddedService( const std::string& serviceID )
 {
+#ifndef NO_CRA
     if( serviceID == Registration::serviceID )
     {
         linkedCameraChooser->setEnabled( true );
     }
+#endif
 }
 
 
 void VolumeController::processRemovedService( const std::string& serviceID )
 {
+#ifndef NO_CRA
     if( serviceID == Registration::serviceID )
     {
         linkedCameraChooser->selectNone();
         linkedCameraChooser->setEnabled( false );
     }
-}
-
-
-void VolumeController::setDefaultCamera()
-{
-    bool usePerspectiveProjection;
-    switch( preferredCameraMode )
-    {
-
-        case perspectiveProjection:
-        {
-            usePerspectiveProjection = true;
-            break;
-        }
-
-        case orthogonalProjection:
-        {
-            usePerspectiveProjection = false;
-            break;
-        }
-
-        case undefinedPreferredProjection:
-        default:
-        {
-            if( view.renderer().mode().name == Carna::VolumeRenderings::MIP::MaximumIntensityProjection::NAME )
-            {
-                usePerspectiveProjection = false;
-            }
-            else
-            {
-                usePerspectiveProjection = true;
-            }
-            break;
-        }
-
-    }
-
-    Carna::base::view::Camera* camera = new Carna::base::view::DefaultCamera( view.renderer().provider.scene, usePerspectiveProjection );
-    view.renderer().setCamera( new Carna::base::Composition< Carna::base::view::Camera >( camera ) );
-
-    cbAutoRotate->setEnabled( true );
-    sbSecondsPerRotation->setEnabled( cameraController->hasAutoRotate() );
-    sbTargetFramesPerSecond->setEnabled( cameraController->hasAutoRotate() );
-    cbAutoRotate->setChecked( cameraController->hasAutoRotate() );
+#endif
 }
 
 
@@ -389,6 +350,66 @@ void VolumeController::updateCamera()
 
         }
     }
+}
+
+
+#ifndef NO_CRA
+
+void VolumeController::resetCamera()
+{
+    if( linkedCameraChooser->isToolSelected() )
+    {
+        linkedCameraChooser->selectNone();
+    }
+    else
+    {
+        this->setDefaultCamera();
+        view.renderer().invalidate();
+    }
+}
+
+
+void VolumeController::setDefaultCamera()
+{
+    bool usePerspectiveProjection;
+    switch( preferredCameraMode )
+    {
+
+    case perspectiveProjection:
+        {
+            usePerspectiveProjection = true;
+            break;
+        }
+
+    case orthogonalProjection:
+        {
+            usePerspectiveProjection = false;
+            break;
+        }
+
+    case undefinedPreferredProjection:
+    default:
+        {
+            if( view.renderer().mode().name == Carna::VolumeRenderings::MIP::MaximumIntensityProjection::NAME )
+            {
+                usePerspectiveProjection = false;
+            }
+            else
+            {
+                usePerspectiveProjection = true;
+            }
+            break;
+        }
+
+    }
+
+    Carna::base::view::Camera* camera = new Carna::base::view::DefaultCamera( view.renderer().provider.scene, usePerspectiveProjection );
+    view.renderer().setCamera( new Carna::base::Composition< Carna::base::view::Camera >( camera ) );
+
+    cbAutoRotate->setEnabled( true );
+    sbSecondsPerRotation->setEnabled( cameraController->hasAutoRotate() );
+    sbTargetFramesPerSecond->setEnabled( cameraController->hasAutoRotate() );
+    cbAutoRotate->setChecked( cameraController->hasAutoRotate() );
 }
 
 
@@ -468,3 +489,5 @@ void VolumeController::setLinkedCamera( CRA::Tool& rb )
         QMessageBox::critical( this, "Linked Camera", QString::fromStdString( ss.str() ) );
     }
 }
+
+#endif  // NO_CRA

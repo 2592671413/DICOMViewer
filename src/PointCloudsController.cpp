@@ -14,7 +14,6 @@
 #include "PointCloudsClient.h"
 #include "PointCloud.h"
 #include "EmbeddablePlacer.h"
-#include "PointRecorder.h"
 #include "PointCloud3D.h"
 #include "CarnaContextClient.h"
 #include "PointCloudComposer.h"
@@ -37,6 +36,10 @@
 #include <QXmlSimpleReader>
 #include <QPushButton>
 #include <QXmlStreamWriter>
+
+#ifndef NO_CRA
+#include "PointRecorder.h"
+#endif
 
 
 
@@ -108,12 +111,16 @@ PointCloudsController::PointCloudsController( Record::Server& server, PointCloud
     , cloudReleasing   ( new QAction( QIcon( ":/icons/trash.png" )      , "&Release", this ) )
     , cloudRenaming    ( new QAction( QIcon( ":/icons/pencil.png" )     , "Rena&me" , this ) )
     , cloudDetails     ( new QAction( QIcon( ":/icons/information.png" ), "&Details", this ) )
+#ifndef NO_CRA
     , cloudRecording   ( new QAction( "Re&cord"          , this ) )
+#endif
     , cloudExtracting  ( new QAction( "Extract &Surface" , this ) )
     , cloudBuilding    ( new QAction( "From &3D Objects" , this ) )
     , object3dCreation ( new QAction( "Create 3D &Object", this ) )
     , point3dCreation  ( new QAction( "Create 3D &Points", this ) )
+#ifndef NO_CRA
     , recorderWindow( nullptr )
+#endif
     , cloudCreatorWindow( nullptr )
     , surfaceExtractionWindow( nullptr )
 {
@@ -146,7 +153,9 @@ PointCloudsController::PointCloudsController( Record::Server& server, PointCloud
     acquireButton->setText( "&New" );
     acquireButton->setIcon( QIcon( ":/icons/add.png" ) );
 
+#ifndef NO_CRA
     acquireMenu->addAction( cloudRecording );
+#endif
     acquireMenu->addAction( cloudExtracting );
     acquireMenu->addAction( cloudBuilding );
     acquireMenu->addSeparator();
@@ -163,7 +172,9 @@ PointCloudsController::PointCloudsController( Record::Server& server, PointCloud
     connect( cloudReleasing  , SIGNAL( triggered() ), this, SLOT(   releasePointCloud() ) );
     connect( cloudRenaming   , SIGNAL( triggered() ), this, SLOT(    renamePointCloud() ) );
     connect( cloudDetails    , SIGNAL( triggered() ), this, SLOT(    showCloudDetails() ) );
+#ifndef NO_CRA
     connect( cloudRecording  , SIGNAL( triggered() ), this, SLOT(    recordPointCloud() ) );
+#endif
     connect( cloudExtracting , SIGNAL( triggered() ), this, SLOT(      extractSurface() ) );
     connect( cloudBuilding   , SIGNAL( triggered() ), this, SLOT( createFrom3dObjects() ) );
     connect( object3dCreation, SIGNAL( triggered() ), this, SLOT(      create3dObject() ) );
@@ -806,6 +817,8 @@ void PointCloudsController::create3dPoints()
 }
 
 
+#ifndef NO_CRA
+
 void PointCloudsController::recordPointCloud()
 {
     if( !recorderWindow )
@@ -841,6 +854,8 @@ void PointCloudsController::pointRecorderClosed()
     this->setEnabled( true );
 }
 
+#endif  // NO_CRA
+
 
 void PointCloudsController::extractSurface()
 {
@@ -865,7 +880,9 @@ void PointCloudsController::extractSurface()
 void PointCloudsController::surfaceExtractorClosed()
 {
     cloudExtracting->setEnabled( true );
+#ifndef NO_CRA
     recorderWindow = nullptr; // TODO: am I obsoleted?
+#endif
 }
 
 

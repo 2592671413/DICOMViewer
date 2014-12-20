@@ -14,7 +14,6 @@
 #include "PointCloud.h"
 #include "CarnaContextClient.h"
 #include "PointCloudsClient.h"
-#include "RegistrationClient.h"
 #include "NotificationsClient.h"
 #include <Carna/base/view/ShaderBundle.h>
 #include <Carna/base/view/ShaderProgram.h>
@@ -25,6 +24,10 @@
 #include <algorithm>
 #include <QApplication>
 #include <QProgressDialog>
+
+#ifndef NO_CRA
+#include "RegistrationClient.h"
+#endif
 
 
 
@@ -55,7 +58,9 @@ PointCloud3D::PointCloud3D( Record::Server& server, const PointCloud& cloud, QWi
     , pointColor( 255, 255, 255 )
     , modulateBrightnessByDistance( cloud.getList().size() > 20 )
     , drawBoundingBox( true )
+#ifndef NO_CRA
     , applyRegistration( cloud.source == PointCloud::trackingSide )
+#endif
 {
     QApplication::setOverrideCursor( Qt::WaitCursor );
 
@@ -131,19 +136,25 @@ PointCloud3D::PointCloud3D( Record::Server& server, const PointCloud& cloud, QWi
 
         const double points_within_data_space_ratio = static_cast< double >( points_within_data_space ) / sample_count;
 
+#ifndef NO_CRA
         if( points_within_data_space_ratio < 0.9 )
         {
             this->applyRegistration = true;
         }
+#endif
     }
 
  // ----------------------------------------------------------------------------------
+
+#ifndef NO_CRA
 
     NotificationsClient( server ).connectServiceProvided( this, SLOT( serviceProvided( const std::string& ) ) );
     if( server.hasService( Registration::serviceID ) )
     {
         serviceProvided( Registration::serviceID );
     }
+
+#endif
 
  // ----------------------------------------------------------------------------------
 
@@ -175,6 +186,8 @@ void PointCloud3D::draw( const Carna::base::view::Renderer& renderer, const Carn
     const Carna::base::Vector& position = this->position().toVolumeUnits();
     glTranslatef( position.x(), position.y(), position.z() );
 
+#ifndef NO_CRA
+
     if( applyRegistration )
     {
         try
@@ -194,6 +207,8 @@ void PointCloud3D::draw( const Carna::base::view::Renderer& renderer, const Carn
         {
         }
     }
+
+#endif
 
     glColor3ub( color.x, color.y, color.z );
 
@@ -365,6 +380,20 @@ void PointCloud3D::setBoundingBoxDrawing( bool drawBoundingBox )
 }
 
 
+void PointCloud3D::serviceProvided( const std::string& serviceID )
+{
+#ifndef NO_CRA
+    if( serviceID == Registration::serviceID && this->applyRegistration )
+    {
+        RegistrationClient( server ).connectTransformationChanged( this, SLOT( transformationChanged() ) );
+        transformationChanged();
+    }
+#endif
+}
+
+
+#ifndef NO_CRA
+
 bool PointCloud3D::appliesRegistration() const
 {
     return applyRegistration;
@@ -387,16 +416,6 @@ void PointCloud3D::setRegistrationApplication( bool applyRegistration )
 }
 
 
-void PointCloud3D::serviceProvided( const std::string& serviceID )
-{
-    if( serviceID == Registration::serviceID && this->applyRegistration )
-    {
-        RegistrationClient( server ).connectTransformationChanged( this, SLOT( transformationChanged() ) );
-        transformationChanged();
-    }
-}
-
-
 void PointCloud3D::transformationChanged()
 {
     if( this->applyRegistration )
@@ -404,3 +423,5 @@ void PointCloud3D::transformationChanged()
         invalidateObjects3D( Carna::base::model::Object3DEvent( Carna::base::model::Object3DEvent::position ) );
     }
 }
+
+#endif

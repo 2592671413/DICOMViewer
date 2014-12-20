@@ -15,8 +15,11 @@
 #include "PointCloud3DEditor.h"
 #include "PointCloud3D.h"
 #include "Pointer3DEditor.h"
-#include "Pointer3D.h"
 #include <Carna/base/view/Point3D.h>
+
+#ifndef NO_CRA
+#include "Pointer3D.h"
+#endif
 
 
 
@@ -50,10 +53,12 @@ Object3DEditor* Object3DEditorFactory::create( Carna::base::model::Object3D& obj
             return new PointCloud3DEditor( static_cast< PointCloud3D& >( object ) );
         }
 
+#ifndef NO_CRA
         case pointerEditor:
         {
             return new Pointer3DEditor( static_cast< Pointer3D& >( object ) );
         }
+#endif
 
         default:
         {

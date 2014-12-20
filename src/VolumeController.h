@@ -14,8 +14,11 @@
 #include "Server.h"
 #include <QWidget>
 #include <Carna/Carna.h>
+
+#ifndef NO_CRA
 #include <CRA/LinkedObject.h>
 #include <CRA/LinkedCamera.h>
+#endif
 
 class VolumeView;
 class ToolChooser;
@@ -62,12 +65,16 @@ public:
 
 public slots:
 
+#ifndef NO_CRA
+
     /** \brief
       * If \c CRA::LinkedCamera is currently being used,
       * it is replaced by new instance of \c Carna::base::view::DefaultCamera through \ref releaseLinkedCamera.
       * Otherwise the current camera is replaced by new instance of \c Carna::base::view::DefaultCamera through \ref setDefaultCamera.
       */
     void resetCamera();
+
+#endif
 
 
 private:
@@ -78,12 +85,13 @@ private:
 
     VolumeViewCameraController* const cameraController;
 
-
-    QComboBox* const cbCameraChooser;
+#ifndef NO_CRA
 
     ToolChooser* const linkedCameraChooser;
 
     std::unique_ptr< CRA::LinkedCamera > linkedCamera;
+
+#endif
 
     PreferredCameraMode preferredCameraMode;
 
@@ -107,6 +115,8 @@ private:
     QPushButton* const buGulsun;
 
 
+#ifndef NO_CRA
+
     /** \brief
       * Creates new \c Carna::base::view::DefaultCamera instance and utilizes it as current camera.
       */
@@ -118,6 +128,8 @@ private:
       */
     void unlinkCamera();
 
+#endif
+
 
 private slots:
 
@@ -125,6 +137,8 @@ private slots:
 
     void processRemovedService( const std::string& serviceID );
 
+
+#ifndef NO_CRA
 
     /** \brief
       * Creates new \c CRA::LinkedCamera and utilizes it as current camera.
@@ -140,6 +154,8 @@ private slots:
       * and finally the \c CRA::LinkedCamera is destroyed.
       */
     void releaseLinkedCamera();
+
+#endif
 
 
     void setRenderMode( int );

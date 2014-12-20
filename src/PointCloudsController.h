@@ -98,15 +98,19 @@ private:
     QAction* const cloudReleasing;  ///< \brief  Removes the selected point cloud.
     QAction* const cloudRenaming;   ///< \brief  Renames selected point cloud to a name prompted from the user.
     QAction* const cloudDetails;    ///< \brief  Presents details of selected point cloud to the user.
+#ifndef NO_CRA
     QAction* const cloudRecording;  ///< \brief  Opens a new \ref PointRecorder "point recorder dialog".
+#endif
     QAction* const cloudExtracting; ///< \brief  Opens a new \ref SurfaceExtractionDialog "surface extraction dialog".
     QAction* const cloudBuilding;   ///< \brief  Opens a new \ref PointCloudCreator "point cloud composer".
     QAction* const object3dCreation;///< \brief  Creates a new \ref PointCloud3D "visual representation" of the selected point cloud.
     QAction* const point3dCreation; ///< \brief  Creates one \c Carna::base::view::Point3D instance for each point within the selected point cloud.
 
+#ifndef NO_CRA
     /** \brief	References the \ref PointRecorder "point recorder dialog" if it is open or is \c nullptr.
       */
     ComponentEmbeddable* recorderWindow;
+#endif
     
     /** \brief	References the \ref PointCloudCreator "point cloud composer" if it is open or is \c nullptr.
       */
@@ -140,6 +144,8 @@ private slots:
       */
     void pointCloudSelectionChanged();
 
+#ifndef NO_CRA
+
     /** \brief	Invoked when a \ref PointRecorder "point recorder dialog" is closed.
       *
       * Enables this controller and sets \ref recorderWindow to \c nullptr.
@@ -147,6 +153,8 @@ private slots:
       * \see    \ref recordPointCloud
       */
     void pointRecorderClosed();
+
+#endif
     
     /** \brief	Invoked when a \ref PointCloudCreator "point cloud composer" is closed.
       *
@@ -170,6 +178,8 @@ private slots:
     void updateListWidget();
 
     
+#ifndef NO_CRA
+
     /** \brief	 Opens a new \ref PointRecorder "point recorder dialog".
       *
       * Disables this controller until the dialog is closed.
@@ -177,6 +187,8 @@ private slots:
       * \see    \ref pointRecorderClosed
       */
     void recordPointCloud();
+
+#endif
     
     /** \brief	Opens a new \ref SurfaceExtractionDialog "surface extraction dialog".
       *

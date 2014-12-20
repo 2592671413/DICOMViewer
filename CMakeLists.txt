@@ -74,7 +74,7 @@ find_package( CarnaDICOM REQUIRED )
 include_directories( ${CARNADICOM_INCLUDE_DIR} )
 
 # CRA
-find_package( CRA REQUIRED )
+find_package( CRA )
 include_directories( ${CRA_INCLUDE_DIR} )
 
 # Eigen
@@ -111,11 +111,8 @@ set( QOBJECT_HEADERS
 		src/Histogram.h
 		src/HistogramController.h
 		src/HistogramView.h
-		src/ICP.h
 		src/Importer.h
 		src/IntegerFormatChooser.h
-		src/LocalizerController.h
-		src/LocalizerProvider.h
 		src/MainWindow.h
 		src/MaskingDialog.h
 		src/ModelInfo.h
@@ -133,20 +130,9 @@ set( QOBJECT_HEADERS
 		src/PointCloudComposerSlot.h
 		src/PointCloudsController.h
 		src/PointCloudsProvider.h
-		src/Pointer3D.h
-		src/Pointer3DCalibration.h
-		src/Pointer3DEditor.h
-		src/PointRecorder.h
-		src/PointRecorderView.h
-		src/RegistrationController.h
-		src/RegistrationProvider.h
 		src/Server.h
 		src/SlicePlane.h
 		src/SurfaceExtractionDialog.h
-		src/ToolCalibrator.h
-		src/ToolChooser.h
-		src/ToolEditor.h
-		src/ToolSetEditor.h
 		src/ViewWindow.h
 		src/VolumeController.h
 		src/VolumeNormalizer.h
@@ -154,6 +140,25 @@ set( QOBJECT_HEADERS
 		src/VolumeViewCameraController.h
 		src/WindowingController.h
 )
+if(CRA_FOUND)
+	set( QOBJECT_HEADERS
+			${QOBJECT_HEADERS}
+			src/ICP.h
+			src/LocalizerController.h
+			src/LocalizerProvider.h
+			src/Pointer3D.h
+			src/Pointer3DCalibration.h
+			src/Pointer3DEditor.h
+			src/PointRecorder.h
+			src/PointRecorderView.h
+			src/RegistrationController.h
+			src/RegistrationProvider.h
+			src/ToolCalibrator.h
+			src/ToolChooser.h
+			src/ToolEditor.h
+			src/ToolSetEditor.h
+		)
+endif(CRA_FOUND)
 set( HEADERS
 		${QOBJECT_HEADERS}
 		src/BinaryDumpProcessor.h
@@ -177,9 +182,6 @@ set( HEADERS
 		src/GulsunRadiusStore.h
 		src/ImportProcessor.h
 		src/LeafFinder.h
-		src/Localizer.h
-		src/LocalizerClient.h
-		src/LocalizerComponent.h
 		src/Medialness.h
 		src/MedialnessGraph.h
 		src/MultiscaleDifferential.h
@@ -195,20 +197,28 @@ set( HEADERS
 		src/PointClouds.h
 		src/PointCloudsClient.h
 		src/PointCloudsComponent.h
-		src/PointToPointRegistration.h
-		src/Registration.h
-		src/RegistrationArguments.h
-		src/RegistrationClient.h
-		src/RegistrationComponent.h
-		src/RegistrationOperation.h
 		src/RegistredComponent.h
 		src/ScalarField3ui.h
 		src/Segmentation.h
 		src/SuccessiveMedialness.h
 		src/SurfaceExtraction.h
-		src/Validation.h
 		src/WindowingComponent.h
 	)
+if(CRA_FOUND)
+	set( HEADERS
+			${HEADERS}
+			src/Localizer.h
+			src/LocalizerClient.h
+			src/LocalizerComponent.h
+			src/PointToPointRegistration.h
+			src/Registration.h
+			src/RegistrationArguments.h
+			src/RegistrationClient.h
+			src/RegistrationComponent.h
+			src/RegistrationOperation.h
+			src/Validation.h
+		)
+endif(CRA_FOUND)
 set( SRC
 		src/BinaryDumpExportDialog.cpp
 		src/BinaryDumpImportDialog.cpp
@@ -236,11 +246,8 @@ set( SRC
 		src/Histogram.cpp
 		src/HistogramController.cpp
 		src/HistogramView.cpp
-		src/ICP.cpp
 		src/Importer.cpp
 		src/IntegerFormatChooser.cpp
-		src/LocalizerComponent.cpp
-		src/LocalizerController.cpp
 		src/main.cpp
 		src/MainWindow.cpp
 		src/MaskingDialog.cpp
@@ -268,26 +275,12 @@ set( SRC
 		src/PointCloudComposerSlot.cpp
 		src/PointCloudsComponent.cpp
 		src/PointCloudsController.cpp
-		src/Pointer3D.cpp
-		src/Pointer3DCalibration.cpp
-		src/Pointer3DEditor.cpp
-		src/PointRecorder.cpp
-		src/PointRecorderView.cpp
-		src/PointToPointRegistration.cpp
-		src/RegistrationComponent.cpp
-		src/RegistrationController.cpp
-		src/RegistrationOperation.cpp
 		src/Segmentation.cpp
 		src/Server.cpp
 		src/SlicePlane.cpp
 		src/SuccessiveMedialness.cpp
 		src/SurfaceExtraction.cpp
 		src/SurfaceExtractionDialog.cpp
-		src/ToolCalibrator.cpp
-		src/ToolChooser.cpp
-		src/ToolEditor.cpp
-		src/ToolSetEditor.cpp
-		src/Validation.cpp
 		src/ViewWindow.cpp
 		src/VolumeController.cpp
 		src/VolumeNormalizer.cpp
@@ -296,6 +289,28 @@ set( SRC
 		src/WindowingComponent.cpp
 		src/WindowingController.cpp
 	)
+if(CRA_FOUND)
+	set( SRC
+			${SRC}
+			src/ICP.cpp
+			src/LocalizerComponent.cpp
+			src/LocalizerController.cpp
+			src/Pointer3D.cpp
+			src/Pointer3DCalibration.cpp
+			src/Pointer3DEditor.cpp
+			src/PointRecorder.cpp
+			src/PointRecorderView.cpp
+			src/PointToPointRegistration.cpp
+			src/RegistrationComponent.cpp
+			src/RegistrationController.cpp
+			src/RegistrationOperation.cpp
+			src/ToolCalibrator.cpp
+			src/ToolChooser.cpp
+			src/ToolEditor.cpp
+			src/ToolSetEditor.cpp
+			src/Validation.cpp
+		)
+endif(CRA_FOUND)
 set( FORMS
 		""
 	)
@@ -304,6 +319,18 @@ set( RESOURCES
 		src/shaders.qrc
 		src/Icons.qrc
 	)
+
+############################################
+
+add_definitions( -DNOMINMAX -D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS )
+
+if( MSVC )
+   add_definitions( /arch:SSE2 )
+endif( MSVC )
+
+if( NOT CRA_FOUND )
+	add_definitions( -DNO_CRA )
+endif()
 
 ############################################
 
@@ -352,14 +379,6 @@ add_executable( ${TARGET_NAME} WIN32
 			${FORMS_HEADERS}
 			${RESOURCES_RCC}
 		)
-
-############################################
-
-add_definitions( -DNOMINMAX -D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS )
-
-if( MSVC )
-   add_definitions( /arch:SSE2 )
-endif( MSVC )
 
 ############################################
 # Add dependencies to the linker
