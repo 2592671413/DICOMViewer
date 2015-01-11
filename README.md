@@ -107,8 +107,7 @@ Use the command below if you are going to use Visual Studio for compilation:
 call "%VS100COMNTOOLS%\vsvars32.bat"
 ```
     
-Now it's time to run the build process.
-Lets build the "debug" version first:
+Now it's time to run the build process:
 
 ```bat
 cd build\debug
